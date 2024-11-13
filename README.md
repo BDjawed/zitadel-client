@@ -20,7 +20,7 @@ ZITADEL custom js client
 [npm-downloads-href]: https://npmjs.com/package/@creoox/zitadel-client
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/@creoox/zitadel-client?style=flat&colorA=080f12&colorB=1fa669&label=minzip
 [bundle-href]: https://bundlephobia.com/result?p=@creoox/zitadel-client
-[license-src]: https://img.shields.io/github/license/Creoox/@creoox/zitadel-client.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/Creoox/@creoox/zitadel-client/blob/main/LICENSE
+[license-src]: https://img.shields.io/github/license/Creoox/zitadel-client.svg?style=flat&colorA=080f12&colorB=1fa669
+[license-href]: https://github.com/Creoox/zitadel-client/blob/main/LICENSE.md
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
 [jsdocs-href]: https://www.jsdocs.io/package/@creoox/zitadel-client
