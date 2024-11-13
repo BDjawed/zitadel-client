@@ -1,7 +1,7 @@
 {
   "name": "@creoox/zitadel-client",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packageManager": "pnpm@9.9.0",
   "description": "ZITADEL custom js client",
   "author": "Creoox AG <info@creoox.com>",
@@ -41,6 +41,7 @@
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish",
+    "rbump": "bumpp",
     "start": "esno src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
