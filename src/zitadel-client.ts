@@ -15,6 +15,7 @@ import type {
   ZitadelAppOidcCreateHeaderDto,
   ZitadelAppOidcCreatePathDto,
   ZitadelHumanUserCreateDto,
+  ZitadelJwtAssertionCreateDto,
   ZitadelLoginSettingsUpdateDto,
   ZitadelMachineUserCreateDto,
   ZitadelMachineUserCreateHeaderDto,
@@ -22,9 +23,10 @@ import type {
   ZitadelMachineUserPatCreateHeaderDto,
   ZitadelMachineUserPatCreatePathDto,
   ZitadelOrganizationCreateDto,
+  ZitadelProjectCreateDto,
+  ZitadelProjectCreateHeaderDto,
 } from './dtos'
 
-import type { ZitadelProjectCreateDto, ZitadelProjectCreateHeaderDto } from './dtos/project-create.dto'
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
 import type {
   ZitadelAppApiCreateResponse,
@@ -68,30 +70,15 @@ export class ZitadelClient {
    * to the ZITADEL API.
    */
   private generateJwtAssertion(): string {
-    // Read the key file content
     const keyFileContent = JSON.parse(fs.readFileSync(this.options.privateJwtKeyPath, 'utf-8'))
 
-    // Generate JWT claims
-    const payload = {
-      iss: keyFileContent.userId,
-      sub: keyFileContent.userId,
-      aud: this.options.issuerUrl,
-      exp: Math.floor(Date.now() / 1000) + 15 * 60, // 15 minutes
-      iat: Math.floor(Date.now() / 1000),
-    }
-
-    const header = {
-      alg: 'RS256',
-      kid: keyFileContent.keyId,
-    }
-
-    // Sign the JWT using RS256 algorithm
-    const encodedJwt = jwt.sign(payload, keyFileContent.key, {
-      algorithm: 'RS256',
-      header,
+    return ZitadelClient.generateJwtAssertion({
+      issuer: keyFileContent.userId,
+      subject: keyFileContent.userId,
+      audience: this.options.issuerUrl,
+      keyId: keyFileContent.keyId,
+      key: keyFileContent.key,
     })
-
-    return encodedJwt
   }
 
   /*
@@ -272,5 +259,28 @@ export class ZitadelClient {
       .json()
 
     return response
+  }
+
+  static generateJwtAssertion(dto: ZitadelJwtAssertionCreateDto): string {
+    // Generate JWT claims
+    const payload = {
+      iss: dto.issuer,
+      sub: dto.subject,
+      aud: dto.audience,
+      exp: Math.floor(Date.now() / 1000) + 15 * 60, // 15 minutes
+      iat: Math.floor(Date.now() / 1000),
+    }
+
+    const header = {
+      alg: 'RS256',
+      kid: dto.keyId,
+    }
+
+    // Sign the JWT using RS256 algorithm
+    const encodedJwt = jwt.sign(payload, dto.key, {
+      algorithm: 'RS256',
+      header,
+    })
+    return encodedJwt
   }
 }
