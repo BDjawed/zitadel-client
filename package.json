@@ -1,7 +1,10 @@
 {
   "name": "@creoox/zitadel-client",
   "type": "module",
-  "version": "0.1.9",
+  "version": "0.1.10",
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@9.9.0",
   "description": "ZITADEL custom js client",
   "author": "Creoox AG <info@creoox.com>",
