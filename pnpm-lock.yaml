@@ -21,9 +21,6 @@ importers:
       '@antfu/ni':
         specifier: ^0.23.0
         version: 0.23.0
-      '@antfu/utils':
-        specifier: ^0.7.10
-        version: 0.7.10
       '@types/jsonwebtoken':
         specifier: ^9.0.7
         version: 9.0.7
@@ -39,9 +36,6 @@ importers:
       eslint:
         specifier: ^9.9.1
         version: 9.9.1(jiti@1.21.6)
-      esno:
-        specifier: ^4.7.0
-        version: 4.7.0
       lint-staged:
         specifier: ^15.2.10
         version: 15.2.10
@@ -1731,10 +1725,6 @@ packages:
     peerDependenciesMeta:
       jiti:
         optional: true
-
-  esno@4.7.0:
-    resolution: {integrity: sha512-81owrjxIxOwqcABt20U09Wn8lpBo9K6ttqbGvQcB3VYNLJyaV1fvKkDtpZd3Rj5BX3WXiGiJCjUevKQGNICzJg==}
-    hasBin: true
 
   espree@10.1.0:
     resolution: {integrity: sha512-M1M6CpiE6ffoigIOWYO9UDP8TMUw9kqb21tf+08IgDYjCsOvCuDt4jQcZmoYxx+w7zlKw9/N0KXfto+I8/FrXA==}
@@ -4750,10 +4740,6 @@ snapshots:
       jiti: 1.21.6
     transitivePeerDependencies:
       - supports-color
-
-  esno@4.7.0:
-    dependencies:
-      tsx: 4.19.2
 
   espree@10.1.0:
     dependencies:
