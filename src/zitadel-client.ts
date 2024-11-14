@@ -45,6 +45,7 @@ export class ZitadelClient {
   private httpClient: KyInstance
   private httpClientPure: KyInstance
   private wellKnown: ZitadelWellKnown | undefined
+  private authenticationResponse: ZitedelAuthenticationResponse | undefined
 
   constructor(private options: ZitadelClientOptions) {
     this.options = options
@@ -105,6 +106,8 @@ export class ZitadelClient {
       })
       .json()
 
+    this.authenticationResponse = response
+
     this.httpClient = this.httpClient.extend({
       headers: {
         Authorization: `Bearer ${response.access_token}`,
@@ -116,6 +119,13 @@ export class ZitadelClient {
       },
     })
     return response
+  }
+
+  getAuthenticationResponse(): ZitedelAuthenticationResponse {
+    if (!this.authenticationResponse) {
+      throw new Error('authenticationResponse is not defined')
+    }
+    return this.authenticationResponse
   }
 
   async getUserInfo(): Promise<unknown> {
