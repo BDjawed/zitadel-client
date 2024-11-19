@@ -44,7 +44,7 @@
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish",
-    "start": "tsx src/index.ts",
+    "debug": "tsx src/debug.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "prepare": "simple-git-hooks"

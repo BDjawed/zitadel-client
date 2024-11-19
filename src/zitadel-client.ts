@@ -1,9 +1,11 @@
 import fs from 'node:fs'
 import jwt from 'jsonwebtoken'
 import ky from 'ky'
-import type { KyInstance } from 'ky'
+import type { HTTPError, KyInstance } from 'ky'
 
 import { ApiEndpointsV1, ApiEndpointsV2 } from './enums'
+
+import { extendedErrorInterceptor } from './interceptors'
 
 import type {
   ZitadelAppApiCreateDto,
@@ -51,9 +53,16 @@ export class ZitadelClient {
     this.options = options
     this.httpClient = ky.create({
       prefixUrl: this.options.issuerUrl,
+      hooks: {
+        beforeError: [extendedErrorInterceptor as unknown as (error: HTTPError) => Promise<HTTPError>],
+      },
     })
     // https://github.com/sindresorhus/ky/pull/606
-    this.httpClientPure = ky.create({})
+    this.httpClientPure = ky.create({
+      hooks: {
+        beforeError: [extendedErrorInterceptor as unknown as (error: HTTPError) => Promise<HTTPError>],
+      },
+    })
   }
 
   async setup(): Promise<void> {
