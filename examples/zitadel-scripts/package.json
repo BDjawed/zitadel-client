@@ -1,0 +1,20 @@
+{
+  "name": "@creoox-public/zitadel-client-examples",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "provision": "tsx src/provision.ts",
+    "generate-token": "tsx src/generate-token.ts"
+  },
+  "dependencies": {
+    "@creoox-public/zitadel-client": "workspace:*",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "tsx": "^4.19.2",
+    "typescript": "latest"
+  }
+}
