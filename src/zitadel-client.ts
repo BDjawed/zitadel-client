@@ -28,8 +28,11 @@ import type {
   ZitadelProjectCreateDto,
   ZitadelProjectCreateHeaderDto,
   ZitadelUserByIdGetDto,
-  ZitadelUserByIdGetDtoPathDto,
   ZitadelUserByIdGetHeaderDto,
+  ZitadelUserByIdGetPathDto,
+  ZitadelUserDeleteDto,
+  ZitadelUserDeleteHeaderDto,
+  ZitadelUserDeletePathDto,
 } from './dtos'
 
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
@@ -44,6 +47,7 @@ import type {
   ZitadelOrganizationCreateResponse,
   ZitadelProjectCreateResponse,
   ZitadelUserByIdGetResponse,
+  ZitadelUserDeleteResponse,
   ZitedelAuthenticationResponse,
 } from './responses'
 
@@ -287,11 +291,28 @@ export class ZitadelClient {
   async getUserById(
     dto: ZitadelUserByIdGetDto,
     headerDto: ZitadelUserByIdGetHeaderDto,
-    pathDto: ZitadelUserByIdGetDtoPathDto,
+    pathDto: ZitadelUserByIdGetPathDto,
   ): Promise<ZitadelUserByIdGetResponse> {
-    const url = `${ApiEndpointsV1.USER_BY_ID.replace(':projectId', pathDto.projectId)}/${dto.userId}`
+    const url = `${ApiEndpointsV1.USERS.replace(':projectId', pathDto.projectId)}/${dto.userId}`
     const response: ZitadelUserByIdGetResponse = await this.httpClient
       .get(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    return response
+  }
+
+  async deleteUserById(
+    dto: ZitadelUserDeleteDto,
+    headerDto: ZitadelUserDeleteHeaderDto,
+    pathDto: ZitadelUserDeletePathDto,
+  ): Promise<ZitadelUserDeleteResponse> {
+    const url = `${ApiEndpointsV1.USERS.replace(':projectId', pathDto.projectId)}/${dto.userId}`
+    const response: ZitadelUserDeleteResponse = await this.httpClient
+      .delete(url, {
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },

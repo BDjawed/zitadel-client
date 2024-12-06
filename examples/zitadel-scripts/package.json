@@ -5,7 +5,8 @@
   "scripts": {
     "provision": "tsx src/provision.ts",
     "generate-token": "tsx src/generate-token.ts",
-    "getuser": "tsx src/getUserById.ts"
+    "getuser": "tsx src/getUserById.ts",
+    "deluser": "tsx src/deleteUserById.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",

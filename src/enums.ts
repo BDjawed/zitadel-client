@@ -6,7 +6,7 @@ export enum ApiEndpointsV1 {
   MACHINE_USERS_PATS = 'management/v1/users/:userId/pats', // https://zitadel.com/docs/apis/resources/mgmt/management-service-add-personal-access-token
   MACHINE_USERS = 'management/v1/users/machine', // https://zitadel.com/docs/apis/resources/mgmt/management-service-add-machine-user
   PROJECTS = 'management/v1/projects', // https://zitadel.com/docs/apis/resources/mgmt/management-service-add-project
-  USER_BY_ID = 'management/v1/users', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-by-id
+  USERS = 'management/v1/users', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-by-id
 }
 
 export enum ApiEndpointsV2 {

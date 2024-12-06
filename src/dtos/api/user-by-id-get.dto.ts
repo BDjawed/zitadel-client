@@ -5,6 +5,6 @@ export interface ZitadelUserByIdGetDto {
   userId: string
 }
 
-export interface ZitadelUserByIdGetDtoPathDto {
+export interface ZitadelUserByIdGetPathDto {
   projectId: string
 }
