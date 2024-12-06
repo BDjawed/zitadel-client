@@ -35,6 +35,7 @@ import type {
   ZitadelUserDeletePathDto,
 } from './dtos'
 
+import type { ZitadelUserByLoginNameGetDto } from './dtos/api/user-by-login-name-get.dto'
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
 import type {
   ZitadelAppApiCreateResponse,
@@ -108,7 +109,7 @@ export class ZitadelClient {
   private async authenticateServiceUser(): Promise<ZitedelAuthenticationResponse> {
     const assertion = this.generateJwtAssertion()
     const grantType = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
-    const scope = `openid urn:zitadel:iam:org:project:id:zitadel:aud`
+    const scope = 'openid urn:zitadel:iam:org:project:id:zitadel:aud'
 
     if (!this.wellKnown) {
       throw new Error('wellKnown is not defined')
@@ -317,6 +318,17 @@ export class ZitadelClient {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
       })
+      .json()
+
+    return response
+  }
+
+  async getUserByLoginName(
+    dto: ZitadelUserByLoginNameGetDto,
+  ): Promise<ZitadelUserByIdGetResponse> {
+    const url = `${ApiEndpointsV1.GLOBAL_USERS}`
+    const response: ZitadelUserByIdGetResponse = await this.httpClient
+      .get(url, { searchParams: { loginName: dto.loginName } })
       .json()
 
     return response

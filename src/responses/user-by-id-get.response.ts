@@ -31,12 +31,14 @@ export interface ZitadelMachineUserDto {
 }
 
 export interface ZitadelUserByIdGetResponse {
-  userId: string
-  details: Details
-  state: ZitadelUserStateType
-  userName: string
-  loginNames: string[]
-  preferredLoginName: string
-  human: ZitadelHumanUserDto
-  machine: ZitadelMachineUserDto
+  user: {
+    userId: string
+    details: Details
+    state: ZitadelUserStateType
+    userName: string
+    loginNames: string[]
+    preferredLoginName: string
+    human: ZitadelHumanUserDto
+    machine: ZitadelMachineUserDto
+  }
 }
