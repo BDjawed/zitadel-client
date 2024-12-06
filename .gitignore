@@ -9,3 +9,5 @@ lib-cov
 logs
 node_modules
 temp
+examples/zitadel-scripts/zitadel/machinekey/*.json
+examples/zitadel-scripts/zitadel/*.json

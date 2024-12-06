@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "provision": "tsx src/provision.ts",
-    "generate-token": "tsx src/generate-token.ts"
+    "generate-token": "tsx src/generate-token.ts",
+    "getuser": "tsx src/getUserById.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",

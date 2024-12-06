@@ -27,6 +27,9 @@ import type {
   ZitadelOrganizationCreateDto,
   ZitadelProjectCreateDto,
   ZitadelProjectCreateHeaderDto,
+  ZitadelUserByIdGetDto,
+  ZitadelUserByIdGetDtoPathDto,
+  ZitadelUserByIdGetHeaderDto,
 } from './dtos'
 
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
@@ -40,6 +43,7 @@ import type {
   ZitadelMachineUserPatCreateResponse,
   ZitadelOrganizationCreateResponse,
   ZitadelProjectCreateResponse,
+  ZitadelUserByIdGetResponse,
   ZitedelAuthenticationResponse,
 } from './responses'
 
@@ -274,6 +278,23 @@ export class ZitadelClient {
     const response: ZitadelLoginSettingsUpdateResponse = await this.httpClient
       .put(ApiEndpointsV1.LOGIN_SETTINGS, {
         json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async getUserById(
+    dto: ZitadelUserByIdGetDto,
+    headerDto: ZitadelUserByIdGetHeaderDto,
+    pathDto: ZitadelUserByIdGetDtoPathDto,
+  ): Promise<ZitadelUserByIdGetResponse> {
+    const url = `${ApiEndpointsV1.USER_BY_ID.replace(':projectId', pathDto.projectId)}/${dto.userId}`
+    const response: ZitadelUserByIdGetResponse = await this.httpClient
+      .get(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
       })
       .json()
 
