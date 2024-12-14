@@ -22,13 +22,13 @@ type Customer = z.infer<typeof Customer>
 dotenv.config()
 
 const ZITADEL_INSTANCE_URL = process.env.ZITADEL_INSTANCE_URL
-const ZITEDEL_KEY_FILE_PATH = process.env.ZITEDEL_KEY_FILE_PATH
+const ZITADEL_KEY_FILE_PATH = process.env.ZITADEL_KEY_FILE_PATH
 const ZITADEL_GENERATE_TOKEN_OUTPUT_FILE_PATH = process.env.ZITADEL_GENERATE_TOKEN_OUTPUT_FILE_PATH
 
 async function main(): Promise<void> {
-  if (!ZITADEL_INSTANCE_URL || !ZITEDEL_KEY_FILE_PATH || !ZITADEL_GENERATE_TOKEN_OUTPUT_FILE_PATH) {
+  if (!ZITADEL_INSTANCE_URL || !ZITADEL_KEY_FILE_PATH || !ZITADEL_GENERATE_TOKEN_OUTPUT_FILE_PATH) {
     throw new Error(
-      'Please provide ZITADEL_INSTANCE_URL, ZITEDEL_KEY_FILE_PATH, ZITADEL_GENERATE_TOKEN_OUTPUT_FILE_PATH env file',
+      'Please provide ZITADEL_INSTANCE_URL, ZITADEL_KEY_FILE_PATH, ZITADEL_GENERATE_TOKEN_OUTPUT_FILE_PATH env file',
     )
   }
 
@@ -59,7 +59,7 @@ async function main(): Promise<void> {
   // Initailize Zitadel client
   const zitadelClient = new ZITADEL.ZitadelClient({
     issuerUrl: ZITADEL_INSTANCE_URL,
-    privateJwtKeyPath: ZITEDEL_KEY_FILE_PATH,
+    privateJwtKeyPath: ZITADEL_KEY_FILE_PATH,
   })
 
   await zitadelClient.setup()

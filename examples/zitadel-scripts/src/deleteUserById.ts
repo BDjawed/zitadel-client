@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 const ZITADEL_INSTANCE_URL = process.env.ZITADEL_INSTANCE_URL
-const ZITEDEL_KEY_FILE_PATH = process.env.ZITEDEL_KEY_FILE_PATH
+const ZITADEL_KEY_FILE_PATH = process.env.ZITADEL_KEY_FILE_PATH
 
 const ZITADEL_PROVISIONING_RESPONSE_FILE_PATH = process.env
   .ZITADEL_PROVISIONING_RESPONSE_FILE_PATH
@@ -21,12 +21,12 @@ async function main(): Promise<void> {
   if (
     !(
       ZITADEL_INSTANCE_URL
-      && ZITEDEL_KEY_FILE_PATH
+      && ZITADEL_KEY_FILE_PATH
       && ZITADEL_PROVISIONING_RESPONSE_FILE
     )
   ) {
     throw new Error(
-      'Please provide ZITADEL_INSTANCE_URL, ZITEDEL_KEY_FILE_PATH in .env file and run pnpm provisioning first',
+      'Please provide ZITADEL_INSTANCE_URL, ZITADEL_KEY_FILE_PATH in .env file and run pnpm provisioning first',
     )
   }
   console.log('Deleting user by id...')
@@ -39,7 +39,7 @@ async function main(): Promise<void> {
 
   const zitadelClient = new ZITADEL.ZitadelClient({
     issuerUrl: ZITADEL_INSTANCE_URL,
-    privateJwtKeyPath: ZITEDEL_KEY_FILE_PATH,
+    privateJwtKeyPath: ZITADEL_KEY_FILE_PATH,
   })
 
   await zitadelClient.setup()

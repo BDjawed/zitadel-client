@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import ky from 'ky'
 import type { HTTPError, KyInstance } from 'ky'
 
-import { ApiEndpointsV1, ApiEndpointsV2 } from './enums'
+import { ApiEndpointsV1, ApiEndpointsV2, UsersEndpointsV1 } from './enums'
 
 import { extendedErrorInterceptor } from './interceptors'
 
@@ -33,6 +33,9 @@ import type {
   ZitadelUserDeleteDto,
   ZitadelUserDeleteHeaderDto,
   ZitadelUserDeletePathDto,
+  ZitadelUserHistoryPostDto,
+  ZitadelUserHistoryPostHeaderDto,
+  ZitadelUserHistoryPostPathDto,
   ZitadelUsersSearchDto,
   ZitadelUsersSearchHeaderDto,
 } from './dtos'
@@ -43,6 +46,7 @@ import type {
   ZitadelAppApiCreateResponse,
   ZitadelAppClientSecretCreateResponse,
   ZitadelAppOidcCreateResponse,
+  ZitadelAuthenticationResponse,
   ZitadelHumanUserCreateResponse,
   ZitadelLoginSettingsUpdateResponse,
   ZitadelMachineUserCreateResponse,
@@ -52,14 +56,14 @@ import type {
   ZitadelSearchUsersPostResponse,
   ZitadelUserByIdGetResponse,
   ZitadelUserDeleteResponse,
-  ZitedelAuthenticationResponse,
+  ZitadelUserHistoryPostResponse,
 } from './responses'
 
 export class ZitadelClient {
   private httpClient: KyInstance
   private httpClientPure: KyInstance
   private wellKnown: ZitadelWellKnown | undefined
-  private authenticationResponse: ZitedelAuthenticationResponse | undefined
+  private authenticationResponse: ZitadelAuthenticationResponse | undefined
 
   constructor(private options: ZitadelClientOptions) {
     this.options = options
@@ -109,7 +113,7 @@ export class ZitadelClient {
    * Access token is stored in the client for further API calls
    *
    */
-  private async authenticateServiceUser(): Promise<ZitedelAuthenticationResponse> {
+  private async authenticateServiceUser(): Promise<ZitadelAuthenticationResponse> {
     const assertion = this.generateJwtAssertion()
     const grantType = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
     const scope = 'openid urn:zitadel:iam:org:project:id:zitadel:aud'
@@ -117,7 +121,7 @@ export class ZitadelClient {
     if (!this.wellKnown) {
       throw new Error('wellKnown is not defined')
     }
-    const response: ZitedelAuthenticationResponse = await this.httpClientPure
+    const response: ZitadelAuthenticationResponse = await this.httpClientPure
       .post(this.wellKnown.token_endpoint, {
         searchParams: {
           grant_type: grantType,
@@ -142,7 +146,7 @@ export class ZitadelClient {
     return response
   }
 
-  getAuthenticationResponse(): ZitedelAuthenticationResponse {
+  getAuthenticationResponse(): ZitadelAuthenticationResponse {
     if (!this.authenticationResponse) {
       throw new Error('authenticationResponse is not defined')
     }
@@ -292,6 +296,7 @@ export class ZitadelClient {
     return response
   }
 
+  // todo: update the endpoint from UsersEndpointsV1
   async getUserById(
     dto: ZitadelUserByIdGetDto,
     headerDto: ZitadelUserByIdGetHeaderDto,
@@ -309,6 +314,7 @@ export class ZitadelClient {
     return response
   }
 
+  // todo: update the endpoint from UsersEndpointsV1
   async deleteUserById(
     dto: ZitadelUserDeleteDto,
     headerDto: ZitadelUserDeleteHeaderDto,
@@ -343,6 +349,24 @@ export class ZitadelClient {
   ): Promise<ZitadelSearchUsersPostResponse> {
     const url = `${ApiEndpointsV1.USERS}/${'_search'}`
     const response: ZitadelSearchUsersPostResponse = await this.httpClient
+      .post(url, {
+        json: dto,
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    return response
+  }
+
+  async getUserHistory(
+    dto: ZitadelUserHistoryPostDto,
+    headerDto: ZitadelUserHistoryPostHeaderDto,
+    pathDto: ZitadelUserHistoryPostPathDto,
+  ): Promise<ZitadelUserHistoryPostResponse> {
+    const url = UsersEndpointsV1.USER_HISTORY.replace(':userId', pathDto.userId)
+    const response: ZitadelUserHistoryPostResponse = await this.httpClient
       .post(url, {
         json: dto,
         headers: {

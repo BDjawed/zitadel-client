@@ -10,6 +10,10 @@ export enum ApiEndpointsV1 {
   GLOBAL_USERS = 'management/v1/global/users/_by_login_name', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-by-login-name-global
 }
 
+export enum UsersEndpointsV1 {
+  USER_HISTORY = 'management/v1/users/:userId/changes/_search', // https://zitadel.com/docs/apis/resources/mgmt/management-service-list-user-changes
+}
+
 export enum ApiEndpointsV2 {
   HUMAN_USERS = 'v2/users/human', // https://zitadel.com/docs/apis/resources/user_service_v2/user-service-add-human-user
   ORGANIZATIONS = 'v2/organizations', // https://zitadel.com/docs/apis/resources/org_service_v2/organization-service-add-organization

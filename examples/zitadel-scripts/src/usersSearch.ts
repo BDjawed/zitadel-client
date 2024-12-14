@@ -11,7 +11,7 @@ import {
 dotenv.config()
 
 const ZITADEL_INSTANCE_URL = process.env.ZITADEL_INSTANCE_URL
-const ZITEDEL_KEY_FILE_PATH = process.env.ZITEDEL_KEY_FILE_PATH
+const ZITADEL_KEY_FILE_PATH = process.env.ZITADEL_KEY_FILE_PATH
 
 const ZITADEL_PROVISIONING_RESPONSE_FILE_PATH = process.env
   .ZITADEL_PROVISIONING_RESPONSE_FILE_PATH
@@ -25,7 +25,7 @@ async function main(): Promise<void> {
   if (
     !(
       ZITADEL_INSTANCE_URL
-      && ZITEDEL_KEY_FILE_PATH
+      && ZITADEL_KEY_FILE_PATH
       && ZITADEL_PROVISIONING_RESPONSE_FILE
       && Array.isArray(ZITADEL_PROVISIONING_RESPONSE_FILE.machineUsers)
       && ZITADEL_PROVISIONING_RESPONSE_FILE.machineUsers.length > 0
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
     )
   ) {
     throw new Error(
-      'Please provide ZITADEL_INSTANCE_URL, ZITEDEL_KEY_FILE_PATH in .env file and run pnpm provisioning first',
+      'Please provide ZITADEL_INSTANCE_URL, ZITADEL_KEY_FILE_PATH in .env file and run pnpm provisioning first',
     )
   }
 
@@ -47,7 +47,7 @@ async function main(): Promise<void> {
 
   const zitadelClient = new ZITADEL.ZitadelClient({
     issuerUrl: ZITADEL_INSTANCE_URL,
-    privateJwtKeyPath: ZITEDEL_KEY_FILE_PATH,
+    privateJwtKeyPath: ZITADEL_KEY_FILE_PATH,
   })
 
   await zitadelClient.setup()

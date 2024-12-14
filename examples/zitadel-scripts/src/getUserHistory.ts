@@ -36,7 +36,10 @@ async function main(): Promise<void> {
       'Please provide ZITADEL_INSTANCE_URL, ZITADEL_KEY_FILE_PATH in .env file and run pnpm provisioning first',
     )
   }
-  console.log('Starting fetching users by login name...')
+
+  const userId = '296855816030388226'
+
+  console.log('Getting user history for userId:', userId)
 
   const zitadelClient = new ZITADEL.ZitadelClient({
     issuerUrl: ZITADEL_INSTANCE_URL,
@@ -47,56 +50,25 @@ async function main(): Promise<void> {
 
   const creLandOrganization = ZITADEL_PROVISIONING_RESPONSE_FILE.creLandOrganization
 
-  const creLandMachineUsers: ZITADEL.ZitadelUserByIdGetResponse['user'][] = []
-
-  // Get machine users information by their id
-  for (const machineUser of ZITADEL_PROVISIONING_RESPONSE_FILE.machineUsers) {
-    const { userId } = machineUser.machineUser
-    const creLandMachineUserInfo = await zitadelClient.getUserById(
+  const creLandUserHistoryResponse: ZITADEL.ZitadelUserHistoryPostResponse
+    = await zitadelClient.getUserHistory(
       {
-        userId,
+        query: {
+          sequence: '0',
+          limit: 20,
+          asc: true,
+        },
       },
       {
         'x-zitadel-orgid': creLandOrganization.organizationId,
       },
       {
-        projectId: ZITADEL_PROVISIONING_RESPONSE_FILE.creDashboardProject.id,
+        userId,
       },
     )
-    creLandMachineUsers.push(creLandMachineUserInfo.user)
-  }
-
-  console.log('CreLand Machine Users info', creLandMachineUsers)
-
-  // Get human users information by their id
-  const creLandHumanUserInfo = await zitadelClient.getUserById(
-    {
-      userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
-    },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
-    { projectId: ZITADEL_PROVISIONING_RESPONSE_FILE.creDashboardProject.id },
+  console.log(
+    'creLandUserHistoryResponse',
+    JSON.stringify(creLandUserHistoryResponse, null, 2),
   )
-  console.log('CreLand Human User Info', creLandHumanUserInfo)
-
-  // Get human users information by their login name
-  console.log('creLandHumanUserInfo.loginNames', creLandHumanUserInfo.user)
-  for (const loginName of creLandHumanUserInfo.user.loginNames) {
-    const humanUserByLoginName = await zitadelClient.getUserByLoginName({
-      loginName,
-    })
-    console.log('CreLand Human User By Login Name Info', humanUserByLoginName)
-  }
-
-  // get machine users information by their login name
-  for (const machineUser of creLandMachineUsers) {
-    for (const loginName of machineUser.loginNames) {
-      const machineUserByLoginName = await zitadelClient.getUserByLoginName({
-        loginName,
-      })
-      console.log('CreLand Machine User By Login Name Info', machineUserByLoginName)
-    }
-  }
 }
 main()
