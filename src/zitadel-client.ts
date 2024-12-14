@@ -33,6 +33,8 @@ import type {
   ZitadelUserDeleteDto,
   ZitadelUserDeleteHeaderDto,
   ZitadelUserDeletePathDto,
+  ZitadelUsersSearchDto,
+  ZitadelUsersSearchHeaderDto,
 } from './dtos'
 
 import type { ZitadelUserByLoginNameGetDto } from './dtos/api/user-by-login-name-get.dto'
@@ -47,6 +49,7 @@ import type {
   ZitadelMachineUserPatCreateResponse,
   ZitadelOrganizationCreateResponse,
   ZitadelProjectCreateResponse,
+  ZitadelSearchUsersPostResponse,
   ZitadelUserByIdGetResponse,
   ZitadelUserDeleteResponse,
   ZitedelAuthenticationResponse,
@@ -329,6 +332,23 @@ export class ZitadelClient {
     const url = `${ApiEndpointsV1.GLOBAL_USERS}`
     const response: ZitadelUserByIdGetResponse = await this.httpClient
       .get(url, { searchParams: { loginName: dto.loginName } })
+      .json()
+
+    return response
+  }
+
+  async usersSearch(
+    dto: ZitadelUsersSearchDto,
+    headerDto: ZitadelUsersSearchHeaderDto,
+  ): Promise<ZitadelSearchUsersPostResponse> {
+    const url = `${ApiEndpointsV1.USERS}/${'_search'}`
+    const response: ZitadelSearchUsersPostResponse = await this.httpClient
+      .post(url, {
+        json: dto,
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
       .json()
 
     return response
