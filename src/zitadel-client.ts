@@ -30,9 +30,12 @@ import type {
   ZitadelUserByIdGetDto,
   ZitadelUserByIdGetHeaderDto,
   ZitadelUserByIdGetPathDto,
+  ZitadelUserByLoginNameGetDto,
   ZitadelUserDeleteDto,
   ZitadelUserDeleteHeaderDto,
   ZitadelUserDeletePathDto,
+  ZitadelUserExistingCheckByUserNameOrEmailDto,
+  ZitadelUserExistingCheckGetHeaderDto,
   ZitadelUserHistoryPostDto,
   ZitadelUserHistoryPostHeaderDto,
   ZitadelUserHistoryPostPathDto,
@@ -40,7 +43,6 @@ import type {
   ZitadelUsersSearchHeaderDto,
 } from './dtos'
 
-import type { ZitadelUserByLoginNameGetDto } from './dtos/api/user-by-login-name-get.dto'
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
 import type {
   ZitadelAppApiCreateResponse,
@@ -56,6 +58,7 @@ import type {
   ZitadelSearchUsersPostResponse,
   ZitadelUserByIdGetResponse,
   ZitadelUserDeleteResponse,
+  ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
 } from './responses'
 
@@ -374,6 +377,38 @@ export class ZitadelClient {
         },
       })
       .json()
+
+    return response
+  }
+
+  async isUserUnique(
+    dto: ZitadelUserExistingCheckByUserNameOrEmailDto,
+    headerDto: ZitadelUserExistingCheckGetHeaderDto,
+  ): Promise<ZitadelUserExistingCheckGetResponse> {
+    if (!dto.email && !dto.userName) {
+      throw new Error('At least one of email or userName must be provided')
+    }
+    const searchParams = new URLSearchParams()
+    if (dto.email) {
+      searchParams.set('email', dto.email)
+    }
+    if (dto.userName) {
+      searchParams.set('userName', dto.userName)
+    }
+    const url = `${UsersEndpointsV1.IS_UNIQUE}`
+    const response: ZitadelUserExistingCheckGetResponse = await this.httpClient
+      .get(url, {
+        searchParams,
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    // If the user is not unique, the response will be an empty object
+    if (!response.isUnique) {
+      response.isUnique = false
+    }
 
     return response
   }

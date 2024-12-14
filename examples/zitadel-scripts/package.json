@@ -8,7 +8,8 @@
     "getuser": "tsx src/getUser.ts",
     "deluser": "tsx src/deleteUserById.ts",
     "usersSearch": "tsx src/usersSearch.ts",
-    "userHistory": "tsx src/getUserHistory.ts"
+    "userHistory": "tsx src/getUserHistory.ts",
+    "isUserUnique": "tsx src/isUserUnique.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",
