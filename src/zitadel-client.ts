@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer'
 import fs from 'node:fs'
 import jwt from 'jsonwebtoken'
 import ky from 'ky'
@@ -39,6 +40,8 @@ import type {
   ZitadelUserHistoryPostDto,
   ZitadelUserHistoryPostHeaderDto,
   ZitadelUserHistoryPostPathDto,
+  ZitadelUserMetadataByKeyGetDto,
+  ZitadelUserMetadataByKeyGetHeaderDto,
   ZitadelUsersSearchDto,
   ZitadelUsersSearchHeaderDto,
 } from './dtos'
@@ -60,6 +63,7 @@ import type {
   ZitadelUserDeleteResponse,
   ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
+  ZitadelUserMetadataByKeyGetResponse,
 } from './responses'
 
 export class ZitadelClient {
@@ -409,6 +413,25 @@ export class ZitadelClient {
     if (!response.isUnique) {
       response.isUnique = false
     }
+
+    return response
+  }
+
+  async getMetadataByKey(
+    dto: ZitadelUserMetadataByKeyGetDto,
+    headerDto: ZitadelUserMetadataByKeyGetHeaderDto,
+  ): Promise<ZitadelUserMetadataByKeyGetResponse> {
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', dto.key)}`
+    const response: ZitadelUserMetadataByKeyGetResponse = await this.httpClient
+      .get(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    const decodeBase64Value = Buffer.from(response.metadata.value, 'base64').toString('utf-8')
+    response.metadata.value = decodeBase64Value
 
     return response
   }
