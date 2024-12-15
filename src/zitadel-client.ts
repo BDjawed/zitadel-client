@@ -50,6 +50,8 @@ import type {
   ZitadelUserMetadataByKeyDeleteHeaderDto,
   ZitadelUserMetadataByKeyGetDto,
   ZitadelUserMetadataByKeyGetHeaderDto,
+  ZitadelUserMetadataSearchDto,
+  ZitadelUserMetadataSearchHeaderDto,
   ZitadelUsersSearchDto,
   ZitadelUsersSearchHeaderDto,
 } from './dtos'
@@ -76,6 +78,7 @@ import type {
   ZitadelUserMetadataByKeyCreateResponse,
   ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
+  ZitadelUserMetadataSearchGetResponse,
 } from './responses'
 
 export class ZitadelClient {
@@ -487,7 +490,7 @@ export class ZitadelClient {
     dto: ZitadelUserMetadataByKeyBulkDeleteDto,
     headerDto: ZitadelUserMetadataByKeyBulkDeleteHeaderDto,
   ): Promise<ZitadelUserMetadataByKeyBulkDeleteResponse> {
-    const url = `${ApiEndpointsV1.METADATA_BULK.replace(':id', dto.userId)}`
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', '_bulk')}`
     const response: ZitadelUserMetadataByKeyBulkDeleteResponse = await this.httpClient
       .delete(url, {
         json: dto,
@@ -504,7 +507,7 @@ export class ZitadelClient {
     dto: ZitadelUserMetadataByKeyBulkCreateDto,
     headerDto: ZitadelUserMetadataByKeyBulkCreateHeaderDto,
   ): Promise<ZitadelUserMetadataByKeyBulkCreateResponse> {
-    const url = `${ApiEndpointsV1.METADATA_BULK.replace(':id', dto.userId)}`
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', '_bulk')}`
     const response: ZitadelUserMetadataByKeyBulkCreateResponse = await this.httpClient
       .post(url, {
         json: dto,
@@ -513,6 +516,32 @@ export class ZitadelClient {
         },
       })
       .json()
+
+    return response
+  }
+
+  async userMetadataSearch(
+    dto: ZitadelUserMetadataSearchDto,
+    headerDto: ZitadelUserMetadataSearchHeaderDto,
+  ): Promise<ZitadelUserMetadataSearchGetResponse> {
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', '_search')}`
+    const response: ZitadelUserMetadataSearchGetResponse = await this.httpClient
+      .post(url, {
+        json: dto,
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    if (response.result && response.result.length > 0) {
+      for (const result of response.result) {
+        if (result.value) {
+          const decodeBase64Value = Buffer.from(result.value, 'base64').toString('utf-8')
+          result.value = decodeBase64Value
+        }
+      }
+    }
 
     return response
   }
