@@ -34,6 +34,7 @@ import type {
   ZitadelUserAvatarDeletePathDto,
   ZitadelUserByIdGetPathDto,
   ZitadelUserByLoginNameGetDto,
+  ZitadelUserDeactivatePathDto,
   ZitadelUserDeletePathDto,
   ZitadelUserExistingCheckByUserNameOrEmailDto,
   ZitadelUserExistingCheckGetHeaderDto,
@@ -70,6 +71,7 @@ import type {
   ZitadelProjectCreateResponse,
   ZitadelUserAvatarDeleteResponse,
   ZitadelUserByIdGetResponse,
+  ZitadelUserDeactivatePostResponse,
   ZitadelUserDeleteResponse,
   ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
@@ -214,6 +216,18 @@ export class ZitadelClient {
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
+      })
+      .json()
+    return response
+  }
+
+  async userDeactivate(
+    pathDto: ZitadelUserDeactivatePathDto,
+  ): Promise<ZitadelUserDeactivatePostResponse> {
+    const url = ApiEndpointsV2.USERS.replace(':userId', `${pathDto.userId}/deactivate`)
+    const response: ZitadelUserDeactivatePostResponse = await this.httpClient
+      .post(url, {
+        json: {},
       })
       .json()
     return response
