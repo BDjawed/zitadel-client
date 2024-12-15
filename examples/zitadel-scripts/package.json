@@ -16,7 +16,8 @@
     "delBulkMetadata": "tsx src/deleteBulkMetadataByKey.ts",
     "postBulkMetadata": "tsx src/createBulkMetadataByKey.ts",
     "metadataSearch": "tsx src/MetadataSearchByKey.ts",
-    "deleteUserAvatar": "tsx src/deleteUserAvatar.ts"
+    "deleteUserAvatar": "tsx src/deleteUserAvatar.ts",
+    "updateMachineUser": "tsx src/updateMachineUser.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",

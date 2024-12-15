@@ -25,6 +25,8 @@ import type {
   ZitadelMachineUserPatCreateDto,
   ZitadelMachineUserPatCreateHeaderDto,
   ZitadelMachineUserPatCreatePathDto,
+  ZitadelMachineUserUpdateDto,
+  ZitadelMachineUserUpdateHeaderDto,
   ZitadelOrganizationCreateDto,
   ZitadelProjectCreateDto,
   ZitadelProjectCreateHeaderDto,
@@ -68,6 +70,7 @@ import type {
   ZitadelLoginSettingsUpdateResponse,
   ZitadelMachineUserCreateResponse,
   ZitadelMachineUserPatCreateResponse,
+  ZitadelMachineUserUpdateResponse,
   ZitadelOrganizationCreateResponse,
   ZitadelProjectCreateResponse,
   ZitadelSearchUsersPostResponse,
@@ -556,6 +559,23 @@ export class ZitadelClient {
     const url = `${UsersEndpointsV1.USER_AVATAR.replace(':userId', dto.userId)}`
     const response: ZitadelUserAvatarDeleteResponse = await this.httpClient
       .delete(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    return response
+  }
+
+  async updateMachineUser(
+    dto: ZitadelMachineUserUpdateDto,
+    headerDto: ZitadelMachineUserUpdateHeaderDto,
+  ): Promise<ZitadelMachineUserUpdateResponse> {
+    const url = `${UsersEndpointsV1.MACHINE_USER.replace(':userId', dto.userId)}`
+    const response: ZitadelMachineUserUpdateResponse = await this.httpClient
+      .put(url, {
+        json: dto,
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
