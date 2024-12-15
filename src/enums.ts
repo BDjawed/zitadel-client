@@ -7,6 +7,7 @@ export enum ApiEndpointsV1 {
   MACHINE_USERS = 'management/v1/users/machine', // https://zitadel.com/docs/apis/resources/mgmt/management-service-add-machine-user
   PROJECTS = 'management/v1/projects', // https://zitadel.com/docs/apis/resources/mgmt/management-service-add-project
   USERS = 'management/v1/users', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-by-id
+  USERS_SEARCH = 'management/v1/users/_search', // https://zitadel.com/docs/apis/resources/mgmt/management-service-list-users
   GLOBAL_USERS = 'management/v1/global/users/_by_login_name', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-by-login-name-global
   METADATA = 'management/v1/users/:id/metadata/:key', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-metadata
 }
@@ -16,11 +17,13 @@ export enum UsersEndpointsV1 {
   IS_UNIQUE = 'management/v1/users/_is_unique', // https://zitadel.com/docs/apis/resources/mgmt/management-service-is-user-unique
   USER_AVATAR = 'management/v1/users/:userId/avatar', // https://zitadel.com/docs/apis/resources/mgmt/management-service-remove-human-avatar
   MACHINE_USER = 'management/v1/users/:userId/machine', // https://zitadel.com/docs/apis/resources/mgmt/management-service-update-machine
+  USER_SECRET = 'management/v1/users/:userId/secret', // https://zitadel.com/docs/apis/resources/mgmt/management-service-remove-machine-secret
 }
 
 export enum ApiEndpointsV2 {
   HUMAN_USERS = 'v2/users/human', // https://zitadel.com/docs/apis/resources/user_service_v2/user-service-add-human-user
   ORGANIZATIONS = 'v2/organizations', // https://zitadel.com/docs/apis/resources/org_service_v2/organization-service-add-organization
+  USERS = 'v2/users/:userId', // https://zitadel.com/docs/apis/resources/user_service_v2/user-service-get-user-by-id
 }
 
 export enum ZitadelUserType {
@@ -39,7 +42,7 @@ export enum ZitadelUserStateType {
   INITIAL = 'USER_STATE_INITIAL',
 }
 
-export enum ZitadelSearchUsersSortingColumn {
+export enum ZitadelUsersSearchSortingColumn {
   UNSPECIFIED = 'USER_FIELD_NAME_UNSPECIFIED',
   USER_NAME = 'USER_FIELD_NAME_USER_NAME',
   FIRST_NAME = 'USER_FIELD_NAME_FIRST_NAME',

@@ -45,8 +45,6 @@ async function main(): Promise<void> {
 
   await zitadelClient.setup()
 
-  const creLandOrganization = ZITADEL_PROVISIONING_RESPONSE_FILE.creLandOrganization
-
   const creLandMachineUsers: ZITADEL.ZitadelUserByIdGetResponse['user'][] = []
 
   // Get machine users information by their id
@@ -55,12 +53,6 @@ async function main(): Promise<void> {
     const creLandMachineUserInfo = await zitadelClient.getUserById(
       {
         userId,
-      },
-      {
-        'x-zitadel-orgid': creLandOrganization.organizationId,
-      },
-      {
-        projectId: ZITADEL_PROVISIONING_RESPONSE_FILE.creDashboardProject.id,
       },
     )
     creLandMachineUsers.push(creLandMachineUserInfo.user)
@@ -73,10 +65,6 @@ async function main(): Promise<void> {
     {
       userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
-    { projectId: ZITADEL_PROVISIONING_RESPONSE_FILE.creDashboardProject.id },
   )
   console.log('CreLand Human User Info', creLandHumanUserInfo)
 

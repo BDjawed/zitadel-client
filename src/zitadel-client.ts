@@ -30,14 +30,10 @@ import type {
   ZitadelOrganizationCreateDto,
   ZitadelProjectCreateDto,
   ZitadelProjectCreateHeaderDto,
-  ZitadelUserAvatarDeleteDto,
   ZitadelUserAvatarDeleteHeaderDto,
-  ZitadelUserByIdGetDto,
-  ZitadelUserByIdGetHeaderDto,
+  ZitadelUserAvatarDeletePathDto,
   ZitadelUserByIdGetPathDto,
   ZitadelUserByLoginNameGetDto,
-  ZitadelUserDeleteDto,
-  ZitadelUserDeleteHeaderDto,
   ZitadelUserDeletePathDto,
   ZitadelUserExistingCheckByUserNameOrEmailDto,
   ZitadelUserExistingCheckGetHeaderDto,
@@ -57,7 +53,6 @@ import type {
   ZitadelUserMetadataSearchDto,
   ZitadelUserMetadataSearchHeaderDto,
   ZitadelUsersSearchDto,
-  ZitadelUsersSearchHeaderDto,
 } from './dtos'
 
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
@@ -73,7 +68,6 @@ import type {
   ZitadelMachineUserUpdateResponse,
   ZitadelOrganizationCreateResponse,
   ZitadelProjectCreateResponse,
-  ZitadelSearchUsersPostResponse,
   ZitadelUserAvatarDeleteResponse,
   ZitadelUserByIdGetResponse,
   ZitadelUserDeleteResponse,
@@ -85,6 +79,7 @@ import type {
   ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
   ZitadelUserMetadataSearchGetResponse,
+  ZitadelUsersSearchPostResponse,
 } from './responses'
 
 export class ZitadelClient {
@@ -324,42 +319,29 @@ export class ZitadelClient {
     return response
   }
 
-  // todo: update the endpoint from UsersEndpointsV1
   async getUserById(
-    dto: ZitadelUserByIdGetDto,
-    headerDto: ZitadelUserByIdGetHeaderDto,
     pathDto: ZitadelUserByIdGetPathDto,
   ): Promise<ZitadelUserByIdGetResponse> {
-    const url = `${ApiEndpointsV1.USERS.replace(':projectId', pathDto.projectId)}/${dto.userId}`
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}`
     const response: ZitadelUserByIdGetResponse = await this.httpClient
-      .get(url, {
-        headers: {
-          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
-        },
-      })
+      .get(url)
       .json()
 
     return response
   }
 
-  // todo: update the endpoint from UsersEndpointsV1
   async deleteUserById(
-    dto: ZitadelUserDeleteDto,
-    headerDto: ZitadelUserDeleteHeaderDto,
     pathDto: ZitadelUserDeletePathDto,
   ): Promise<ZitadelUserDeleteResponse> {
-    const url = `${ApiEndpointsV1.USERS.replace(':projectId', pathDto.projectId)}/${dto.userId}`
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}`
     const response: ZitadelUserDeleteResponse = await this.httpClient
-      .delete(url, {
-        headers: {
-          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
-        },
-      })
+      .delete(url)
       .json()
 
     return response
   }
 
+  // deprecated use usersSearch with query loginNameQuery instead
   async getUserByLoginName(
     dto: ZitadelUserByLoginNameGetDto,
   ): Promise<ZitadelUserByIdGetResponse> {
@@ -373,15 +355,11 @@ export class ZitadelClient {
 
   async usersSearch(
     dto: ZitadelUsersSearchDto,
-    headerDto: ZitadelUsersSearchHeaderDto,
-  ): Promise<ZitadelSearchUsersPostResponse> {
-    const url = `${ApiEndpointsV1.USERS}/${'_search'}`
-    const response: ZitadelSearchUsersPostResponse = await this.httpClient
+  ): Promise<ZitadelUsersSearchPostResponse> {
+    const url = `${ApiEndpointsV2.USERS.replace('/:userId', '')}`
+    const response: ZitadelUsersSearchPostResponse = await this.httpClient
       .post(url, {
         json: dto,
-        headers: {
-          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
-        },
       })
       .json()
 
@@ -406,6 +384,7 @@ export class ZitadelClient {
     return response
   }
 
+  // deprecated use usersSearch with query search instead
   async isUserUnique(
     dto: ZitadelUserExistingCheckByUserNameOrEmailDto,
     headerDto: ZitadelUserExistingCheckGetHeaderDto,
@@ -553,10 +532,10 @@ export class ZitadelClient {
   }
 
   async deleteUserAvatar(
-    dto: ZitadelUserAvatarDeleteDto,
+    pathDto: ZitadelUserAvatarDeletePathDto,
     headerDto: ZitadelUserAvatarDeleteHeaderDto,
   ): Promise<ZitadelUserAvatarDeleteResponse> {
-    const url = `${UsersEndpointsV1.USER_AVATAR.replace(':userId', dto.userId)}`
+    const url = `${UsersEndpointsV1.USER_AVATAR.replace(':userId', pathDto.userId)}`
     const response: ZitadelUserAvatarDeleteResponse = await this.httpClient
       .delete(url, {
         headers: {

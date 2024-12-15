@@ -3,9 +3,14 @@ import type { ZitadelUserStateType } from '../enums'
 import type { Details } from './common'
 
 export interface ZitadelHumanUserDto {
+  userId: string
+  state: ZitadelUserStateType
+  userName: string
+  loginNames: string[]
+  preferredLoginName: string
   profile: {
-    firstName: string
-    lastName: string
+    givenName: string
+    familyName: string
     nickName: string
     displayName: string
     preferredLanguage: string
@@ -18,8 +23,9 @@ export interface ZitadelHumanUserDto {
   }
   phone: {
     phone: string
-    isPhoneVerified: boolean
+    isVerified: boolean
   }
+  passwordChangeRequired: boolean
   passwordChanged: Date
 }
 
@@ -31,6 +37,7 @@ export interface ZitadelMachineUserDto {
 }
 
 export interface ZitadelUserByIdGetResponse {
+  details: Details
   user: {
     userId: string
     details: Details

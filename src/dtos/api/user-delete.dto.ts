@@ -1,8 +1,3 @@
-import type { ZitadelOrganizationIdHeaderDto } from './common'
-import type { ZitadelUserByIdGetDto, ZitadelUserByIdGetPathDto } from './user-by-id-get.dto'
-
-export interface ZitadelUserDeleteHeaderDto extends ZitadelOrganizationIdHeaderDto {}
-
-export interface ZitadelUserDeleteDto extends ZitadelUserByIdGetDto {}
+import type { ZitadelUserByIdGetPathDto } from '.'
 
 export interface ZitadelUserDeletePathDto extends ZitadelUserByIdGetPathDto {}

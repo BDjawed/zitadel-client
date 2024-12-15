@@ -1,12 +1,23 @@
-import type { ZitadelSearchUsersSortingColumn } from '../enums'
-import type { ZitadelUserByIdGetResponse } from './user-by-id-get.response'
+import type { ZitadelUsersSearchSortingColumn, ZitadelUserStateType } from '../enums'
+import type { Details } from './common'
+import type { ZitadelHumanUserDto, ZitadelMachineUserDto } from './user-by-id-get.response'
 
-export interface ZitadelSearchUsersPostResponse {
+interface ZitadelUser {
+  userId: string
+  details: Details
+  state: ZitadelUserStateType
+  userName: string
+  loginNames: string[]
+  preferredLoginName: string
+  human: ZitadelHumanUserDto
+  machine: ZitadelMachineUserDto
+}
+export interface ZitadelUsersSearchPostResponse {
   details: {
     totalResult: string
     processedSequence: string
-    viewTimestamp: string
+    timestamp: Date
   }
-  sortingColumn: ZitadelSearchUsersSortingColumn
-  results: Array<ZitadelUserByIdGetResponse>
+  sortingColumn: ZitadelUsersSearchSortingColumn
+  results: Array<ZitadelUser>
 }

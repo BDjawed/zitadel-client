@@ -4,8 +4,8 @@ import process from 'node:process'
 import * as ZITADEL from '@creoox-public/zitadel-client'
 import * as dotenv from 'dotenv'
 import {
-  ZitadelSearchUsersSortingColumn,
-  ZitadelTextQueryMethod,
+  ZitadelUsersSearchSortingColumn,
+  ZitadelUserStateType,
 } from '../../../src/enums'
 
 dotenv.config()
@@ -41,7 +41,7 @@ async function main(): Promise<void> {
     )
   }
 
-  const searchQuery = 'cre'
+  const searchQuery = 'c'
 
   console.log('Start search users by query: ', searchQuery)
 
@@ -52,33 +52,27 @@ async function main(): Promise<void> {
 
   await zitadelClient.setup()
 
-  const creLandOrganization = ZITADEL_PROVISIONING_RESPONSE_FILE.creLandOrganization
-
-  const creLandQueryResponse: ZITADEL.ZitadelSearchUsersPostResponse
+  const creLandQueryResponse: ZITADEL.ZitadelUsersSearchPostResponse
     = await zitadelClient.usersSearch(
       {
         query: {
           offset: '0',
-          limit: 10,
+          limit: 100,
           asc: true,
         },
-        sortingColumn: ZitadelSearchUsersSortingColumn.UNSPECIFIED,
+        sortingColumn: ZitadelUsersSearchSortingColumn.UNSPECIFIED,
         queries: [
           {
-            nickNameQuery: {
-              nickName: searchQuery,
-              method: ZitadelTextQueryMethod.STARTS_WITH_IGNORE_CASE,
+            stateQuery: {
+              state: ZitadelUserStateType.ACTIVE,
             },
           },
         ],
       },
-      {
-        'x-zitadel-orgid': creLandOrganization.organizationId,
-      },
     )
   console.log(
     'creLandQueryResponse',
-    JSON.stringify(creLandQueryResponse, null, 2),
+    creLandQueryResponse,
   )
 }
 main()

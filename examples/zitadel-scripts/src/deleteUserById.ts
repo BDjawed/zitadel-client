@@ -66,12 +66,6 @@ async function main(): Promise<void> {
     {
       userId: machineUser.userId,
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
-    {
-      projectId: ZITADEL_PROVISIONING_RESPONSE_FILE.creDashboardProject.id,
-    },
   )
 
   console.log('Deleted machine user: ', deleteMachineUser)

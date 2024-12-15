@@ -1,10 +1,9 @@
 import type {
-  ZitadelSearchUsersSortingColumn,
   ZitadelTextQueryMethod,
+  ZitadelUsersSearchSortingColumn,
   ZitadelUserStateType,
   ZitadelUserType,
 } from '../../enums'
-import type { ZitadelOrganizationIdHeaderDto } from './common'
 
 // Individual query interfaces
 interface UserNameQuery {
@@ -70,6 +69,10 @@ interface NotQuery {
   query: ZitadelUserQuery
 }
 
+interface organizationIdQuery {
+  organizationId: string
+}
+
 // Union type for all possible queries
 interface ZitadelUserQuery {
   userNameQuery?: UserNameQuery
@@ -86,6 +89,7 @@ interface ZitadelUserQuery {
   andQuery?: AndQuery
   notQuery?: NotQuery
   inUserEmailsQuery?: InUserEmailsQuery
+  organizationIdQuery?: organizationIdQuery
 }
 
 // Main UsersSearch DTO interface
@@ -95,9 +99,6 @@ export interface ZitadelUsersSearchDto {
     limit: number
     asc: boolean
   }
-  sortingColumn: ZitadelSearchUsersSortingColumn
+  sortingColumn: ZitadelUsersSearchSortingColumn
   queries: Array<ZitadelUserQuery>
 }
-
-export interface ZitadelUsersSearchHeaderDto
-  extends ZitadelOrganizationIdHeaderDto {}
