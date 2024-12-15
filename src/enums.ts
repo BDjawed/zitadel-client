@@ -14,6 +14,7 @@ export enum ApiEndpointsV1 {
 export enum UsersEndpointsV1 {
   USER_HISTORY = 'management/v1/users/:userId/changes/_search', // https://zitadel.com/docs/apis/resources/mgmt/management-service-list-user-changes
   IS_UNIQUE = 'management/v1/users/_is_unique', // https://zitadel.com/docs/apis/resources/mgmt/management-service-is-user-unique
+  USER_AVATAR = 'management/v1/users/:userId/avatar', // https://zitadel.com/docs/apis/resources/mgmt/management-service-remove-human-avatar
 }
 
 export enum ApiEndpointsV2 {

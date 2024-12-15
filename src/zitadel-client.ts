@@ -28,6 +28,8 @@ import type {
   ZitadelOrganizationCreateDto,
   ZitadelProjectCreateDto,
   ZitadelProjectCreateHeaderDto,
+  ZitadelUserAvatarDeleteDto,
+  ZitadelUserAvatarDeleteHeaderDto,
   ZitadelUserByIdGetDto,
   ZitadelUserByIdGetHeaderDto,
   ZitadelUserByIdGetPathDto,
@@ -69,6 +71,7 @@ import type {
   ZitadelOrganizationCreateResponse,
   ZitadelProjectCreateResponse,
   ZitadelSearchUsersPostResponse,
+  ZitadelUserAvatarDeleteResponse,
   ZitadelUserByIdGetResponse,
   ZitadelUserDeleteResponse,
   ZitadelUserExistingCheckGetResponse,
@@ -542,6 +545,22 @@ export class ZitadelClient {
         }
       }
     }
+
+    return response
+  }
+
+  async deleteUserAvatar(
+    dto: ZitadelUserAvatarDeleteDto,
+    headerDto: ZitadelUserAvatarDeleteHeaderDto,
+  ): Promise<ZitadelUserAvatarDeleteResponse> {
+    const url = `${UsersEndpointsV1.USER_AVATAR.replace(':userId', dto.userId)}`
+    const response: ZitadelUserAvatarDeleteResponse = await this.httpClient
+      .delete(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
 
     return response
   }
