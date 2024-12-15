@@ -13,7 +13,8 @@
     "getMetadata": "tsx src/getMetadataByKey.ts",
     "delMetadata": "tsx src/deleteMetadataByKey.ts",
     "postMetadata": "tsx src/createMetadataByKey.ts",
-    "delBulkMetadata": "tsx src/deleteBulkMetadataByKey.ts"
+    "delBulkMetadata": "tsx src/deleteBulkMetadataByKey.ts",
+    "postBulkMetadata": "tsx src/createBulkMetadataByKey.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",
