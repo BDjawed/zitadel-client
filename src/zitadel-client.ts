@@ -40,6 +40,8 @@ import type {
   ZitadelUserHistoryPostDto,
   ZitadelUserHistoryPostHeaderDto,
   ZitadelUserHistoryPostPathDto,
+  ZitadelUserMetadataByKeyCreateDto,
+  ZitadelUserMetadataByKeyCreateHeaderDto,
   ZitadelUserMetadataByKeyDeleteDto,
   ZitadelUserMetadataByKeyDeleteHeaderDto,
   ZitadelUserMetadataByKeyGetDto,
@@ -65,6 +67,7 @@ import type {
   ZitadelUserDeleteResponse,
   ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
+  ZitadelUserMetadataByKeyCreateResponse,
   ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
 } from './responses'
@@ -446,6 +449,25 @@ export class ZitadelClient {
     const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', dto.key)}`
     const response: ZitadelUserMetadataByKeyDeleteResponse = await this.httpClient
       .delete(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    return response
+  }
+
+  async createMetadataByKey(
+    dto: ZitadelUserMetadataByKeyCreateDto,
+    headerDto: ZitadelUserMetadataByKeyCreateHeaderDto,
+  ): Promise<ZitadelUserMetadataByKeyCreateResponse> {
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', dto.key)}`
+    const encodeBase64Value = Buffer.from(dto.value, 'utf-8').toString('base64')
+    dto.value = encodeBase64Value
+    const response: ZitadelUserMetadataByKeyCreateResponse = await this.httpClient
+      .post(url, {
+        json: dto,
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
