@@ -10,7 +10,8 @@
     "usersSearch": "tsx src/usersSearch.ts",
     "userHistory": "tsx src/getUserHistory.ts",
     "isUserUnique": "tsx src/isUserUnique.ts",
-    "getMetadata": "tsx src/getMetadataByKey.ts"
+    "getMetadata": "tsx src/getMetadataByKey.ts",
+    "delMetadata": "tsx src/deleteMetadataByKey.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",

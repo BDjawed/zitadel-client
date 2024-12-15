@@ -40,6 +40,8 @@ import type {
   ZitadelUserHistoryPostDto,
   ZitadelUserHistoryPostHeaderDto,
   ZitadelUserHistoryPostPathDto,
+  ZitadelUserMetadataByKeyDeleteDto,
+  ZitadelUserMetadataByKeyDeleteHeaderDto,
   ZitadelUserMetadataByKeyGetDto,
   ZitadelUserMetadataByKeyGetHeaderDto,
   ZitadelUsersSearchDto,
@@ -63,6 +65,7 @@ import type {
   ZitadelUserDeleteResponse,
   ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
+  ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
 } from './responses'
 
@@ -432,6 +435,22 @@ export class ZitadelClient {
 
     const decodeBase64Value = Buffer.from(response.metadata.value, 'base64').toString('utf-8')
     response.metadata.value = decodeBase64Value
+
+    return response
+  }
+
+  async deleteMetadataByKey(
+    dto: ZitadelUserMetadataByKeyDeleteDto,
+    headerDto: ZitadelUserMetadataByKeyDeleteHeaderDto,
+  ): Promise<ZitadelUserMetadataByKeyDeleteResponse> {
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', dto.key)}`
+    const response: ZitadelUserMetadataByKeyDeleteResponse = await this.httpClient
+      .delete(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
 
     return response
   }
