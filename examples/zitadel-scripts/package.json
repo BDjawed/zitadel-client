@@ -12,7 +12,8 @@
     "isUserUnique": "tsx src/isUserUnique.ts",
     "getMetadata": "tsx src/getMetadataByKey.ts",
     "delMetadata": "tsx src/deleteMetadataByKey.ts",
-    "postMetadata": "tsx src/createMetadataByKey.ts"
+    "postMetadata": "tsx src/createMetadataByKey.ts",
+    "delBulkMetadata": "tsx src/deleteBulkMetadataByKey.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",

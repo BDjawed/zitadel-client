@@ -9,6 +9,7 @@ export enum ApiEndpointsV1 {
   USERS = 'management/v1/users', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-by-id
   GLOBAL_USERS = 'management/v1/global/users/_by_login_name', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-by-login-name-global
   METADATA = 'management/v1/users/:id/metadata/:key', // https://zitadel.com/docs/apis/resources/mgmt/management-service-get-user-metadata
+  METADATA_BULK = 'management/v1/users/:id/metadata/_bulk', // https://zitadel.com/docs/apis/resources/mgmt/management-service-bulk-remove-user-metadata
 }
 
 export enum UsersEndpointsV1 {
