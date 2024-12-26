@@ -53,6 +53,7 @@ import type {
   ZitadelUserMetadataByKeyGetHeaderDto,
   ZitadelUserMetadataSearchDto,
   ZitadelUserMetadataSearchHeaderDto,
+  ZitadelUserReactivatePathDto,
   ZitadelUsersSearchDto,
 } from './dtos'
 
@@ -81,6 +82,7 @@ import type {
   ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
   ZitadelUserMetadataSearchGetResponse,
+  ZitadelUserReactivatePostResponse,
   ZitadelUsersSearchPostResponse,
 } from './responses'
 
@@ -226,6 +228,18 @@ export class ZitadelClient {
   ): Promise<ZitadelUserDeactivatePostResponse> {
     const url = ApiEndpointsV2.USERS.replace(':userId', `${pathDto.userId}/deactivate`)
     const response: ZitadelUserDeactivatePostResponse = await this.httpClient
+      .post(url, {
+        json: {},
+      })
+      .json()
+    return response
+  }
+
+  async userReactivate(
+    pathDto: ZitadelUserReactivatePathDto,
+  ): Promise<ZitadelUserReactivatePostResponse> {
+    const url = ApiEndpointsV2.USERS.replace(':userId', `${pathDto.userId}/reactivate`)
+    const response: ZitadelUserReactivatePostResponse = await this.httpClient
       .post(url, {
         json: {},
       })
@@ -577,6 +591,8 @@ export class ZitadelClient {
 
     return response
   }
+
+  // todo: https://zitadel.com/docs/apis/resources/mgmt/management-service-reactivate-user
 
   static generateJwtAssertion(dto: ZitadelJwtAssertionCreateDto): string {
     // Generate JWT claims
