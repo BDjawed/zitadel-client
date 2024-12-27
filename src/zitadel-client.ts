@@ -62,6 +62,7 @@ import type {
   ZitadelUserMetadataSearchHeaderDto,
   ZitadelUserOtpEmailDeletePathDto,
   ZitadelUserOtpSmsDeletePathDto,
+  ZitadelUserPasskeyDeleteDto,
   ZitadelUserPasskeyLinkRegistrationPostDto,
   ZitadelUserPasskeyLinkRegistrationPostPathDto,
   ZitadelUserPasskeyRegisterPostDto,
@@ -118,6 +119,7 @@ import type {
   ZitadelUserMetadataSearchGetResponse,
   ZitadelUserOtpEmailDeleteResponse,
   ZitadelUserOtpSmsDeleteResponse,
+  ZitadelUserPasskeyDeleteResponse,
   ZitadelUserPasskeyLinkRegistrationPostResponse,
   ZitadelUserPasskeyRegisterPostResponse,
   ZitadelUserPasskeysGetResponse,
@@ -869,6 +871,19 @@ export class ZitadelClient {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/passkeys/registration_link`
     const response: ZitadelUserPasskeyLinkRegistrationPostResponse = await this.httpClient
       .post(url, {
+        json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async RegisterUserPasskeyDelete(
+    dto: ZitadelUserPasskeyDeleteDto,
+  ): Promise<ZitadelUserPasskeyDeleteResponse> {
+    const url = `${ApiEndpointsV2.USERS}.replace(':userId', ${dto.userId})/passkeys/${dto.passkeyId}`
+    const response: ZitadelUserPasskeyDeleteResponse = await this.httpClient
+      .delete(url, {
         json: dto,
       })
       .json()
