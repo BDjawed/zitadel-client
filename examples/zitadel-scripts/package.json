@@ -19,7 +19,9 @@
     "deleteUserAvatar": "tsx src/deleteUserAvatar.ts",
     "updateMachineUser": "tsx src/updateMachineUser.ts",
     "deactivateMachineUser": "tsx src/userDeactivate.ts",
-    "reactivateMachineUser": "tsx src/userReactivate.ts"
+    "reactivateMachineUser": "tsx src/userReactivate.ts",
+    "lockMachineUser": "tsx src/userLock.ts",
+    "unlockMachineUser": "tsx src/userUnlock.ts"
   },
   "dependencies": {
     "@creoox-public/zitadel-client": "workspace:*",

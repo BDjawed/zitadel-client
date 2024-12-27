@@ -41,6 +41,7 @@ import type {
   ZitadelUserHistoryPostDto,
   ZitadelUserHistoryPostHeaderDto,
   ZitadelUserHistoryPostPathDto,
+  ZitadelUserLockPathDto,
   ZitadelUserMetadataByKeyBulkCreateDto,
   ZitadelUserMetadataByKeyBulkCreateHeaderDto,
   ZitadelUserMetadataByKeyBulkDeleteDto,
@@ -55,6 +56,7 @@ import type {
   ZitadelUserMetadataSearchHeaderDto,
   ZitadelUserReactivatePathDto,
   ZitadelUsersSearchDto,
+  ZitadelUserUnlockPathDto,
 } from './dtos'
 
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
@@ -76,6 +78,7 @@ import type {
   ZitadelUserDeleteResponse,
   ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
+  ZitadelUserLockPostResponse,
   ZitadelUserMetadataByKeyBulkCreateResponse,
   ZitadelUserMetadataByKeyBulkDeleteResponse,
   ZitadelUserMetadataByKeyCreateResponse,
@@ -84,6 +87,7 @@ import type {
   ZitadelUserMetadataSearchGetResponse,
   ZitadelUserReactivatePostResponse,
   ZitadelUsersSearchPostResponse,
+  ZitadelUserUnlockPostResponse,
 } from './responses'
 
 export class ZitadelClient {
@@ -240,6 +244,30 @@ export class ZitadelClient {
   ): Promise<ZitadelUserReactivatePostResponse> {
     const url = ApiEndpointsV2.USERS.replace(':userId', `${pathDto.userId}/reactivate`)
     const response: ZitadelUserReactivatePostResponse = await this.httpClient
+      .post(url, {
+        json: {},
+      })
+      .json()
+    return response
+  }
+
+  async userLock(
+    pathDto: ZitadelUserLockPathDto,
+  ): Promise<ZitadelUserLockPostResponse> {
+    const url = ApiEndpointsV2.USERS.replace(':userId', `${pathDto.userId}/lock`)
+    const response: ZitadelUserLockPostResponse = await this.httpClient
+      .post(url, {
+        json: {},
+      })
+      .json()
+    return response
+  }
+
+  async userUnlock(
+    pathDto: ZitadelUserUnlockPathDto,
+  ): Promise<ZitadelUserUnlockPostResponse> {
+    const url = ApiEndpointsV2.USERS.replace(':userId', `${pathDto.userId}/unlock`)
+    const response: ZitadelUserUnlockPostResponse = await this.httpClient
       .post(url, {
         json: {},
       })
