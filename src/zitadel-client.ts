@@ -59,6 +59,8 @@ import type {
   ZitadelUserMetadataSearchDto,
   ZitadelUserMetadataSearchHeaderDto,
   ZitadelUserReactivatePathDto,
+  ZitadelUserResendVerifyCodeByEmailPathDto,
+  ZitadelUserResendVerifyCodeByEmailPostDto,
   ZitadelUsersSearchDto,
   ZitadelUserUnlockPathDto,
 } from './dtos'
@@ -92,6 +94,7 @@ import type {
   ZitadelUserMetadataByKeyGetResponse,
   ZitadelUserMetadataSearchGetResponse,
   ZitadelUserReactivatePostResponse,
+  ZitadelUserResendVerifyCodeByEmailPostResponse,
   ZitadelUsersSearchPostResponse,
   ZitadelUserUnlockPostResponse,
 } from './responses'
@@ -646,6 +649,20 @@ export class ZitadelClient {
   ): Promise<ZitadelUserEmailCreateResponse> {
     const url = `${ApiEndpointsV2.HUMAN_USERS.replace(':userId', pathDto.userId)}/email`
     const response: ZitadelUserEmailCreateResponse = await this.httpClient
+      .put(url, {
+        json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async resendUserEmailVerificationCode(
+    pathDto: ZitadelUserResendVerifyCodeByEmailPathDto,
+    dto: ZitadelUserResendVerifyCodeByEmailPostDto,
+  ): Promise<ZitadelUserResendVerifyCodeByEmailPostResponse> {
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/email/resend`
+    const response: ZitadelUserResendVerifyCodeByEmailPostResponse = await this.httpClient
       .put(url, {
         json: dto,
       })
