@@ -21,7 +21,7 @@ export enum UsersEndpointsV1 {
 }
 
 export enum ApiEndpointsV2 {
-  HUMAN_USERS = 'v2/users/human', // https://zitadel.com/docs/apis/resources/user_service_v2/user-service-add-human-user
+  HUMAN_USERS = 'v2/users/human/:userId', // https://zitadel.com/docs/apis/resources/user_service_v2/user-service-add-human-user
   ORGANIZATIONS = 'v2/organizations', // https://zitadel.com/docs/apis/resources/org_service_v2/organization-service-add-organization
   USERS = 'v2/users/:userId', // https://zitadel.com/docs/apis/resources/user_service_v2/user-service-get-user-by-id
 }

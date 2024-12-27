@@ -18,6 +18,8 @@ import type {
   ZitadelAppOidcCreateHeaderDto,
   ZitadelAppOidcCreatePathDto,
   ZitadelHumanUserCreateDto,
+  ZitadelHumanUserUpdateDto,
+  ZitadelHumanUserUpdatePathDto,
   ZitadelJwtAssertionCreateDto,
   ZitadelLoginSettingsUpdateDto,
   ZitadelMachineUserCreateDto,
@@ -66,6 +68,7 @@ import type {
   ZitadelAppOidcCreateResponse,
   ZitadelAuthenticationResponse,
   ZitadelHumanUserCreateResponse,
+  ZitadelHumanUserUpdateResponse,
   ZitadelLoginSettingsUpdateResponse,
   ZitadelMachineUserCreateResponse,
   ZitadelMachineUserPatCreateResponse,
@@ -205,7 +208,7 @@ export class ZitadelClient {
 
   async createHumanUser(dto: ZitadelHumanUserCreateDto): Promise<ZitadelHumanUserCreateResponse> {
     const response: ZitadelHumanUserCreateResponse = await this.httpClient
-      .post(ApiEndpointsV2.HUMAN_USERS, {
+      .post(ApiEndpointsV2.HUMAN_USERS.replace('/:userId', ''), {
         json: dto,
       })
       .json()
@@ -620,7 +623,19 @@ export class ZitadelClient {
     return response
   }
 
-  // todo: https://zitadel.com/docs/apis/resources/mgmt/management-service-reactivate-user
+  async updateHumanUser(
+    pathDto: ZitadelHumanUserUpdatePathDto,
+    dto: ZitadelHumanUserUpdateDto,
+  ): Promise<ZitadelHumanUserUpdateResponse> {
+    const url = `${ApiEndpointsV2.HUMAN_USERS.replace(':userId', pathDto.userId)}`
+    const response: ZitadelHumanUserUpdateResponse = await this.httpClient
+      .put(url, {
+        json: dto,
+      })
+      .json()
+
+    return response
+  }
 
   static generateJwtAssertion(dto: ZitadelJwtAssertionCreateDto): string {
     // Generate JWT claims
