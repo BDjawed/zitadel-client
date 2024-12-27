@@ -8,7 +8,7 @@ export interface ZitadelUserPasskeyRegisterPostDto {
   domain: string
 }
 
-interface Code {
+export interface Code {
   id: string
   code: string
 }
