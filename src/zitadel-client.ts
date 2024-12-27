@@ -58,6 +58,8 @@ import type {
   ZitadelUserMetadataByKeyGetHeaderDto,
   ZitadelUserMetadataSearchDto,
   ZitadelUserMetadataSearchHeaderDto,
+  ZitadelUserPhoneDeleteDto,
+  ZitadelUserPhoneDeletePathDto,
   ZitadelUserReactivatePathDto,
   ZitadelUserResendVerifyCodeByEmailPathDto,
   ZitadelUserResendVerifyCodeByEmailPostDto,
@@ -93,6 +95,7 @@ import type {
   ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
   ZitadelUserMetadataSearchGetResponse,
+  ZitadelUserPhoneDeleteResponse,
   ZitadelUserReactivatePostResponse,
   ZitadelUserResendVerifyCodeByEmailPostResponse,
   ZitadelUsersSearchPostResponse,
@@ -650,6 +653,20 @@ export class ZitadelClient {
     const url = `${ApiEndpointsV2.HUMAN_USERS.replace(':userId', pathDto.userId)}/email`
     const response: ZitadelUserEmailCreateResponse = await this.httpClient
       .put(url, {
+        json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async deleteUserPhone(
+    pathDto: ZitadelUserPhoneDeletePathDto,
+    dto: ZitadelUserPhoneDeleteDto,
+  ): Promise<ZitadelUserPhoneDeleteResponse> {
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/phone`
+    const response: ZitadelUserPhoneDeleteResponse = await this.httpClient
+      .delete(url, {
         json: dto,
       })
       .json()
