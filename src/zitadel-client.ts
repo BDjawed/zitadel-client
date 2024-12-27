@@ -38,6 +38,8 @@ import type {
   ZitadelUserByLoginNameGetDto,
   ZitadelUserDeactivatePathDto,
   ZitadelUserDeletePathDto,
+  ZitadelUserEmailCreatePathDto,
+  ZitadelUserEmailCreatePostDto,
   ZitadelUserExistingCheckByUserNameOrEmailDto,
   ZitadelUserExistingCheckGetHeaderDto,
   ZitadelUserHistoryPostDto,
@@ -79,6 +81,7 @@ import type {
   ZitadelUserByIdGetResponse,
   ZitadelUserDeactivatePostResponse,
   ZitadelUserDeleteResponse,
+  ZitadelUserEmailCreateResponse,
   ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
   ZitadelUserLockPostResponse,
@@ -629,6 +632,20 @@ export class ZitadelClient {
   ): Promise<ZitadelHumanUserUpdateResponse> {
     const url = `${ApiEndpointsV2.HUMAN_USERS.replace(':userId', pathDto.userId)}`
     const response: ZitadelHumanUserUpdateResponse = await this.httpClient
+      .put(url, {
+        json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async createUserEmail(
+    pathDto: ZitadelUserEmailCreatePathDto,
+    dto: ZitadelUserEmailCreatePostDto,
+  ): Promise<ZitadelUserEmailCreateResponse> {
+    const url = `${ApiEndpointsV2.HUMAN_USERS.replace(':userId', pathDto.userId)}/email`
+    const response: ZitadelUserEmailCreateResponse = await this.httpClient
       .put(url, {
         json: dto,
       })
