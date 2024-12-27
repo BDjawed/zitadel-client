@@ -58,6 +58,8 @@ import type {
   ZitadelUserMetadataByKeyGetHeaderDto,
   ZitadelUserMetadataSearchDto,
   ZitadelUserMetadataSearchHeaderDto,
+  ZitadelUserPhoneCreateDto,
+  ZitadelUserPhoneCreatePathDto,
   ZitadelUserPhoneDeleteDto,
   ZitadelUserPhoneDeletePathDto,
   ZitadelUserReactivatePathDto,
@@ -95,6 +97,7 @@ import type {
   ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
   ZitadelUserMetadataSearchGetResponse,
+  ZitadelUserPhoneCreateResponse,
   ZitadelUserPhoneDeleteResponse,
   ZitadelUserReactivatePostResponse,
   ZitadelUserResendVerifyCodeByEmailPostResponse,
@@ -667,6 +670,20 @@ export class ZitadelClient {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/phone`
     const response: ZitadelUserPhoneDeleteResponse = await this.httpClient
       .delete(url, {
+        json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async createUserPhone(
+    pathDto: ZitadelUserPhoneCreatePathDto,
+    dto: ZitadelUserPhoneCreateDto,
+  ): Promise<ZitadelUserPhoneCreateResponse> {
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/phone`
+    const response: ZitadelUserPhoneCreateResponse = await this.httpClient
+      .post(url, {
         json: dto,
       })
       .json()
