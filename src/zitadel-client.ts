@@ -58,6 +58,8 @@ import type {
   ZitadelUserMetadataByKeyGetHeaderDto,
   ZitadelUserMetadataSearchDto,
   ZitadelUserMetadataSearchHeaderDto,
+  ZitadelUserPasswordCreateDto,
+  ZitadelUserPasswordCreatePathDto,
   ZitadelUserPhoneCreateDto,
   ZitadelUserPhoneCreatePathDto,
   ZitadelUserPhoneDeleteDto,
@@ -99,6 +101,7 @@ import type {
   ZitadelUserMetadataByKeyDeleteResponse,
   ZitadelUserMetadataByKeyGetResponse,
   ZitadelUserMetadataSearchGetResponse,
+  ZitadelUserPasswordCreateResponse,
   ZitadelUserPhoneCreateResponse,
   ZitadelUserPhoneDeleteResponse,
   ZitadelUserReactivatePostResponse,
@@ -686,6 +689,20 @@ export class ZitadelClient {
   ): Promise<ZitadelUserPhoneCreateResponse> {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/phone`
     const response: ZitadelUserPhoneCreateResponse = await this.httpClient
+      .post(url, {
+        json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async createUserPassword(
+    pathDto: ZitadelUserPasswordCreatePathDto,
+    dto: ZitadelUserPasswordCreateDto,
+  ): Promise<ZitadelUserPasswordCreateResponse> {
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/password`
+    const response: ZitadelUserPasswordCreateResponse = await this.httpClient
       .post(url, {
         json: dto,
       })
