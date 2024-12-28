@@ -26,6 +26,8 @@ import type {
   ZitadelMachineUserByIdGetPathDto,
   ZitadelMachineUserCreateDto,
   ZitadelMachineUserCreateHeaderDto,
+  ZitadelMachineUserKeyDeleteHeaderDto,
+  ZitadelMachineUserKeyDeletePathDto,
   ZitadelMachineUserPatCreateDto,
   ZitadelMachineUserPatCreateHeaderDto,
   ZitadelMachineUserPatCreatePathDto,
@@ -105,6 +107,7 @@ import type {
   ZitadelLoginSettingsUpdateResponse,
   ZitadelMachineUserByIdGetResponse,
   ZitadelMachineUserCreateResponse,
+  ZitadelMachineUserKeyDeleteResponse,
   ZitadelMachineUserPatCreateResponse,
   ZitadelMachineUserSecretCreateResponse,
   ZitadelMachineUserSecretDeleteResponse,
@@ -710,6 +713,22 @@ export class ZitadelClient {
   ): Promise<ZitadelMachineUserSecretDeleteResponse> {
     const url = `${UsersEndpointsV1.USER.replace(':userId', pathDto.userId)}/secret`
     const response: ZitadelMachineUserSecretDeleteResponse = await this.httpClient
+      .delete(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    return response
+  }
+
+  async deleteMachineUserKey(
+    pathDto: ZitadelMachineUserKeyDeletePathDto,
+    headerDto: ZitadelMachineUserKeyDeleteHeaderDto,
+  ): Promise<ZitadelMachineUserKeyDeleteResponse> {
+    const url = `${UsersEndpointsV1.USER.replace(':userId', pathDto.userId)}/keys/${pathDto.keyId}`
+    const response: ZitadelMachineUserKeyDeleteResponse = await this.httpClient
       .delete(url, {
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
