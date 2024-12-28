@@ -22,6 +22,8 @@ import type {
   ZitadelHumanUserUpdatePathDto,
   ZitadelJwtAssertionCreateDto,
   ZitadelLoginSettingsUpdateDto,
+  ZitadelMachineUserByIdGetHeaderDto,
+  ZitadelMachineUserByIdGetPathDto,
   ZitadelMachineUserCreateDto,
   ZitadelMachineUserCreateHeaderDto,
   ZitadelMachineUserPatCreateDto,
@@ -101,6 +103,7 @@ import type {
   ZitadelHumanUserCreateResponse,
   ZitadelHumanUserUpdateResponse,
   ZitadelLoginSettingsUpdateResponse,
+  ZitadelMachineUserByIdGetResponse,
   ZitadelMachineUserCreateResponse,
   ZitadelMachineUserPatCreateResponse,
   ZitadelMachineUserSecretCreateResponse,
@@ -271,6 +274,21 @@ export class ZitadelClient {
     const response: ZitadelMachineUserCreateResponse = await this.httpClient
       .post(ApiEndpointsV1.MACHINE_USERS, {
         json: dto,
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+    return response
+  }
+
+  async getMachineUserById(
+    pathDto: ZitadelMachineUserByIdGetPathDto,
+    headerDto: ZitadelMachineUserByIdGetHeaderDto,
+  ): Promise<ZitadelMachineUserByIdGetResponse> {
+    const url = `${UsersEndpointsV1.USER.replace(':userId', pathDto.userId)}/keys/${pathDto.keyId}`
+    const response: ZitadelMachineUserByIdGetResponse = await this.httpClient
+      .get(url, {
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
