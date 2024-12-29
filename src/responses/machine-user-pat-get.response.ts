@@ -4,7 +4,7 @@ export interface ZitadelMachineUserPatGetResponse {
   token: Token
 }
 
-interface Token {
+export interface Token {
   id: string
   details: Details
   expirationDate: string

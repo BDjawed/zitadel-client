@@ -40,6 +40,9 @@ import type {
   ZitadelMachineUserPatDeletePathDto,
   ZitadelMachineUserPatGetHeaderDto,
   ZitadelMachineUserPatGetPathDto,
+  ZitadelMachineUserPatsListGetDto,
+  ZitadelMachineUserPatsListGetHeaderDto,
+  ZitadelMachineUserPatsListGetPathDto,
   ZitadelMachineUserSecretCreateHeaderDto,
   ZitadelMachineUserSecretCreatePathDto,
   ZitadelMachineUserSecretDeleteHeaderDto,
@@ -122,6 +125,7 @@ import type {
   ZitadelMachineUserPatCreateResponse,
   ZitadelMachineUserPatDeleteResponse,
   ZitadelMachineUserPatGetResponse,
+  ZitadelMachineUserPatsListGetResponse,
   ZitadelMachineUserSecretCreateResponse,
   ZitadelMachineUserSecretDeleteResponse,
   ZitadelMachineUserUpdateResponse,
@@ -419,6 +423,24 @@ export class ZitadelClient {
 
     const response: ZitadelMachineUserPatGetResponse = await this.httpClient
       .get(url, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+    return response
+  }
+
+  async getMachineUserPATsList(
+    headerDto: ZitadelMachineUserPatsListGetHeaderDto,
+    pathDto: ZitadelMachineUserPatsListGetPathDto,
+    dto: ZitadelMachineUserPatsListGetDto,
+  ): Promise<ZitadelMachineUserPatsListGetResponse> {
+    const url = `${ApiEndpointsV1.MACHINE_USERS_PATS.replace(':userId', pathDto.userId)}/_search`
+
+    const response: ZitadelMachineUserPatsListGetResponse = await this.httpClient
+      .post(url, {
+        json: dto,
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
