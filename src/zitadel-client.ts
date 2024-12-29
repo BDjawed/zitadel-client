@@ -26,6 +26,8 @@ import type {
   ZitadelMachineUserByIdGetPathDto,
   ZitadelMachineUserCreateDto,
   ZitadelMachineUserCreateHeaderDto,
+  ZitadelMachineUserIdpsListGetDto,
+  ZitadelMachineUserIdpsListGetPathDto,
   ZitadelMachineUserKeyCreateDto,
   ZitadelMachineUserKeyCreateHeaderDto,
   ZitadelMachineUserKeyCreatePathDto,
@@ -119,6 +121,7 @@ import type {
   ZitadelLoginSettingsUpdateResponse,
   ZitadelMachineUserByIdGetResponse,
   ZitadelMachineUserCreateResponse,
+  ZitadelMachineUserIdpsListGetResponse,
   ZitadelMachineUserKeyCreateResponse,
   ZitadelMachineUserKeyDeleteResponse,
   ZitadelMachineUserKeysGetResponse,
@@ -444,6 +447,20 @@ export class ZitadelClient {
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
+      })
+      .json()
+    return response
+  }
+
+  async getUserIDPsList(
+    dto: ZitadelMachineUserIdpsListGetDto,
+    pathDto: ZitadelMachineUserIdpsListGetPathDto,
+  ): Promise<ZitadelMachineUserIdpsListGetResponse> {
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/links/_search`
+
+    const response: ZitadelMachineUserIdpsListGetResponse = await this.httpClient
+      .get(url, {
+        json: dto,
       })
       .json()
     return response
