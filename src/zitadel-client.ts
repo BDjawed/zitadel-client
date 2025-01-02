@@ -21,6 +21,7 @@ import type {
   ZitadelHumanUserUpdateDto,
   ZitadelHumanUserUpdatePathDto,
   ZitadelJwtAssertionCreateDto,
+  ZitadelLoginSettingsGetHeaderDto,
   ZitadelLoginSettingsUpdateDto,
   ZitadelMachineUserByIdGetHeaderDto,
   ZitadelMachineUserByIdGetPathDto,
@@ -118,6 +119,7 @@ import type {
   ZitadelAuthenticationResponse,
   ZitadelHumanUserCreateResponse,
   ZitadelHumanUserUpdateResponse,
+  ZitadelLoginSettingsGetResponse,
   ZitadelLoginSettingsUpdateResponse,
   ZitadelMachineUserByIdGetResponse,
   ZitadelMachineUserCreateResponse,
@@ -137,6 +139,7 @@ import type {
   ZitadelUserAuthenticationMethodsGetResponse,
   ZitadelUserAvatarDeleteResponse,
   ZitadelUserByIdGetResponse,
+  ZitadelUserByLoginNameGetResponse,
   ZitadelUserDeactivatePostResponse,
   ZitadelUserDeleteResponse,
   ZitadelUserEmailCreateResponse,
@@ -564,6 +567,34 @@ export class ZitadelClient {
     return response
   }
 
+  async getLoginSettings(
+    headerDto: ZitadelLoginSettingsGetHeaderDto,
+  ): Promise<ZitadelLoginSettingsGetResponse> {
+    const response: ZitadelLoginSettingsGetResponse = await this.httpClient
+      .get(ApiEndpointsV1.LOGIN_SETTINGS, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    return response
+  }
+
+  /**
+   * Retrieves a user by ID.
+   * @param {ZitadelUserByIdGetPathDto} pathDto - The path parameters for the request.
+   * @param {string} pathDto.userId - The unique identifier of the user to retrieve.
+   * @returns {Promise<ZitadelUserByIdGetResponse>} A promise that resolves to the user data.
+   * @example
+   * ```typescript
+   * const userId = '1234567890'
+   * const userInfo = await zitadelClient.getUserById({ userId });
+   * ```
+   * @throws {TypeError} Thrown if the user ID is not provided.
+   * @throws {Error} Thrown if the user is not found.
+   * @throws {Error} Thrown if access is forbidden.
+   */
   async getUserById(
     pathDto: ZitadelUserByIdGetPathDto,
   ): Promise<ZitadelUserByIdGetResponse> {
@@ -586,12 +617,25 @@ export class ZitadelClient {
     return response
   }
 
-  // deprecated use usersSearch with query loginNameQuery instead
+  /**
+   * Retrieves a user by login name.
+   * @param {ZitadelUserByLoginNameGetDto} dto - The path parameters for the request.
+   * @param {string} dto.loginName - The login name of the user to retrieve.
+   * @returns {Promise<ZitadelUserByLoginNameGetResponse>} A promise that resolves to the user data.
+   * @example
+   * ```typescript
+   * const userName = 'User123'
+   * const userInfo = await zitadelClient.getUserByLoginName({ userName });
+   * ```
+   * @throws {TypeError} Thrown if the userName is not provided.
+   * @throws {Error} Thrown if the user is not found.
+   * @throws {Error} Thrown if access is forbidden.
+   */
   async getUserByLoginName(
     dto: ZitadelUserByLoginNameGetDto,
-  ): Promise<ZitadelUserByIdGetResponse> {
+  ): Promise<ZitadelUserByLoginNameGetResponse> {
     const url = `${ApiEndpointsV1.GLOBAL_USERS}`
-    const response: ZitadelUserByIdGetResponse = await this.httpClient
+    const response: ZitadelUserByLoginNameGetResponse = await this.httpClient
       .get(url, { searchParams: { loginName: dto.loginName } })
       .json()
 
