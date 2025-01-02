@@ -53,6 +53,7 @@ import type {
   ZitadelMachineUserUpdateDto,
   ZitadelMachineUserUpdateHeaderDto,
   ZitadelOrganizationCreateDto,
+  ZitadelOrganizationDeleteHeaderDto,
   ZitadelProjectCreateDto,
   ZitadelProjectCreateHeaderDto,
   ZitadelUserAuthenticationMethodsGetDto,
@@ -135,6 +136,7 @@ import type {
   ZitadelMachineUserSecretDeleteResponse,
   ZitadelMachineUserUpdateResponse,
   ZitadelOrganizationCreateResponse,
+  ZitadelOrganizationDeleteResponse,
   ZitadelProjectCreateResponse,
   ZitadelUserAuthenticationMethodsGetResponse,
   ZitadelUserAvatarDeleteResponse,
@@ -278,6 +280,20 @@ export class ZitadelClient {
     const response: ZitadelOrganizationCreateResponse = await this.httpClient
       .post(ApiEndpointsV2.ORGANIZATIONS, {
         json: dto,
+      })
+      .json()
+
+    return response
+  }
+
+  async deleteOrganization(
+    headerDto: ZitadelOrganizationDeleteHeaderDto,
+  ): Promise<ZitadelOrganizationDeleteResponse> {
+    const response: ZitadelOrganizationDeleteResponse = await this.httpClient
+      .delete(ApiEndpointsV1.ORGANIZATION, {
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
       })
       .json()
 
@@ -568,13 +584,17 @@ export class ZitadelClient {
   }
 
   async getLoginSettings(
-    headerDto: ZitadelLoginSettingsGetHeaderDto,
+    headerDto?: ZitadelLoginSettingsGetHeaderDto,
   ): Promise<ZitadelLoginSettingsGetResponse> {
+    let headers = {}
+    if (headerDto) {
+      headers = {
+        'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+      }
+    }
     const response: ZitadelLoginSettingsGetResponse = await this.httpClient
       .get(ApiEndpointsV1.LOGIN_SETTINGS, {
-        headers: {
-          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
-        },
+        headers,
       })
       .json()
 

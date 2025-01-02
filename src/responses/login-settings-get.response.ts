@@ -21,6 +21,10 @@ export interface ZitadelLoginSettingsGetResponse {
     secondFactors: SecondFactors[]
     multiFactors: MultiFactors[]
     idps: Idps[]
+    allowDomainDiscovery: boolean
+    disableLoginWithEmail: boolean
+    disableLoginWithPhone: boolean
+    forceMfaLocalOnly: boolean
   }
   isDefault: boolean
 }
@@ -39,8 +43,13 @@ export enum MultiFactors {
 }
 
 export interface Idps {
-  allowDomainDiscovery: boolean
-  disableLoginWithEmail: boolean
-  disableLoginWithPhone: boolean
-  forceMfaLocalOnly: boolean
+  idpId: string
+  idpName: string
+  idpType: IdpType
+}
+
+export enum IdpType {
+  UNSPECIFIED = 'IDP_TYPE_UNSPECIFIED',
+  OIDC = 'IDP_TYPE_OIDC',
+  JWT = 'IDP_TYPE_JWT',
 }
