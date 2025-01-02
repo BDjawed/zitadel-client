@@ -1,3 +1,3 @@
-export interface ZitadelUserByLoginNameGetDto {
+export interface ZitadelUserByLoginNameGetPathDto {
   loginName: string
 }

@@ -19,5 +19,5 @@ export interface ZitadelUsersSearchPostResponse {
     timestamp: Date
   }
   sortingColumn: ZitadelUsersSearchSortingColumn
-  results: Array<ZitadelUser>
+  result: Array<ZitadelUser>
 }

@@ -12,7 +12,7 @@ const ZITADEL_HUMAN_USER_PASSWORD = process.env.ZITADEL_HUMAN_USER_PASSWORD
 const ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE
   = process.env.ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE
 
-const ZIDATEL_APP_OIDC_REDIRECT_URI = process.env.ZIDATEL_APP_OIDC_REDIRECT_URI
+const ZITADEL_APP_OIDC_REDIRECT_URI = process.env.ZITADEL_APP_OIDC_REDIRECT_URI
 
 const ZITADEL_PROVISIONING_RESPONSE_FILE_PATH = process.env.ZITADEL_PROVISIONING_RESPONSE_FILE_PATH
   ? process.env.ZITADEL_PROVISIONING_RESPONSE_FILE_PATH
@@ -24,10 +24,10 @@ async function main(): Promise<void> {
     || !ZITADEL_KEY_FILE_PATH
     || !ZITADEL_HUMAN_USER_PASSWORD
     || !ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE
-    || !ZIDATEL_APP_OIDC_REDIRECT_URI
+    || !ZITADEL_APP_OIDC_REDIRECT_URI
   ) {
     throw new Error(
-      'Please provide ZITADEL_INSTANCE_URL, ZITADEL_KEY_FILE_PATH, ZITADEL_HUMAN_USER_PASSWORD, ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE, ZIDATEL_APP_OIDC_REDIRECT_URI in .env file',
+      'Please provide ZITADEL_INSTANCE_URL, ZITADEL_KEY_FILE_PATH, ZITADEL_HUMAN_USER_PASSWORD, ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE, ZITADEL_APP_OIDC_REDIRECT_URI in .env file',
     )
   }
   console.log('Starting Zitadel provisioning...')
@@ -166,7 +166,7 @@ async function main(): Promise<void> {
   const creBetaOidcApp = await zitadelClient.createAppOidc(
     {
       name: creLand.creBetaAppName,
-      redirectUris: [ZIDATEL_APP_OIDC_REDIRECT_URI],
+      redirectUris: [ZITADEL_APP_OIDC_REDIRECT_URI],
       responseTypes: [ZITADEL.ZitadelAppOidcResponseType.CODE],
       grantTypes: [ZITADEL.ZitadelAppOidcGrantType.AUTHORIZATION_CODE],
       appType: ZITADEL.ZitadelAppOidcAppType.WEB,
@@ -194,7 +194,7 @@ async function main(): Promise<void> {
   const creAlphaOidcApp = await zitadelClient.createAppOidc(
     {
       name: creLand.creAlphaAppName,
-      redirectUris: [ZIDATEL_APP_OIDC_REDIRECT_URI],
+      redirectUris: [ZITADEL_APP_OIDC_REDIRECT_URI],
       responseTypes: [ZITADEL.ZitadelAppOidcResponseType.CODE],
       grantTypes: [ZITADEL.ZitadelAppOidcGrantType.AUTHORIZATION_CODE],
       appType: ZITADEL.ZitadelAppOidcAppType.WEB,

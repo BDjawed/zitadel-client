@@ -64,7 +64,7 @@ import type {
   ZitadelUserAvatarDeleteHeaderDto,
   ZitadelUserAvatarDeletePathDto,
   ZitadelUserByIdGetPathDto,
-  ZitadelUserByLoginNameGetDto,
+  ZitadelUserByLoginNameGetPathDto,
   ZitadelUserDeactivatePathDto,
   ZitadelUserDeletePathDto,
   ZitadelUserEmailCreatePathDto,
@@ -662,8 +662,8 @@ export class ZitadelClient {
 
   /**
    * Retrieves a user by login name.
-   * @param {ZitadelUserByLoginNameGetDto} dto - The path parameters for the request.
-   * @param {string} dto.loginName - The login name of the user to retrieve.
+   * @param {ZitadelUserByLoginNameGetDto} pathDto - The path parameters for the request.
+   * @param {string} pathDto.loginName - The login name of the user to retrieve.
    * @returns {Promise<ZitadelUserByLoginNameGetResponse>} A promise that resolves to the user data.
    * @example
    * ```typescript
@@ -675,11 +675,11 @@ export class ZitadelClient {
    * @throws {Error} Thrown if access is forbidden.
    */
   async getUserByLoginName(
-    dto: ZitadelUserByLoginNameGetDto,
+    pathDto: ZitadelUserByLoginNameGetPathDto,
   ): Promise<ZitadelUserByLoginNameGetResponse> {
-    const url = `${ApiEndpointsV1.GLOBAL_USERS}`
+    const url = `${ApiEndpointsV1.GLOBAL_USERS}?loginName=${pathDto.loginName}`
     const response: ZitadelUserByLoginNameGetResponse = await this.httpClient
-      .get(url, { searchParams: { loginName: dto.loginName } })
+      .get(url)
       .json()
 
     return response
