@@ -8,6 +8,6 @@ export interface ZitadelMachineUserKeyCreatePathDto extends ZitadelUserByIdGetPa
 
 export interface ZitadelMachineUserKeyCreateDto {
   type: ZitadelMachineUserKeyType
-  expirationDate: string
+  expirationDate: Date
   publicKey?: string
 }

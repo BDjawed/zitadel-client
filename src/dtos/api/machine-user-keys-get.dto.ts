@@ -9,7 +9,7 @@ export interface ZitadelMachineUserKeysGetDto {
   query: Query
 }
 
-interface Query {
+export interface Query {
   offset: string
   limit: number
   asc: boolean

@@ -4,7 +4,7 @@ export interface ZitadelMachineUserIdpsListGetResponse {
     processedSequence: string
     timestamp: string
   }
-  result: Idp[]
+  result?: Idp[]
 }
 
 interface Idp {

@@ -1,8 +1,8 @@
-import type { ZitadelMachineUserByIdGetPathDto } from '.'
+import type { ZitadelUserByIdGetPathDto } from '.'
 import type { ZitadelOrganizationIdHeaderDto } from './common'
 
 export interface ZitadelMachineUserPatDeleteHeaderDto extends ZitadelOrganizationIdHeaderDto {}
 
-export interface ZitadelMachineUserPatDeletePathDto extends ZitadelMachineUserByIdGetPathDto {
+export interface ZitadelMachineUserPatDeletePathDto extends ZitadelUserByIdGetPathDto {
   tokenId: string
 }

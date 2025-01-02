@@ -12,6 +12,8 @@ import type {
   ZitadelAppApiCreateDto,
   ZitadelAppApiCreateHeaderDto,
   ZitadelAppApiCreatePathDto,
+  ZitadelAppApiDeleteHeaderDto,
+  ZitadelAppApiDeletePathDto,
   ZitadelAppClientSecretCreateHeaderDto,
   ZitadelAppClientSecretCreatePathDto,
   ZitadelAppOidcCreateDto,
@@ -23,17 +25,18 @@ import type {
   ZitadelJwtAssertionCreateDto,
   ZitadelLoginSettingsGetHeaderDto,
   ZitadelLoginSettingsUpdateDto,
-  ZitadelMachineUserByIdGetHeaderDto,
-  ZitadelMachineUserByIdGetPathDto,
   ZitadelMachineUserCreateDto,
   ZitadelMachineUserCreateHeaderDto,
   ZitadelMachineUserIdpsListGetDto,
   ZitadelMachineUserIdpsListGetPathDto,
+  ZitadelMachineUserKeyByIdGetHeaderDto,
+  ZitadelMachineUserKeyByIdGetPathDto,
   ZitadelMachineUserKeyCreateDto,
   ZitadelMachineUserKeyCreateHeaderDto,
   ZitadelMachineUserKeyCreatePathDto,
   ZitadelMachineUserKeyDeleteHeaderDto,
   ZitadelMachineUserKeyDeletePathDto,
+  ZitadelMachineUserKeysGetDto,
   ZitadelMachineUserKeysGetHeaderDto,
   ZitadelMachineUserKeysGetPathDto,
   ZitadelMachineUserPatCreateDto,
@@ -115,6 +118,7 @@ import type {
 import type { ZitadelClientOptions, ZitadelWellKnown } from './interfaces'
 import type {
   ZitadelAppApiCreateResponse,
+  ZitadelAppApiDeleteResponse,
   ZitadelAppClientSecretCreateResponse,
   ZitadelAppOidcCreateResponse,
   ZitadelAuthenticationResponse,
@@ -122,9 +126,9 @@ import type {
   ZitadelHumanUserUpdateResponse,
   ZitadelLoginSettingsGetResponse,
   ZitadelLoginSettingsUpdateResponse,
-  ZitadelMachineUserByIdGetResponse,
   ZitadelMachineUserCreateResponse,
   ZitadelMachineUserIdpsListGetResponse,
+  ZitadelMachineUserKeyByIdGetResponse,
   ZitadelMachineUserKeyCreateResponse,
   ZitadelMachineUserKeyDeleteResponse,
   ZitadelMachineUserKeysGetResponse,
@@ -147,6 +151,7 @@ import type {
   ZitadelUserEmailCreateResponse,
   ZitadelUserExistingCheckGetResponse,
   ZitadelUserHistoryPostResponse,
+  ZitadelUserInfoGetResponse,
   ZitadelUserLockPostResponse,
   ZitadelUserMetadataByKeyBulkCreateResponse,
   ZitadelUserMetadataByKeyBulkDeleteResponse,
@@ -267,7 +272,7 @@ export class ZitadelClient {
     return this.authenticationResponse
   }
 
-  async getUserInfo(): Promise<unknown> {
+  async getUserInfo(): Promise<ZitadelUserInfoGetResponse> {
     if (!this.wellKnown) {
       throw new Error('wellKnown is not defined')
     }
@@ -341,12 +346,12 @@ export class ZitadelClient {
     return response
   }
 
-  async getMachineUserById(
-    pathDto: ZitadelMachineUserByIdGetPathDto,
-    headerDto: ZitadelMachineUserByIdGetHeaderDto,
-  ): Promise<ZitadelMachineUserByIdGetResponse> {
+  async getMachineUserKeyById(
+    pathDto: ZitadelMachineUserKeyByIdGetPathDto,
+    headerDto: ZitadelMachineUserKeyByIdGetHeaderDto,
+  ): Promise<ZitadelMachineUserKeyByIdGetResponse> {
     const url = `${UsersEndpointsV1.USER.replace(':userId', pathDto.userId)}/keys/${pathDto.keyId}`
-    const response: ZitadelMachineUserByIdGetResponse = await this.httpClient
+    const response: ZitadelMachineUserKeyByIdGetResponse = await this.httpClient
       .get(url, {
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
@@ -359,10 +364,12 @@ export class ZitadelClient {
   async getMachineUserKeys(
     pathDto: ZitadelMachineUserKeysGetPathDto,
     headerDto: ZitadelMachineUserKeysGetHeaderDto,
+    dto: ZitadelMachineUserKeysGetDto,
   ): Promise<ZitadelMachineUserKeysGetResponse> {
     const url = `${UsersEndpointsV1.USER.replace(':userId', pathDto.userId)}/keys/_search`
     const response: ZitadelMachineUserKeysGetResponse = await this.httpClient
-      .get(url, {
+      .post(url, {
+        json: dto,
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },
@@ -478,7 +485,7 @@ export class ZitadelClient {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/links/_search`
 
     const response: ZitadelMachineUserIdpsListGetResponse = await this.httpClient
-      .get(url, {
+      .post(url, {
         json: dto,
       })
       .json()
@@ -526,6 +533,22 @@ export class ZitadelClient {
     const response: ZitadelAppApiCreateResponse = await this.httpClient
       .post(url, {
         json: dto,
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
+      .json()
+
+    return response
+  }
+
+  async deleteAppApi(
+    headerDto: ZitadelAppApiDeleteHeaderDto,
+    pathDto: ZitadelAppApiDeletePathDto,
+  ): Promise<ZitadelAppApiDeleteResponse> {
+    const url = `${ApiEndpointsV1.APPS_API.replace(':projectId', pathDto.projectId).replace('api', pathDto.appId)}`
+    const response: ZitadelAppApiDeleteResponse = await this.httpClient
+      .delete(url, {
         headers: {
           'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
         },

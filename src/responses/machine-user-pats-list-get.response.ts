@@ -6,5 +6,5 @@ export interface ZitadelMachineUserPatsListGetResponse {
     processedSequence: string
     viewTimestamp: string
   }
-  token: Token[]
+  result: Token[]
 }
