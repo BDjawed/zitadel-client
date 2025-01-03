@@ -9,13 +9,16 @@ interface ZitadelMetadataKeyQuery {
 }
 
 export interface ZitadelUserMetadataSearchDto {
-  userId: string
   query: {
     offset: string
     limit: number
     asc: boolean
   }
   queries: Array<ZitadelMetadataKeyQuery>
+}
+
+export interface ZitadelUserMetadataSearchPathDto {
+  userId: string
 }
 
 export interface ZitadelUserMetadataSearchHeaderDto extends ZitadelOrganizationIdHeaderDto {}

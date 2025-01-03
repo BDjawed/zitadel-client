@@ -1,7 +1,7 @@
 import type { ZitadelUserByIdGetPathDto } from '.'
 
-export interface ZitadelUserPasswordResetCreateDto {
-  sendLink: SendLink
+export interface ZitadelUserPasswordResetCodeCreateDto {
+  sendLink?: SendLink
   returnCode?: object
 }
 
@@ -16,4 +16,4 @@ export enum NotificationType {
   SMS = 'NOTIFICATION_TYPE_SMS',
 }
 
-export interface ZitadelUserPasswordResetCreatePathDto extends ZitadelUserByIdGetPathDto {}
+export interface ZitadelUserPasswordResetCodeCreatePathDto extends ZitadelUserByIdGetPathDto {}

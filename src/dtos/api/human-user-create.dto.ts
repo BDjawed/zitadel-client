@@ -1,28 +1,62 @@
 export interface ZitadelHumanUserCreateDto {
-  username: string
-  organization: Organization
+  userId?: string
+  username?: string
+  organization?: Organization
   profile: Profile
   email: Email
-  password: Password
+  phone?: Phone
+  metadata?: Metadata[]
+  password?: Password
+  hashedPassword?: HashedPassword
+  idpLinks?: IdpLink[]
+  totpSecret?: string
+}
+
+interface IdpLink {
+  idpId?: string
+  userId?: string
+  userName?: string
+}
+interface HashedPassword {
+  hash: string
+  changeRequired?: boolean
+}
+
+interface Metadata {
+  key: string
+  value: string
+}
+interface Phone {
+  phone?: string
+  sendCode?: object
+  returnCode?: object
+  isVerified?: boolean
 }
 interface Email {
   email: string
-  isVerified: boolean
+  sendCode?: SendCode
+  returnCode?: object
+  isVerified?: boolean
+}
+
+interface SendCode {
+  urlTemplate: string
 }
 interface Organization {
-  orgId: string
+  orgId?: string
+  orgDomain?: string
 }
 interface Password {
   password: string
-  changeRequired: boolean
+  changeRequired?: boolean
 }
 interface Profile {
   givenName: string
   familyName: string
-  nickName: string
-  displayName: string
-  preferredLanguage: string
-  gender: ZitadelUserGender
+  nickName?: string
+  displayName?: string
+  preferredLanguage?: string
+  gender?: ZitadelUserGender
 }
 
 export enum ZitadelUserGender {

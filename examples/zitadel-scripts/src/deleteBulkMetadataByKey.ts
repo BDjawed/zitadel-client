@@ -56,6 +56,8 @@ async function main(): Promise<void> {
   const metadata = await zitadelClient.deleteBulkMetadataByKey(
     {
       userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
+    },
+    {
       keys: metadataKeys,
     },
     {

@@ -1,5 +1,5 @@
 import type { ZitadelUserByIdGetPathDto } from '.'
 
-export interface ZitadelUserPasskeyDeleteDto extends ZitadelUserByIdGetPathDto {
+export interface ZitadelUserPasskeyDeletePathDto extends ZitadelUserByIdGetPathDto {
   passkeyId: string
 }

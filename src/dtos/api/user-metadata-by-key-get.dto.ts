@@ -1,6 +1,6 @@
 import type { ZitadelOrganizationIdHeaderDto } from './common'
 
-export interface ZitadelUserMetadataByKeyGetDto {
+export interface ZitadelUserMetadataByKeyPathGetDto {
   userId: string
   key: string
 }

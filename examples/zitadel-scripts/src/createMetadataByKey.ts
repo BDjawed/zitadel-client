@@ -55,6 +55,8 @@ async function main(): Promise<void> {
     {
       userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
       key: randomKey,
+    },
+    {
       value,
     },
     {

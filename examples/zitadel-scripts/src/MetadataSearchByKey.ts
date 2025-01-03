@@ -51,6 +51,8 @@ async function main(): Promise<void> {
   const metadata = await zitadelClient.userMetadataSearch(
     {
       userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
+    },
+    {
       query: {
         offset: '0',
         limit: 100,

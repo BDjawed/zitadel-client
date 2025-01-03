@@ -57,6 +57,8 @@ async function main(): Promise<void> {
     const creLandMachineUserUpdateResponse = await zitadelClient.updateMachineUser(
       {
         userId,
+      },
+      {
         name: `creLandMachineUser-${randomName}`,
         description: `Updated machine user description by script ${new Date().toISOString()}`,
         accessTokenType: ZitadelMachineUserAccessTokenType.BEARER,

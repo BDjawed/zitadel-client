@@ -55,11 +55,12 @@ import type {
   ZitadelMachineUserSecretDeletePathDto,
   ZitadelMachineUserUpdateDto,
   ZitadelMachineUserUpdateHeaderDto,
+  ZitadelMachineUserUpdatePathDto,
   ZitadelOrganizationCreateDto,
   ZitadelOrganizationDeleteHeaderDto,
   ZitadelProjectCreateDto,
   ZitadelProjectCreateHeaderDto,
-  ZitadelUserAuthenticationMethodsGetDto,
+  ZitadelUserAuthenticationMethodsGetQueryDto,
   ZitadelUserAuthenticationMethodsPathDto,
   ZitadelUserAvatarDeleteHeaderDto,
   ZitadelUserAvatarDeletePathDto,
@@ -77,19 +78,23 @@ import type {
   ZitadelUserLockPathDto,
   ZitadelUserMetadataByKeyBulkCreateDto,
   ZitadelUserMetadataByKeyBulkCreateHeaderDto,
+  ZitadelUserMetadataByKeyBulkCreatePathDto,
   ZitadelUserMetadataByKeyBulkDeleteDto,
   ZitadelUserMetadataByKeyBulkDeleteHeaderDto,
+  ZitadelUserMetadataByKeyBulkPathDeleteDto,
   ZitadelUserMetadataByKeyCreateDto,
   ZitadelUserMetadataByKeyCreateHeaderDto,
-  ZitadelUserMetadataByKeyDeleteDto,
+  ZitadelUserMetadataByKeyCreatePathDto,
   ZitadelUserMetadataByKeyDeleteHeaderDto,
-  ZitadelUserMetadataByKeyGetDto,
   ZitadelUserMetadataByKeyGetHeaderDto,
+  ZitadelUserMetadataByKeyPathDeleteDto,
+  ZitadelUserMetadataByKeyPathGetDto,
   ZitadelUserMetadataSearchDto,
   ZitadelUserMetadataSearchHeaderDto,
+  ZitadelUserMetadataSearchPathDto,
   ZitadelUserOtpEmailDeletePathDto,
   ZitadelUserOtpSmsDeletePathDto,
-  ZitadelUserPasskeyDeleteDto,
+  ZitadelUserPasskeyDeletePathDto,
   ZitadelUserPasskeyLinkRegistrationPostDto,
   ZitadelUserPasskeyLinkRegistrationPostPathDto,
   ZitadelUserPasskeyRegisterPostDto,
@@ -98,8 +103,8 @@ import type {
   ZitadelUserPasskeysGetPathDto,
   ZitadelUserPasswordCreateDto,
   ZitadelUserPasswordCreatePathDto,
-  ZitadelUserPasswordResetCreateDto,
-  ZitadelUserPasswordResetCreatePathDto,
+  ZitadelUserPasswordResetCodeCreateDto,
+  ZitadelUserPasswordResetCodeCreatePathDto,
   ZitadelUserPhoneCreateDto,
   ZitadelUserPhoneCreatePathDto,
   ZitadelUserPhoneDeleteDto,
@@ -166,7 +171,7 @@ import type {
   ZitadelUserPasskeyRegisterPostResponse,
   ZitadelUserPasskeysGetResponse,
   ZitadelUserPasswordCreateResponse,
-  ZitadelUserPasswordResetCreateResponse,
+  ZitadelUserPasswordResetCodeCreateResponse,
   ZitadelUserPhoneCreateResponse,
   ZitadelUserPhoneDeleteResponse,
   ZitadelUserReactivatePostResponse,
@@ -750,7 +755,7 @@ export class ZitadelClient {
   }
 
   async getMetadataByKey(
-    dto: ZitadelUserMetadataByKeyGetDto,
+    dto: ZitadelUserMetadataByKeyPathGetDto,
     headerDto: ZitadelUserMetadataByKeyGetHeaderDto,
   ): Promise<ZitadelUserMetadataByKeyGetResponse> {
     const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', dto.key)}`
@@ -769,10 +774,10 @@ export class ZitadelClient {
   }
 
   async deleteMetadataByKey(
-    dto: ZitadelUserMetadataByKeyDeleteDto,
+    pathDto: ZitadelUserMetadataByKeyPathDeleteDto,
     headerDto: ZitadelUserMetadataByKeyDeleteHeaderDto,
   ): Promise<ZitadelUserMetadataByKeyDeleteResponse> {
-    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', dto.key)}`
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', pathDto.userId).replace(':key', pathDto.key)}`
     const response: ZitadelUserMetadataByKeyDeleteResponse = await this.httpClient
       .delete(url, {
         headers: {
@@ -785,10 +790,11 @@ export class ZitadelClient {
   }
 
   async createMetadataByKey(
+    pathDto: ZitadelUserMetadataByKeyCreatePathDto,
     dto: ZitadelUserMetadataByKeyCreateDto,
     headerDto: ZitadelUserMetadataByKeyCreateHeaderDto,
   ): Promise<ZitadelUserMetadataByKeyCreateResponse> {
-    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', dto.key)}`
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', pathDto.userId).replace(':key', pathDto.key)}`
     const encodeBase64Value = Buffer.from(dto.value, 'utf-8').toString('base64')
     dto.value = encodeBase64Value
     const response: ZitadelUserMetadataByKeyCreateResponse = await this.httpClient
@@ -804,10 +810,11 @@ export class ZitadelClient {
   }
 
   async deleteBulkMetadataByKey(
+    pathDto: ZitadelUserMetadataByKeyBulkPathDeleteDto,
     dto: ZitadelUserMetadataByKeyBulkDeleteDto,
     headerDto: ZitadelUserMetadataByKeyBulkDeleteHeaderDto,
   ): Promise<ZitadelUserMetadataByKeyBulkDeleteResponse> {
-    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', '_bulk')}`
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', pathDto.userId).replace(':key', '_bulk')}`
     const response: ZitadelUserMetadataByKeyBulkDeleteResponse = await this.httpClient
       .delete(url, {
         json: dto,
@@ -821,10 +828,15 @@ export class ZitadelClient {
   }
 
   async createBulkMetadataByKey(
+    pathDto: ZitadelUserMetadataByKeyBulkCreatePathDto,
     dto: ZitadelUserMetadataByKeyBulkCreateDto,
     headerDto: ZitadelUserMetadataByKeyBulkCreateHeaderDto,
   ): Promise<ZitadelUserMetadataByKeyBulkCreateResponse> {
-    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', '_bulk')}`
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', pathDto.userId).replace(':key', '_bulk')}`
+    for (const metadata of dto.metadata) {
+      const encodeBase64Value = Buffer.from(metadata.value, 'utf-8').toString('base64')
+      metadata.value = encodeBase64Value
+    }
     const response: ZitadelUserMetadataByKeyBulkCreateResponse = await this.httpClient
       .post(url, {
         json: dto,
@@ -838,10 +850,11 @@ export class ZitadelClient {
   }
 
   async userMetadataSearch(
+    pathDto: ZitadelUserMetadataSearchPathDto,
     dto: ZitadelUserMetadataSearchDto,
     headerDto: ZitadelUserMetadataSearchHeaderDto,
   ): Promise<ZitadelUserMetadataSearchGetResponse> {
-    const url = `${ApiEndpointsV1.METADATA.replace(':id', dto.userId).replace(':key', '_search')}`
+    const url = `${ApiEndpointsV1.METADATA.replace(':id', pathDto.userId).replace(':key', '_search')}`
     const response: ZitadelUserMetadataSearchGetResponse = await this.httpClient
       .post(url, {
         json: dto,
@@ -880,10 +893,11 @@ export class ZitadelClient {
   }
 
   async updateMachineUser(
+    pathDto: ZitadelMachineUserUpdatePathDto,
     dto: ZitadelMachineUserUpdateDto,
     headerDto: ZitadelMachineUserUpdateHeaderDto,
   ): Promise<ZitadelMachineUserUpdateResponse> {
-    const url = `${UsersEndpointsV1.MACHINE_USER.replace(':userId', dto.userId)}`
+    const url = `${UsersEndpointsV1.MACHINE_USER.replace(':userId', pathDto.userId)}`
     const response: ZitadelMachineUserUpdateResponse = await this.httpClient
       .put(url, {
         json: dto,
@@ -958,13 +972,14 @@ export class ZitadelClient {
     return response
   }
 
+  // choose between sendCode or returnCode, if both are set, will return an error
   async createUserEmail(
     pathDto: ZitadelUserEmailCreatePathDto,
     dto: ZitadelUserEmailCreatePostDto,
   ): Promise<ZitadelUserEmailCreateResponse> {
-    const url = `${ApiEndpointsV2.HUMAN_USERS.replace(':userId', pathDto.userId)}/email`
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/email`
     const response: ZitadelUserEmailCreateResponse = await this.httpClient
-      .put(url, {
+      .post(url, {
         json: dto,
       })
       .json()
@@ -1014,12 +1029,12 @@ export class ZitadelClient {
     return response
   }
 
-  async createUserPasswordReset(
-    pathDto: ZitadelUserPasswordResetCreatePathDto,
-    dto: ZitadelUserPasswordResetCreateDto,
-  ): Promise<ZitadelUserPasswordResetCreateResponse> {
+  async createUserPasswordResetCode(
+    pathDto: ZitadelUserPasswordResetCodeCreatePathDto,
+    dto: ZitadelUserPasswordResetCodeCreateDto,
+  ): Promise<ZitadelUserPasswordResetCodeCreateResponse> {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/password_reset`
-    const response: ZitadelUserPasswordResetCreateResponse = await this.httpClient
+    const response: ZitadelUserPasswordResetCodeCreateResponse = await this.httpClient
       .post(url, {
         json: dto,
       })
@@ -1034,7 +1049,7 @@ export class ZitadelClient {
   ): Promise<ZitadelUserResendVerifyCodeByEmailPostResponse> {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/email/resend`
     const response: ZitadelUserResendVerifyCodeByEmailPostResponse = await this.httpClient
-      .put(url, {
+      .post(url, {
         json: dto,
       })
       .json()
@@ -1048,7 +1063,7 @@ export class ZitadelClient {
   ): Promise<ZitadelUserResendVerifyCodeByPhonePostResponse> {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/phone/resend`
     const response: ZitadelUserResendVerifyCodeByPhonePostResponse = await this.httpClient
-      .put(url, {
+      .post(url, {
         json: dto,
       })
       .json()
@@ -1058,13 +1073,22 @@ export class ZitadelClient {
 
   async getUserAuthMethods(
     pathDto: ZitadelUserAuthenticationMethodsPathDto,
-    dto: ZitadelUserAuthenticationMethodsGetDto,
+    dto: ZitadelUserAuthenticationMethodsGetQueryDto,
   ): Promise<ZitadelUserAuthenticationMethodsGetResponse> {
-    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/authentication_methods`
+    const queryParams: { [key: string]: string } = {}
+
+    if (dto.includeWithoutDomain) {
+      queryParams['domainQuery.includeWithoutDomain'] = dto.includeWithoutDomain.toString()
+    }
+
+    if (dto.domain) {
+      queryParams['domainQuery.domain'] = dto.domain
+    }
+
+    const queryParamString = new URLSearchParams(queryParams).toString()
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/authentication_methods${queryParamString ? `?${queryParamString}` : ''}`
     const response: ZitadelUserAuthenticationMethodsGetResponse = await this.httpClient
-      .get(url, {
-        json: dto,
-      })
+      .get(url)
       .json()
 
     return response
@@ -1120,7 +1144,7 @@ export class ZitadelClient {
   ): Promise<ZitadelUserPasskeysGetResponse> {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/passkeys/_search`
     const response: ZitadelUserPasskeysGetResponse = await this.httpClient
-      .get(url, {
+      .post(url, {
         json: dto,
       })
       .json()
@@ -1128,7 +1152,7 @@ export class ZitadelClient {
     return response
   }
 
-  async RegisterUserPasskey(
+  async registerUserPasskey(
     pathDto: ZitadelUserPasskeyRegisterPostPathDto,
     dto: ZitadelUserPasskeyRegisterPostDto,
   ): Promise<ZitadelUserPasskeyRegisterPostResponse> {
@@ -1142,7 +1166,7 @@ export class ZitadelClient {
     return response
   }
 
-  async RegisterUserPasskeyLink(
+  async registerUserPasskeyLink(
     pathDto: ZitadelUserPasskeyLinkRegistrationPostPathDto,
     dto: ZitadelUserPasskeyLinkRegistrationPostDto,
   ): Promise<ZitadelUserPasskeyLinkRegistrationPostResponse> {
@@ -1156,14 +1180,12 @@ export class ZitadelClient {
     return response
   }
 
-  async RegisterUserPasskeyDelete(
-    dto: ZitadelUserPasskeyDeleteDto,
+  async deleteRegisteredUserPasskey(
+    pathDto: ZitadelUserPasskeyDeletePathDto,
   ): Promise<ZitadelUserPasskeyDeleteResponse> {
-    const url = `${ApiEndpointsV2.USERS}.replace(':userId', ${dto.userId})/passkeys/${dto.passkeyId}`
+    const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/passkeys/${pathDto.passkeyId}`
     const response: ZitadelUserPasskeyDeleteResponse = await this.httpClient
-      .delete(url, {
-        json: dto,
-      })
+      .delete(url)
       .json()
 
     return response

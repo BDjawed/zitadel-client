@@ -74,6 +74,8 @@ async function main(): Promise<void> {
   const metadata = await zitadelClient.createBulkMetadataByKey(
     {
       userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
+    },
+    {
       metadata: metadataArray,
     },
     {

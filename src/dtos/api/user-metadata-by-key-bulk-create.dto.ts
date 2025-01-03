@@ -5,8 +5,11 @@ export interface ZitadelUserMetadata {
   value: string
 }
 export interface ZitadelUserMetadataByKeyBulkCreateDto {
-  userId: string
   metadata: ZitadelUserMetadata[]
+}
+
+export interface ZitadelUserMetadataByKeyBulkCreatePathDto {
+  userId: string
 }
 
 export interface ZitadelUserMetadataByKeyBulkCreateHeaderDto extends ZitadelOrganizationIdHeaderDto {}

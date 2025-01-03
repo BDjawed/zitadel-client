@@ -1,6 +1,6 @@
 import type { ZitadelOrganizationIdHeaderDto } from './common'
-import type { ZitadelUserMetadataByKeyGetDto } from './user-metadata-by-key-get.dto'
+import type { ZitadelUserMetadataByKeyPathGetDto } from './user-metadata-by-key-get.dto'
 
-export interface ZitadelUserMetadataByKeyDeleteDto extends ZitadelUserMetadataByKeyGetDto {}
+export interface ZitadelUserMetadataByKeyPathDeleteDto extends ZitadelUserMetadataByKeyPathGetDto {}
 
 export interface ZitadelUserMetadataByKeyDeleteHeaderDto extends ZitadelOrganizationIdHeaderDto {}
