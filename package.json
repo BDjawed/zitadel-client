@@ -1,7 +1,7 @@
 {
   "name": "@creoox-public/zitadel-client",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.52.3",
   "publishConfig": {
     "access": "public"
   },
