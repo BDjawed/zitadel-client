@@ -105,6 +105,9 @@ import type {
   ZitadelUserPasswordCreatePathDto,
   ZitadelUserPasswordResetCodeCreateDto,
   ZitadelUserPasswordResetCodeCreatePathDto,
+  ZitadelUserPermissionsGetDto,
+  ZitadelUserPermissionsGetHeaderDto,
+  ZitadelUserPermissionsGetPathDto,
   ZitadelUserPhoneCreateDto,
   ZitadelUserPhoneCreatePathDto,
   ZitadelUserPhoneDeleteDto,
@@ -172,6 +175,7 @@ import type {
   ZitadelUserPasskeysGetResponse,
   ZitadelUserPasswordCreateResponse,
   ZitadelUserPasswordResetCodeCreateResponse,
+  ZitadelUserPermissionsGetResponseDto,
   ZitadelUserPhoneCreateResponse,
   ZitadelUserPhoneDeleteResponse,
   ZitadelUserReactivatePostResponse,
@@ -1186,6 +1190,24 @@ export class ZitadelClient {
     const url = `${ApiEndpointsV2.USERS.replace(':userId', pathDto.userId)}/passkeys/${pathDto.passkeyId}`
     const response: ZitadelUserPasskeyDeleteResponse = await this.httpClient
       .delete(url)
+      .json()
+
+    return response
+  }
+
+  async getUserPermissions(
+    pathDto: ZitadelUserPermissionsGetPathDto,
+    headerDto: ZitadelUserPermissionsGetHeaderDto,
+    dto: ZitadelUserPermissionsGetDto,
+  ): Promise<ZitadelUserPermissionsGetResponseDto> {
+    const url = `${UsersEndpointsV1.USER.replace(':userId', pathDto.userId)}/memberships/_search`
+    const response: ZitadelUserPermissionsGetResponseDto = await this.httpClient
+      .post(url, {
+        json: dto,
+        headers: {
+          'x-zitadel-orgid': headerDto['x-zitadel-orgid'],
+        },
+      })
       .json()
 
     return response

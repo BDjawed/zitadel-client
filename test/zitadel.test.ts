@@ -84,6 +84,7 @@ describe('zitadel methods test', () => {
   // let retrievedHumanUser: ZITADEL.ZitadelUserByIdGetResponse
   let passwordResetCode: string
   let userPassKey: { id: string, code: string }
+  let managerId: string
 
   /* const testHumanUserData1 = {
     username: 'TestHumanUser',
@@ -228,6 +229,7 @@ describe('zitadel methods test', () => {
       const userInfos = await zitadelClient.getUserInfo()
       expectTypeOf(userInfos).toEqualTypeOf<ZITADEL.ZitadelUserInfoGetResponse>()
       console.log('✓ User info retrieved, USER_ID:', userInfos.sub)
+      managerId = userInfos.sub
     }
     catch (error) {
       console.error('❌ Get user info failed:', error)
@@ -290,6 +292,49 @@ describe('zitadel methods test', () => {
     }
     catch (error) {
       console.error('❌ Organization creation failed:', error)
+      throw error
+    }
+  })
+
+  it('should show all the permissions the user has in ZITADEL (ZITADEL Manager)', async () => {
+    try {
+      const permissions = await zitadelClient.getUserPermissions(
+        {
+          userId: managerId,
+        },
+        {
+          'x-zitadel-orgid': testOrganization.organizationId,
+        },
+        {
+          query: {
+            offset: '0',
+            limit: 100,
+            asc: true,
+          },
+          queries: [
+            {
+              /* orgQuery: {
+                orgId: testOrganization.organizationId
+              },
+              projectQuery: {
+                projectId: testOrganization.organizationId
+              },
+              projectGrantQuery: {
+                projectGrantId: testOrganization.organizationId
+              }, */
+              iamQuery: {
+                iam: true,
+              },
+            },
+          ],
+
+        },
+      )
+      expectTypeOf(permissions).toEqualTypeOf<ZITADEL.ZitadelUserPermissionsGetResponseDto>()
+      console.log('✓ User permissions: ', permissions.result)
+    }
+    catch (error) {
+      console.error('❌ Get user permissions failed:', error)
       throw error
     }
   })
