@@ -1,7 +1,7 @@
 {
-  "name": "@creoox-public/zitadel-client",
+  "name": "@bdjawed/zitadel-client",
   "type": "module",
-  "version": "0.52.4",
+  "version": "0.52.5",
   "publishConfig": {
     "access": "public"
   },
@@ -9,12 +9,12 @@
   "description": "ZITADEL custom js client",
   "author": "Creoox AG <info@creoox.com>",
   "license": "MIT",
-  "homepage": "https://github.com/Creoox/zitadel-client#readme",
+  "homepage": "https://github.com/BDjawed/zitadel-client#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Creoox/zitadel-client.git"
+    "url": "git+https://github.com/BDjawed/zitadel-client.git"
   },
-  "bugs": "https://github.com/Creoox/zitadel-client/issues",
+  "bugs": "https://github.com/BDjawed/zitadel-client/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {
