@@ -1,5 +1,8 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-export interface ZitadelAppApiDeleteResponse {
-  details: Details
-}
+export const ZitadelAppApiDeleteResponseSchema = z.object({
+  details: DetailsSchema,
+})
+
+export type ZitadelAppApiDeleteResponse = z.infer<typeof ZitadelAppApiDeleteResponseSchema>

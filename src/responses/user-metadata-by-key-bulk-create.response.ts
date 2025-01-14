@@ -1,3 +1,6 @@
-import type { ZitadelUserMetadataByKeyBulkDeleteResponse } from './user-metadata-by-key-bulk-delete.response'
+import type { z } from 'zod'
+import { ZitadelUserMetadataByKeyBulkDeleteResponseSchema } from './user-metadata-by-key-bulk-delete.response'
 
-export interface ZitadelUserMetadataByKeyBulkCreateResponse extends ZitadelUserMetadataByKeyBulkDeleteResponse {}
+export const ZitadelUserMetadataByKeyBulkCreateResponseSchema = ZitadelUserMetadataByKeyBulkDeleteResponseSchema.extend({})
+
+export type ZitadelUserMetadataByKeyBulkCreateResponse = z.infer<typeof ZitadelUserMetadataByKeyBulkCreateResponseSchema>

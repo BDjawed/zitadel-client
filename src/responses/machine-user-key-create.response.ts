@@ -1,7 +1,10 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-export interface ZitadelMachineUserKeyCreateResponse {
-  keyId: string
-  keyDetails: string
-  details: Details
-}
+export const ZitadelMachineUserKeyCreateResponseSchema = z.object({
+  keyId: z.string(),
+  keyDetails: z.string(),
+  details: DetailsSchema,
+})
+
+export type ZitadelMachineUserKeyCreateResponse = z.infer<typeof ZitadelMachineUserKeyCreateResponseSchema>

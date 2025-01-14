@@ -1,9 +1,16 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
-import type { ZitadelOrganizationIdHeaderDto } from './common'
+import { z } from 'zod'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
 
-export interface ZitadelMachineUserSecretCreateHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export const ZitadelMachineUserSecretCreateHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
 
-export interface ZitadelMachineUserSecretCreatePathDto extends ZitadelUserByIdGetPathDto {}
+export type ZitadelMachineUserSecretCreateHeaderDto = z.infer<typeof ZitadelMachineUserSecretCreateHeaderSchema>
 
-// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
-export interface ZitadelMachineUserSecretCreateDto {}
+export const ZitadelMachineUserSecretCreatePathSchema = z.object({
+  userId: z.string().min(1, 'User  ID is required'),
+})
+
+export type ZitadelMachineUserSecretCreatePathDto = z.infer<typeof ZitadelMachineUserSecretCreatePathSchema>
+
+export const ZitadelMachineUserSecretCreateSchema = z.object({})
+
+export type ZitadelMachineUserSecretCreateDto = z.infer<typeof ZitadelMachineUserSecretCreateSchema>

@@ -1,17 +1,21 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-export interface ZitadelUserPermissionsGetResponseDto {
-  details: Details
-  result: Result[]
-}
+export const ResultSchema = z.object({
+  userId: z.string(),
+  details: DetailsSchema,
+  roles: z.array(z.string()),
+  displayName: z.string(),
+  iam: z.boolean(),
+  orgId: z.string(),
+  projectId: z.string(),
+  projectGrantId: z.string(),
+})
 
-interface Result {
-  userId: string
-  details: Details
-  roles: string[]
-  displayName: string
-  iam: boolean
-  orgId: string
-  projectId: string
-  projectGrantId: string
-}
+export const ZitadelUserPermissionsGetResponseSchema = z.object({
+  details: DetailsSchema,
+  result: z.array(ResultSchema),
+})
+
+export type Result = z.infer<typeof ResultSchema>
+export type ZitadelUserPermissionsGetResponseDto = z.infer<typeof ZitadelUserPermissionsGetResponseSchema>

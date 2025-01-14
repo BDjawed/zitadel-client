@@ -1,7 +1,7 @@
 /* eslint no-console: "off" */
 import fs from 'node:fs'
 import process from 'node:process'
-import * as ZITADEL from '@creoox-public/zitadel-client'
+import * as ZITADEL from '@bdjawed/zitadel-client'
 import * as dotenv from 'dotenv'
 import { ZitadelTextQueryMethod } from '../../../src/enums'
 

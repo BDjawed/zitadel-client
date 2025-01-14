@@ -1,15 +1,20 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-interface ZitadelUserMetadataResult {
-  details: Details
-  key: string
-  value: string
-}
-export interface ZitadelUserMetadataSearchGetResponse {
-  details: {
-    totalResult: string
-    processedSequence: string
-    viewTimestamp: string
-  }
-  result: ZitadelUserMetadataResult[]
-}
+export const ZitadelUserMetadataResultSchema = z.object({
+  details: DetailsSchema,
+  key: z.string(),
+  value: z.string(),
+})
+
+export const ZitadelUserMetadataSearchGetResponseSchema = z.object({
+  details: z.object({
+    totalResult: z.string(),
+    processedSequence: z.string(),
+    viewTimestamp: z.string(),
+  }),
+  result: z.array(ZitadelUserMetadataResultSchema),
+})
+
+export type ZitadelUserMetadataResult = z.infer<typeof ZitadelUserMetadataResultSchema>
+export type ZitadelUserMetadataSearchGetResponse = z.infer<typeof ZitadelUserMetadataSearchGetResponseSchema>

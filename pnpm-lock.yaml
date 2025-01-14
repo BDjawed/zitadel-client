@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@bdjawed/zitadel-client':
+        specifier: ^0.52.5
+        version: 0.52.5
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
       ky:
         specifier: ^1.7.2
         version: 1.7.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^3.3.2
@@ -63,7 +69,7 @@ importers:
 
   examples/zitadel-scripts:
     dependencies:
-      '@creoox-public/zitadel-client':
+      '@bdjawed/zitadel-client':
         specifier: workspace:*
         version: link:../..
       chalk:
@@ -84,7 +90,7 @@ importers:
         version: 4.19.2
       typescript:
         specifier: latest
-        version: 5.7.2
+        version: 5.7.3
 
 packages:
 
@@ -238,6 +244,9 @@ packages:
   '@babel/types@7.24.5':
     resolution: {integrity: sha512-6mQNsaLeXTw0nxYUYu+NSa4Hx4BlF1x1x8/PMFbiR+GBSr+2DkECc69b8hgy2frEodNcvPffeH8YfWd3LI6jhQ==}
     engines: {node: '>=6.9.0'}
+
+  '@bdjawed/zitadel-client@0.52.5':
+    resolution: {integrity: sha512-XWXoVpwriw6PuuoigyQWVkZcXsQiywgt85sTc9VYba9L9r6GfOOw03vpaNAwSNmjKOS7KlboVUd/Niz60QrsjA==}
 
   '@clack/core@0.3.4':
     resolution: {integrity: sha512-H4hxZDXgHtWTwV3RAVenqcC4VbJZNegbBjlPvzOzCouXtS2y3sDvlO3IsbrPNWuLWPPlYVYPghQdSF64683Ldw==}
@@ -2958,8 +2967,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.7.2:
-    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
+  typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -3327,6 +3336,11 @@ snapshots:
       '@babel/helper-string-parser': 7.24.1
       '@babel/helper-validator-identifier': 7.24.5
       to-fast-properties: 2.0.0
+
+  '@bdjawed/zitadel-client@0.52.5':
+    dependencies:
+      jsonwebtoken: 9.0.2
+      ky: 1.7.2
 
   '@clack/core@0.3.4':
     dependencies:
@@ -5913,7 +5927,7 @@ snapshots:
 
   typescript@5.5.4: {}
 
-  typescript@5.7.2: {}
+  typescript@5.7.3: {}
 
   ufo@1.5.3: {}
 

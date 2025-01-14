@@ -1,14 +1,5 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
-
-export interface ZitadelUserPasswordResetCodeCreateDto {
-  sendLink?: SendLink
-  returnCode?: object
-}
-
-export interface SendLink {
-  notificationType: NotificationType
-  urlTemplate?: string
-}
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
 export enum NotificationType {
   UNSPECIFIED = 'NOTIFICATION_TYPE_Unspecified',
@@ -16,4 +7,20 @@ export enum NotificationType {
   SMS = 'NOTIFICATION_TYPE_SMS',
 }
 
-export interface ZitadelUserPasswordResetCodeCreatePathDto extends ZitadelUserByIdGetPathDto {}
+export const SendLinkSchema = z.object({
+  notificationType: z.nativeEnum(NotificationType),
+  urlTemplate: z.string().optional(),
+})
+
+export type SendLink = z.infer<typeof SendLinkSchema>
+
+export const ZitadelUserPasswordResetCodeCreateSchema = z.object({
+  sendLink: SendLinkSchema.optional(),
+  returnCode: z.object({}).optional(),
+})
+
+export type ZitadelUserPasswordResetCodeCreateDto = z.infer<typeof ZitadelUserPasswordResetCodeCreateSchema>
+
+export const ZitadelUserPasswordResetCodeCreatePathSchema = ZitadelUserByIdGetPathSchema.extend({})
+
+export type ZitadelUserPasswordResetCodeCreatePathDto = z.infer<typeof ZitadelUserPasswordResetCodeCreatePathSchema>

@@ -1,12 +1,13 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { SendCodeSchema, ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserResendVerifyCodeByEmailPathDto extends ZitadelUserByIdGetPathDto {}
+export const ZitadelUserResendVerifyCodeByEmailPathSchema = ZitadelUserByIdGetPathSchema.extend({})
 
-export interface ZitadelUserResendVerifyCodeByEmailPostDto {
-  sendCode?: SendCode
-  returnCode?: object
-}
+export type ZitadelUserResendVerifyCodeByEmailPathDto = z.infer<typeof ZitadelUserResendVerifyCodeByEmailPathSchema>
 
-interface SendCode {
-  urlTemplate: string
-}
+export const ZitadelUserResendVerifyCodeByEmailPostSchema = z.object({
+  sendCode: SendCodeSchema.optional(),
+  returnCode: z.object({}).optional(),
+})
+
+export type ZitadelUserResendVerifyCodeByEmailPostDto = z.infer<typeof ZitadelUserResendVerifyCodeByEmailPostSchema>

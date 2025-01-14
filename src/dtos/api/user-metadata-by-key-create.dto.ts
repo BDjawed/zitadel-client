@@ -1,10 +1,17 @@
-import type { ZitadelOrganizationIdHeaderDto } from './common'
-import type { ZitadelUserMetadataByKeyPathGetDto } from './user-metadata-by-key-get.dto'
+import { z } from 'zod'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
+import { ZitadelUserMetadataByKeyPathGetSchema } from './user-metadata-by-key-get.dto'
 
-export interface ZitadelUserMetadataByKeyCreatePathDto extends ZitadelUserMetadataByKeyPathGetDto {}
+export const ZitadelUserMetadataByKeyCreatePathSchema = ZitadelUserMetadataByKeyPathGetSchema.extend({})
 
-export interface ZitadelUserMetadataByKeyCreateDto {
-  value: string
-}
+export type ZitadelUserMetadataByKeyCreatePathDto = z.infer<typeof ZitadelUserMetadataByKeyCreatePathSchema>
 
-export interface ZitadelUserMetadataByKeyCreateHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export const ZitadelUserMetadataByKeyCreateSchema = z.object({
+  value: z.string().min(1, 'Value is required'),
+})
+
+export type ZitadelUserMetadataByKeyCreateDto = z.infer<typeof ZitadelUserMetadataByKeyCreateSchema>
+
+export const ZitadelUserMetadataByKeyCreateHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
+
+export type ZitadelUserMetadataByKeyCreateHeaderDto = z.infer<typeof ZitadelUserMetadataByKeyCreateHeaderSchema>

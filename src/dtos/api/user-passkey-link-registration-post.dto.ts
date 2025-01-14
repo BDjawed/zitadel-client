@@ -1,12 +1,15 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserPasskeyLinkRegistrationPostPathDto extends ZitadelUserByIdGetPathDto {}
+export const ZitadelUserPasskeyLinkRegistrationPostPathSchema = ZitadelUserByIdGetPathSchema.extend({})
 
-export interface ZitadelUserPasskeyLinkRegistrationPostDto {
-  sendLink?: SendLink
-  returnCode?: object
-}
+export type ZitadelUserPasskeyLinkRegistrationPostPathDto = z.infer<typeof ZitadelUserPasskeyLinkRegistrationPostPathSchema>
 
-interface SendLink {
-  urlTemplate: string
-}
+export const ZitadelUserPasskeyLinkRegistrationPostSchema = z.object({
+  sendLink: z.object({
+    urlTemplate: z.string().min(1, 'URL template is required'),
+  }).optional(),
+  returnCode: z.object({}).optional(),
+})
+
+export type ZitadelUserPasskeyLinkRegistrationPostDto = z.infer<typeof ZitadelUserPasskeyLinkRegistrationPostSchema>

@@ -1,14 +1,16 @@
-export interface ZitadelMachineUserIdpsListGetResponse {
-  details: {
-    totalResult: string
-    processedSequence: string
-    timestamp: string
-  }
-  result?: Idp[]
-}
+import { z } from 'zod'
 
-interface Idp {
-  idpId: string
-  userId: string
-  userName: string
-}
+export const ZitadelMachineUserIdpsListGetResponseSchema = z.object({
+  details: z.object({
+    totalResult: z.string(),
+    processedSequence: z.string(),
+    timestamp: z.string(),
+  }),
+  result: z.array(z.object({
+    idpId: z.string(),
+    userId: z.string(),
+    userName: z.string(),
+  })).optional(),
+})
+
+export type ZitadelMachineUserIdpsListGetResponse = z.infer<typeof ZitadelMachineUserIdpsListGetResponseSchema>

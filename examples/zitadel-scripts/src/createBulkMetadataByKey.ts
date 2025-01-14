@@ -2,9 +2,9 @@
 import { Buffer } from 'node:buffer'
 import fs from 'node:fs'
 import process from 'node:process'
-import * as ZITADEL from '@creoox-public/zitadel-client'
+import * as ZITADEL from '@bdjawed/zitadel-client'
 import * as dotenv from 'dotenv'
-import type { ZitadelUserMetadata } from '@creoox-public/zitadel-client'
+import type { ZitadelUserMetadata } from '@bdjawed/zitadel-client'
 
 dotenv.config()
 

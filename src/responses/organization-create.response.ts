@@ -1,13 +1,17 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-export interface ZitadelOrganizationCreateResponse {
-  details: Details
-  organizationId: string
-  createdAdmins: CreatedAdmins[]
-}
+export const CreatedAdminsSchema = z.object({
+  userId: z.string(),
+  emailCode: z.string(),
+  phoneCode: z.string(),
+})
 
-interface CreatedAdmins {
-  userId: string
-  emailCode: string
-  phoneCode: string
-}
+export const ZitadelOrganizationCreateResponseSchema = z.object({
+  details: DetailsSchema,
+  organizationId: z.string(),
+  createdAdmins: z.array(CreatedAdminsSchema),
+})
+
+export type CreatedAdmins = z.infer<typeof CreatedAdminsSchema>
+export type ZitadelOrganizationCreateResponse = z.infer<typeof ZitadelOrganizationCreateResponseSchema>

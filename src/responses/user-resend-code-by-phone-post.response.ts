@@ -1,6 +1,9 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-export interface ZitadelUserResendVerifyCodeByPhonePostResponse {
-  details: Details
-  verificationCode?: string
-}
+export const ZitadelUserResendVerifyCodeByPhonePostResponseSchema = z.object({
+  details: DetailsSchema,
+  verificationCode: z.string().optional(),
+})
+
+export type ZitadelUserResendVerifyCodeByPhonePostResponse = z.infer<typeof ZitadelUserResendVerifyCodeByPhonePostResponseSchema>

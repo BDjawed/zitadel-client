@@ -1,5 +1,8 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserU2fDeletePathDto extends ZitadelUserByIdGetPathDto {
-  u2fId: string
-}
+export const ZitadelUserU2fDeletePathSchema = ZitadelUserByIdGetPathSchema.extend({
+  u2fId: z.string().min(1, 'U2F ID is required'),
+})
+
+export type ZitadelUserU2fDeletePathDto = z.infer<typeof ZitadelUserU2fDeletePathSchema>

@@ -1,10 +1,15 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-interface Metadata {
-  details: Details
-  key: string
-  value: string
-}
-export interface ZitadelUserMetadataByKeyGetResponse {
-  metadata: Metadata
-}
+const MetadataSchema = z.object({
+  details: DetailsSchema,
+  key: z.string(),
+  value: z.string(),
+})
+
+export const ZitadelUserMetadataByKeyGetResponseSchema = z.object({
+  metadata: MetadataSchema,
+})
+
+// type Metadata = z.infer<typeof MetadataSchema>
+export type ZitadelUserMetadataByKeyGetResponse = z.infer<typeof ZitadelUserMetadataByKeyGetResponseSchema>

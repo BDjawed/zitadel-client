@@ -1,6 +1,10 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserLockPathDto extends ZitadelUserByIdGetPathDto {}
+export const ZitadelUserLockPathSchema = ZitadelUserByIdGetPathSchema.extend({})
 
-// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
-export interface ZitadelUserLockPostDto {}
+export type ZitadelUserLockPathDto = z.infer<typeof ZitadelUserLockPathSchema>
+
+export const ZitadelUserLockPostSchema = z.object({})
+
+export type ZitadelUserLockPostDto = z.infer<typeof ZitadelUserLockPostSchema>
