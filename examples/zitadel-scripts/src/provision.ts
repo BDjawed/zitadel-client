@@ -45,11 +45,11 @@ async function main(): Promise<void> {
 
   const creLand = {
     organizationName: `creLand-${randomName}`,
-    humanUserName: `creLandAdmin`,
-    creDashboardProjectName: `creDashboard`,
-    crePaymentsProjectName: `crePayments`,
-    creBetaAppName: `creBeta`,
-    creAlphaAppName: `creAlpha`,
+    humanUserName: 'creLandAdmin',
+    creDashboardProjectName: 'creDashboard',
+    crePaymentsProjectName: 'crePayments',
+    creBetaAppName: 'creBeta',
+    creAlphaAppName: 'creAlpha',
     creMachineUsers: ['creApi', 'creWorker'],
   }
 
@@ -139,9 +139,7 @@ async function main(): Promise<void> {
       privateLabelingSetting:
         ZITADEL.ZitadelProjectPrivateLabelingSetting.ENFORCE_PROJECT_RESOURCE_OWNER_POLICY,
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
+    creLandOrganization.organizationId,
   )
 
   provision_log.creDashboardProject = creDashboardProject
@@ -155,15 +153,14 @@ async function main(): Promise<void> {
       privateLabelingSetting:
         ZITADEL.ZitadelProjectPrivateLabelingSetting.ENFORCE_PROJECT_RESOURCE_OWNER_POLICY,
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
+    creLandOrganization.organizationId,
   )
 
   provision_log.crePaymentsProject = crePaymentsProject
 
   // Create creLand OIDC Apps
   const creBetaOidcApp = await zitadelClient.createAppOidc(
+    creDashboardProject.id,
     {
       name: creLand.creBetaAppName,
       redirectUris: [ZITADEL_APP_OIDC_REDIRECT_URI],
@@ -183,15 +180,13 @@ async function main(): Promise<void> {
       skipNativeAppSuccessPage: true,
       backChannelLogoutUri: [],
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
-    { projectId: creDashboardProject.id },
+    creLandOrganization.organizationId,
   )
 
   provision_log.creBetaOidcApp = creBetaOidcApp
 
   const creAlphaOidcApp = await zitadelClient.createAppOidc(
+    creDashboardProject.id,
     {
       name: creLand.creAlphaAppName,
       redirectUris: [ZITADEL_APP_OIDC_REDIRECT_URI],
@@ -211,10 +206,7 @@ async function main(): Promise<void> {
       skipNativeAppSuccessPage: true,
       backChannelLogoutUri: [],
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
-    { projectId: creDashboardProject.id },
+    creLandOrganization.organizationId,
   )
 
   provision_log.creAlphaOidcApp = creAlphaOidcApp
@@ -229,21 +221,15 @@ async function main(): Promise<void> {
         description: `Machine user for  ${creMachineUser}`,
         accessTokenType: ZITADEL.ZitadelMachineUserAccessTokenType.JWT,
       },
-      {
-        'x-zitadel-orgid': creLandOrganization.organizationId,
-      },
+      creLandOrganization.organizationId,
     )
 
     const pat = await zitadelClient.createMachineUserPAT(
+      machineUser.userId,
       {
         expirationDate: new Date(ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE),
       },
-      {
-        'x-zitadel-orgid': creLandOrganization.organizationId,
-      },
-      {
-        userId: machineUser.userId,
-      },
+      creLandOrganization.organizationId,
     )
 
     provision_log.machineUsers.push({

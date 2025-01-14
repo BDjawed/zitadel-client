@@ -51,11 +51,7 @@ async function main(): Promise<void> {
   for (const machineUser of ZITADEL_PROVISIONING_RESPONSE_FILE.machineUsers) {
     const { userId } = machineUser.machineUser
     console.log('userId', userId)
-    const creLandMachineUserLockResponse = await zitadelClient.userLock(
-      {
-        userId,
-      },
-    )
+    const creLandMachineUserLockResponse = await zitadelClient.userLock(userId)
     lockedCreLandMachineUsers.push(creLandMachineUserLockResponse)
   }
 

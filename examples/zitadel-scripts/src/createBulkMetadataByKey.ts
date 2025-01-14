@@ -72,15 +72,11 @@ async function main(): Promise<void> {
   const metadataArray = generateMetadataArray(4)
 
   const metadata = await zitadelClient.createBulkMetadataByKey(
-    {
-      userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
-    },
+    ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
     {
       metadata: metadataArray,
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
+    creLandOrganization.organizationId,
   )
 
   console.log('Created metadata response: ', metadata)

@@ -52,9 +52,7 @@ async function main(): Promise<void> {
       userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
       key: 'test',
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
+    creLandOrganization.organizationId,
   )
 
   console.log('Deleted metadata response: ', metadata)

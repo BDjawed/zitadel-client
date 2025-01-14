@@ -55,17 +55,13 @@ async function main(): Promise<void> {
     const { userId } = machineUser.machineUser
     const randomName = Math.random().toString(36).substring(7)
     const creLandMachineUserUpdateResponse = await zitadelClient.updateMachineUser(
-      {
-        userId,
-      },
+      userId,
       {
         name: `creLandMachineUser-${randomName}`,
         description: `Updated machine user description by script ${new Date().toISOString()}`,
         accessTokenType: ZitadelMachineUserAccessTokenType.BEARER,
       },
-      {
-        'x-zitadel-orgid': creLandOrganization.organizationId,
-      },
+      creLandOrganization.organizationId,
     )
     updatedCreLandMachineUsers.push(creLandMachineUserUpdateResponse)
   }

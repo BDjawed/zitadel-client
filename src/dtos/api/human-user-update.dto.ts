@@ -12,11 +12,11 @@ export interface ZitadelHumanUserUpdateDto {
     verificationCode?: string
   }
 }
-interface HashedPassword {
+export interface HashedPassword {
   hash: string
   changeRequired?: boolean
 }
-interface Email {
+export interface Email {
   email: string
   sendCode?: SendCode
   returnCode?: object
@@ -25,17 +25,17 @@ interface Email {
 interface SendCode {
   urlTemplate: string
 }
-interface Phone {
+export interface Phone {
   phone: string
   sendCode: SendCode
   returnCode: object
   isVerified: boolean
 }
-interface Password {
+export interface Password {
   password: string
   changeRequired?: boolean
 }
-interface Profile {
+export interface Profile {
   givenName: string
   familyName: string
   nickName?: string

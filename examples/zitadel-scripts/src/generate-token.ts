@@ -86,24 +86,18 @@ async function main(): Promise<void> {
       description: `Machine user for ${customer.machineUserName}`,
       accessTokenType: ZITADEL.ZitadelMachineUserAccessTokenType.JWT,
     },
-    {
-      'x-zitadel-orgid': organization.organizationId,
-    },
+    organization.organizationId,
   )
 
   script_log.machineUser = machineUser
 
   // Create Pat
   const pat = await zitadelClient.createMachineUserPAT(
+    machineUser.userId,
     {
       expirationDate: new Date(customer.patExpirationDate),
     },
-    {
-      'x-zitadel-orgid': organization.organizationId,
-    },
-    {
-      userId: machineUser.userId,
-    },
+    organization.organizationId,
   )
 
   script_log.pat = pat

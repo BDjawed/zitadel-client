@@ -41,14 +41,7 @@ async function main(): Promise<void> {
   const creLandOrganization = ZITADEL_PROVISIONING_RESPONSE_FILE.creLandOrganization
 
   // Create a machine user
-  const deleteUserAvatarResponse = await zitadelClient.deleteUserAvatar(
-    {
-      userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
-    },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
-  )
+  const deleteUserAvatarResponse = await zitadelClient.deleteUserAvatar(ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId, creLandOrganization.organizationId)
 
   console.log('Delete user avatar response: ', deleteUserAvatarResponse)
 }
