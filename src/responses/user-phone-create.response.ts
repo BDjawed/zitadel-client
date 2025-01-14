@@ -1,5 +1,8 @@
-import type { ZitadelLoginSettingsUpdateResponse } from './login-settings-update.response'
+import { z } from 'zod'
+import { ZitadelLoginSettingsUpdateResponseSchema } from './login-settings-update.response'
 
-export interface ZitadelUserPhoneCreateResponse extends ZitadelLoginSettingsUpdateResponse {
-  verificationCode?: string
-}
+export const ZitadelUserPhoneCreateResponseSchema = ZitadelLoginSettingsUpdateResponseSchema.extend({
+  verificationCode: z.string().optional(),
+})
+
+export type ZitadelUserPhoneCreateResponse = z.infer<typeof ZitadelUserPhoneCreateResponseSchema>

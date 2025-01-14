@@ -1,8 +1,13 @@
-import type { ZitadelOrganizationIdHeaderDto } from './common'
+import { z } from 'zod'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
 
-export interface ZitadelAppClientSecretCreateHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export const ZitadelAppClientSecretCreateHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
 
-export interface ZitadelAppClientSecretCreatePathDto {
-  appId: string
-  projectId: string
-}
+export type ZitadelAppClientSecretCreateHeaderDto = z.infer<typeof ZitadelAppClientSecretCreateHeaderSchema>
+
+export const ZitadelAppClientSecretCreatePathSchema = z.object({
+  appId: z.string(),
+  projectId: z.string(),
+})
+
+export type ZitadelAppClientSecretCreatePathDto = z.infer<typeof ZitadelAppClientSecretCreatePathSchema>

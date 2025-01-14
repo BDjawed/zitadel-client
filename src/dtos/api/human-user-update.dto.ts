@@ -1,49 +1,23 @@
-import type { ZitadelUserGender } from '.'
+import { z } from 'zod'
+import { EmailSchema, HashedPasswordSchema, PasswordSchema, PhoneSchema, ProfileSchema } from '.'
 
-export interface ZitadelHumanUserUpdateDto {
-  username: string
-  profile: Profile
-  email: Email
-  phone?: Phone
-  password: {
-    password: Password
-    hashedPassword?: HashedPassword
-    currentPassword?: string
-    verificationCode?: string
-  }
-}
-export interface HashedPassword {
-  hash: string
-  changeRequired?: boolean
-}
-export interface Email {
-  email: string
-  sendCode?: SendCode
-  returnCode?: object
-  isVerified?: boolean
-}
-interface SendCode {
-  urlTemplate: string
-}
-export interface Phone {
-  phone: string
-  sendCode: SendCode
-  returnCode: object
-  isVerified: boolean
-}
-export interface Password {
-  password: string
-  changeRequired?: boolean
-}
-export interface Profile {
-  givenName: string
-  familyName: string
-  nickName?: string
-  displayName?: string
-  preferredLanguage?: string
-  gender?: ZitadelUserGender
-}
+export const ZitadelHumanUserUpdateSchema = z.object({
+  username: z.string().min(1, 'Username is required'),
+  profile: ProfileSchema,
+  email: EmailSchema,
+  phone: PhoneSchema.optional(),
+  password: z.object({
+    password: PasswordSchema,
+    hashedPassword: HashedPasswordSchema.optional(),
+    currentPassword: z.string().optional(),
+    verificationCode: z.string().optional(),
+  }),
+})
 
-export interface ZitadelHumanUserUpdatePathDto {
-  userId: string
-}
+export type ZitadelHumanUserUpdateDto = z.infer<typeof ZitadelHumanUserUpdateSchema>
+
+export const ZitadelHumanUserUpdatePathSchema = z.object({
+  userId: z.string().min(1, 'User  ID is required'),
+})
+
+export type ZitadelHumanUserUpdatePathDto = z.infer<typeof ZitadelHumanUserUpdatePathSchema>

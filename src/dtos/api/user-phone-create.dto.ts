@@ -1,10 +1,15 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserPhoneCreateDto {
-  phone: string
-  sendCode?: object
-  returnCode?: object
-  isVerified?: boolean
-}
+export const ZitadelUserPhoneCreateSchema = z.object({
+  phone: z.string().min(1, 'Phone is required'),
+  sendCode: z.object({}).optional(),
+  returnCode: z.object({}).optional(),
+  isVerified: z.boolean().optional(),
+})
 
-export interface ZitadelUserPhoneCreatePathDto extends ZitadelUserByIdGetPathDto {}
+export type ZitadelUserPhoneCreateDto = z.infer<typeof ZitadelUserPhoneCreateSchema>
+
+export const ZitadelUserPhoneCreatePathSchema = ZitadelUserByIdGetPathSchema.extend({})
+
+export type ZitadelUserPhoneCreatePathDto = z.infer<typeof ZitadelUserPhoneCreatePathSchema>

@@ -1,8 +1,11 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-export interface ZitadelHumanUserCreateResponse {
-  userId?: string
-  details: Details
-  emailCode?: string
-  phoneCode?: string
-}
+export const ZitadelHumanUserCreateResponseSchema = z.object({
+  userId: z.string().optional(),
+  details: DetailsSchema,
+  emailCode: z.string().optional(),
+  phoneCode: z.string().optional(),
+})
+
+export type ZitadelHumanUserCreateResponse = z.infer<typeof ZitadelHumanUserCreateResponseSchema>

@@ -1,14 +1,21 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserPasswordCreateDto {
-  newPassword: NewPassword
-  currentPassword?: string
-  verificationCode?: string
-}
+export const NewPasswordSchema = z.object({
+  password: z.string().min(1, 'Password is required'),
+  changeRequired: z.boolean().optional(),
+})
 
-export interface NewPassword {
-  password: string
-  changeRequired?: boolean
-}
+export type NewPassword = z.infer<typeof NewPasswordSchema>
 
-export interface ZitadelUserPasswordCreatePathDto extends ZitadelUserByIdGetPathDto {}
+export const ZitadelUserPasswordCreateSchema = z.object({
+  newPassword: NewPasswordSchema,
+  currentPassword: z.string().optional(),
+  verificationCode: z.string().optional(),
+})
+
+export type ZitadelUserPasswordCreateDto = z.infer<typeof ZitadelUserPasswordCreateSchema>
+
+export const ZitadelUserPasswordCreatePathSchema = ZitadelUserByIdGetPathSchema.extend({})
+
+export type ZitadelUserPasswordCreatePathDto = z.infer<typeof ZitadelUserPasswordCreatePathSchema>

@@ -1,3 +1,6 @@
-import type { ZitadelOrganizationIdHeaderDto } from './common'
+import type { z } from 'zod'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
 
-export interface ZitadelLoginSettingsGetHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export const ZitadelLoginSettingsGetHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
+
+export type ZitadelLoginSettingsGetHeaderDto = z.infer<typeof ZitadelLoginSettingsGetHeaderSchema>

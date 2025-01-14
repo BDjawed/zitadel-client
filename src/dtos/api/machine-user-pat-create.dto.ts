@@ -1,11 +1,18 @@
-import type { ZitadelOrganizationIdHeaderDto } from './common'
+import { z } from 'zod'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
 
-export interface ZitadelMachineUserPatCreateDto {
-  expirationDate: Date
-}
+export const ZitadelMachineUserPatCreateSchema = z.object({
+  expirationDate: z.date(),
+})
 
-export interface ZitadelMachineUserPatCreateHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export type ZitadelMachineUserPatCreateDto = z.infer<typeof ZitadelMachineUserPatCreateSchema>
 
-export interface ZitadelMachineUserPatCreatePathDto {
-  userId: string
-}
+export const ZitadelMachineUserPatCreateHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
+
+export type ZitadelMachineUserPatCreateHeaderDto = z.infer<typeof ZitadelMachineUserPatCreateHeaderSchema>
+
+export const ZitadelMachineUserPatCreatePathSchema = z.object({
+  userId: z.string().min(1, 'User  ID is required'),
+})
+
+export type ZitadelMachineUserPatCreatePathDto = z.infer<typeof ZitadelMachineUserPatCreatePathSchema>

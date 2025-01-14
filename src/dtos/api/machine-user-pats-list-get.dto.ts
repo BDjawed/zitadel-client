@@ -1,8 +1,17 @@
-import type { Query, ZitadelUserByIdGetPathDto } from '.'
-import type { ZitadelOrganizationIdHeaderDto } from './common'
+import { z } from 'zod'
+import { QuerySchema } from '.'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
 
-export interface ZitadelMachineUserPatsListGetHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export const ZitadelMachineUserPatsListGetHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
 
-export interface ZitadelMachineUserPatsListGetPathDto extends ZitadelUserByIdGetPathDto {}
+export type ZitadelMachineUserPatsListGetHeaderDto = z.infer<typeof ZitadelMachineUserPatsListGetHeaderSchema>
 
-export interface ZitadelMachineUserPatsListGetDto extends Query {}
+export const ZitadelMachineUserPatsListGetPathSchema = z.object({
+  userId: z.string().min(1, 'User  ID is required'),
+})
+
+export type ZitadelMachineUserPatsListGetPathDto = z.infer<typeof ZitadelMachineUserPatsListGetPathSchema>
+
+export const ZitadelMachineUserPatsListGetSchema = QuerySchema.extend({})
+
+export type ZitadelMachineUserPatsListGetDto = z.infer<typeof ZitadelMachineUserPatsListGetSchema>

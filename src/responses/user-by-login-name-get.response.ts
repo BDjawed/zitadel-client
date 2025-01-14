@@ -1,18 +1,22 @@
-import type { ZitadelUserStateType } from '../enums'
-import type { Details } from './common'
-import type { ZitadelHumanUserDto, ZitadelMachineUserDto } from './user-by-id-get.response'
+import { z } from 'zod'
+import { ZitadelUserStateType } from '../enums'
+import { DetailsSchema } from './common'
+import { ZitadelHumanUserSchema, ZitadelMachineUserSchema } from './user-by-id-get.response'
 
-interface User {
-  id: string
-  details: Details
-  state: ZitadelUserStateType
-  userName: string
-  loginNames: string[]
-  preferredLoginName: string
-  human: ZitadelHumanUserDto
-  machine: ZitadelMachineUserDto
-}
+export const UserSchema = z.object({
+  id: z.string(),
+  details: DetailsSchema,
+  state: z.nativeEnum(ZitadelUserStateType),
+  userName: z.string(),
+  loginNames: z.array(z.string()),
+  preferredLoginName: z.string(),
+  human: ZitadelHumanUserSchema,
+  machine: ZitadelMachineUserSchema,
+})
 
-export interface ZitadelUserByLoginNameGetResponse {
-  user: User
-}
+export const ZitadelUserByLoginNameGetResponseSchema = z.object({
+  user: UserSchema,
+})
+
+export type User = z.infer<typeof UserSchema>
+export type ZitadelUserByLoginNameGetResponse = z.infer<typeof ZitadelUserByLoginNameGetResponseSchema>

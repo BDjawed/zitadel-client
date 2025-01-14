@@ -1,24 +1,5 @@
-import type { ZitadelOrganizationIdHeaderDto } from './common'
-
-export interface ZitadelAppOidcCreateDto {
-  name: string
-  redirectUris: string[]
-  responseTypes: ZitadelAppOidcResponseType[]
-  grantTypes: ZitadelAppOidcGrantType[]
-  appType: ZitadelAppOidcAppType
-  authMethodType: ZitadelAppOidcAuthMethodType
-  postLogoutRedirectUris: string[]
-  version: ZitadelAppOidcVersionType
-  devMode: boolean
-  accessTokenType: ZitadelAppOidcAccessTokenType
-  accessTokenRoleAssertion: boolean
-  idTokenRoleAssertion: boolean
-  idTokenUserinfoAssertion: boolean
-  clockSkew: string
-  additionalOrigins: string[]
-  skipNativeAppSuccessPage: boolean
-  backChannelLogoutUri: string[]
-}
+import { z } from 'zod'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
 
 export enum ZitadelAppOidcResponseType {
   CODE = 'OIDC_RESPONSE_TYPE_CODE',
@@ -56,8 +37,34 @@ export enum ZitadelAppOidcAccessTokenType {
   JWT = 'OIDC_TOKEN_TYPE_JWT',
 }
 
-export interface ZitadelAppOidcCreateHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export const ZitadelAppOidcCreateSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  redirectUris: z.array(z.string()),
+  responseTypes: z.array(z.nativeEnum(ZitadelAppOidcResponseType)),
+  grantTypes: z.array(z.nativeEnum(ZitadelAppOidcGrantType)),
+  appType: z.nativeEnum(ZitadelAppOidcAppType),
+  authMethodType: z.nativeEnum(ZitadelAppOidcAuthMethodType),
+  postLogoutRedirectUris: z.array(z.string()),
+  version: z.nativeEnum(ZitadelAppOidcVersionType),
+  devMode: z.boolean(),
+  accessTokenType: z.nativeEnum(ZitadelAppOidcAccessTokenType),
+  accessTokenRoleAssertion: z.boolean(),
+  idTokenRoleAssertion: z.boolean(),
+  idTokenUserinfoAssertion: z.boolean(),
+  clockSkew: z.string(),
+  additionalOrigins: z.array(z.string()),
+  skipNativeAppSuccessPage: z.boolean(),
+  backChannelLogoutUri: z.array(z.string()),
+})
 
-export interface ZitadelAppOidcCreatePathDto {
-  projectId: string
-}
+export type ZitadelAppOidcCreateDto = z.infer<typeof ZitadelAppOidcCreateSchema>
+
+export const ZitadelAppOidcCreateHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
+
+export type ZitadelAppOidcCreateHeaderDto = z.infer<typeof ZitadelAppOidcCreateHeaderSchema>
+
+export const ZitadelAppOidcCreatePathSchema = z.object({
+  projectId: z.string(),
+})
+
+export type ZitadelAppOidcCreatePathDto = z.infer<typeof ZitadelAppOidcCreatePathSchema>

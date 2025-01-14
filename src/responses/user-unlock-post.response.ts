@@ -1,5 +1,8 @@
-import type { Details } from './common'
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
-export interface ZitadelUserUnlockPostResponse {
-  details: Details
-}
+export const ZitadelUserUnlockPostResponseSchema = z.object({
+  details: DetailsSchema,
+})
+
+export type ZitadelUserUnlockPostResponse = z.infer<typeof ZitadelUserUnlockPostResponseSchema>

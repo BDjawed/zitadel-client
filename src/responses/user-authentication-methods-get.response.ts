@@ -1,9 +1,5 @@
-import type { Details } from './common'
-
-export interface ZitadelUserAuthenticationMethodsGetResponse {
-  details: Details
-  authMethodTypes: AuthMethodTypes[]
-}
+import { z } from 'zod'
+import { DetailsSchema } from './common'
 
 export enum AuthMethodTypes {
   UNSPECIFIED = 'AUTHENTICATION_METHOD_TYPE_UNSPECIFIED',
@@ -15,3 +11,10 @@ export enum AuthMethodTypes {
   SMS = 'AUTHENTICATION_METHOD_TYPE_OTP_SMS',
   EMAIL = 'AUTHENTICATION_METHOD_TYPE_OTP_EMAIL',
 }
+
+export const ZitadelUserAuthenticationMethodsGetResponseSchema = z.object({
+  details: DetailsSchema,
+  authMethodTypes: z.array(z.nativeEnum(AuthMethodTypes)),
+})
+
+export type ZitadelUserAuthenticationMethodsGetResponse = z.infer<typeof ZitadelUserAuthenticationMethodsGetResponseSchema>

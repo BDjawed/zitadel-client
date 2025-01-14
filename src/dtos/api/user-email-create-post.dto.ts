@@ -1,14 +1,17 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserEmailCreatePathDto extends ZitadelUserByIdGetPathDto {}
+export const ZitadelUserEmailCreatePathSchema = ZitadelUserByIdGetPathSchema.extend({})
 
-export interface ZitadelUserEmailCreatePostDto {
-  email: string
-  sendCode?: SendCode
-  returnCode?: object
-  isVerified?: boolean
-}
+export type ZitadelUserEmailCreatePathDto = z.infer<typeof ZitadelUserEmailCreatePathSchema>
 
-interface SendCode {
-  urlTemplate: string
-}
+export const ZitadelUserEmailCreatePostSchema = z.object({
+  email: z.string().min(1, 'Email is required'),
+  sendCode: z.object({
+    urlTemplate: z.string().min(1, 'URL template is required'),
+  }).optional(),
+  returnCode: z.object({}).optional(),
+  isVerified: z.boolean().optional(),
+})
+
+export type ZitadelUserEmailCreatePostDto = z.infer<typeof ZitadelUserEmailCreatePostSchema>

@@ -1,57 +1,69 @@
-interface Details {
-  sequence: string
-  changeDate?: string
-  creationDate?: string
-  resourceOwner: string
-}
+import { z } from 'zod'
 
-interface MachineUserDetails {
-  userId: string
-  details: Details
-}
+export const DetailsSchema = z.object({
+  sequence: z.string(),
+  changeDate: z.string().optional(),
+  creationDate: z.string().optional(),
+  resourceOwner: z.string(),
+})
 
-interface PersonalAccessToken {
-  tokenId: string
-  token: string
-  details: Details
-}
+export const MachineUserDetailsSchema = z.object({
+  userId: z.string(),
+  details: DetailsSchema,
+})
 
-interface MachineUser {
-  name: string
-  machineUser: MachineUserDetails
-  pat: PersonalAccessToken
-}
+export const PersonalAccessTokenSchema = z.object({
+  tokenId: z.string(),
+  token: z.string(),
+  details: DetailsSchema,
+})
 
-interface Organization {
-  details: Details
-  organizationId: string
-}
+export const MachineUserSchema = z.object({
+  name: z.string(),
+  machineUser: MachineUserDetailsSchema,
+  pat: PersonalAccessTokenSchema,
+})
 
-interface HumanUser {
-  userId: string
-  details: Details
-}
+export const OrganizationSchema = z.object({
+  details: DetailsSchema,
+  organizationId: z.string(),
+})
 
-interface Project {
-  id: string
-  details: Details
-}
+export const HumanUserSchema = z.object({
+  userId: z.string(),
+  details: DetailsSchema,
+})
 
-interface OidcApp {
-  appId: string
-  details: Details
-  clientId: string
-  clientSecret: string
-}
+export const ProjectSchema = z.object({
+  id: z.string(),
+  details: DetailsSchema,
+})
 
-export interface ZitadelProvisioningResponse {
-  machineUsers: MachineUser[]
-  creLandOrganization: Organization
-  creLandOrganizationName: string
-  creLandHumanUser: HumanUser
-  creDashboardProject: Project
-  crePaymentsProject: Project
-  creBetaOidcApp: OidcApp
-  creAlphaOidcApp: OidcApp
-  creAlphaOidcAppName: string
-}
+export const OidcAppSchema = z.object({
+  appId: z.string(),
+  details: DetailsSchema,
+  clientId: z.string(),
+  clientSecret: z.string(),
+})
+
+export const ZitadelProvisioningResponseSchema = z.object({
+  machineUsers: z.array(MachineUserSchema),
+  creLandOrganization: OrganizationSchema,
+  creLandOrganizationName: z.string(),
+  creLandHumanUser: HumanUserSchema,
+  creDashboardProject: ProjectSchema,
+  crePaymentsProject: ProjectSchema,
+  creBetaOidcApp: OidcAppSchema,
+  creAlphaOidcApp: OidcAppSchema,
+  creAlphaOidcAppName: z.string(),
+})
+
+export type Details = z.infer<typeof DetailsSchema>
+export type MachineUserDetailsResponse = z.infer<typeof MachineUserDetailsSchema>
+export type PersonalAccessTokenResponse = z.infer<typeof PersonalAccessTokenSchema>
+export type MachineUserResponse = z.infer<typeof MachineUserSchema>
+export type OrganizationResponse = z.infer<typeof OrganizationSchema>
+export type HumanUserResponse = z.infer<typeof HumanUserSchema>
+export type ProjectResponse = z.infer<typeof ProjectSchema>
+export type OidcAppResponse = z.infer<typeof OidcAppSchema>
+export type ZitadelProvisioningResponse = z.infer<typeof ZitadelProvisioningResponseSchema>

@@ -1,24 +1,33 @@
-import type { ZitadelTextQueryMethod } from '../../enums'
-import type { ZitadelOrganizationIdHeaderDto } from './common'
+import { z } from 'zod'
+import { ZitadelTextQueryMethod } from '../../enums'
+import { ZitadelOrganizationIdHeaderSchema } from './common'
 
-interface ZitadelMetadataKeyQuery {
-  keyQuery: {
-    key: string
-    method: ZitadelTextQueryMethod
-  }
-}
+export const ZitadelMetadataKeyQuerySchema = z.object({
+  keyQuery: z.object({
+    key: z.string().min(1, 'Key is required'),
+    method: z.nativeEnum(ZitadelTextQueryMethod),
+  }),
+})
 
-export interface ZitadelUserMetadataSearchDto {
-  query: {
-    offset: string
-    limit: number
-    asc: boolean
-  }
-  queries: Array<ZitadelMetadataKeyQuery>
-}
+export type ZitadelMetadataKeyQuery = z.infer<typeof ZitadelMetadataKeyQuerySchema>
 
-export interface ZitadelUserMetadataSearchPathDto {
-  userId: string
-}
+export const ZitadelUserMetadataSearchSchema = z.object({
+  query: z.object({
+    offset: z.string().min(1, 'Offset is required'),
+    limit: z.number().min(1, 'Limit is required'),
+    asc: z.boolean(),
+  }),
+  queries: z.array(ZitadelMetadataKeyQuerySchema),
+})
 
-export interface ZitadelUserMetadataSearchHeaderDto extends ZitadelOrganizationIdHeaderDto {}
+export type ZitadelUserMetadataSearchDto = z.infer<typeof ZitadelUserMetadataSearchSchema>
+
+export const ZitadelUserMetadataSearchPathSchema = z.object({
+  userId: z.string().min(1, 'User  ID is required'),
+})
+
+export type ZitadelUserMetadataSearchPathDto = z.infer<typeof ZitadelUserMetadataSearchPathSchema>
+
+export const ZitadelUserMetadataSearchHeaderSchema = ZitadelOrganizationIdHeaderSchema.extend({})
+
+export type ZitadelUserMetadataSearchHeaderDto = z.infer<typeof ZitadelUserMetadataSearchHeaderSchema>

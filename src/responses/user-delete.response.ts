@@ -1,3 +1,6 @@
-import type { ZitadelLoginSettingsUpdateResponse } from './login-settings-update.response'
+import type { z } from 'zod'
+import { ZitadelLoginSettingsUpdateResponseSchema } from './login-settings-update.response'
 
-export interface ZitadelUserDeleteResponse extends ZitadelLoginSettingsUpdateResponse {}
+export const ZitadelUserDeleteResponseSchema = ZitadelLoginSettingsUpdateResponseSchema.extend({})
+
+export type ZitadelUserDeleteResponse = z.infer<typeof ZitadelUserDeleteResponseSchema>

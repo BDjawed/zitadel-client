@@ -1,23 +1,28 @@
-import type { ZitadelUsersSearchSortingColumn, ZitadelUserStateType } from '../enums'
-import type { Details } from './common'
-import type { ZitadelHumanUserDto, ZitadelMachineUserDto } from './user-by-id-get.response'
+import { z } from 'zod'
+import { ZitadelUsersSearchSortingColumn, ZitadelUserStateType } from '../enums'
+import { DetailsSchema } from './common'
+import { ZitadelHumanUserSchema, ZitadelMachineUserSchema } from './user-by-id-get.response'
 
-interface ZitadelUser {
-  userId: string
-  details: Details
-  state: ZitadelUserStateType
-  userName: string
-  loginNames: string[]
-  preferredLoginName: string
-  human: ZitadelHumanUserDto
-  machine: ZitadelMachineUserDto
-}
-export interface ZitadelUsersSearchPostResponse {
-  details: {
-    totalResult: string
-    processedSequence: string
-    timestamp: Date
-  }
-  sortingColumn: ZitadelUsersSearchSortingColumn
-  result: Array<ZitadelUser>
-}
+export const ZitadelUserSchema = z.object({
+  userId: z.string(),
+  details: DetailsSchema,
+  state: z.nativeEnum(ZitadelUserStateType),
+  userName: z.string(),
+  loginNames: z.array(z.string()),
+  preferredLoginName: z.string(),
+  human: ZitadelHumanUserSchema,
+  machine: ZitadelMachineUserSchema,
+})
+
+export const ZitadelUsersSearchPostResponseSchema = z.object({
+  details: z.object({
+    totalResult: z.string(),
+    processedSequence: z.string(),
+    timestamp: z.date(),
+  }),
+  sortingColumn: z.nativeEnum(ZitadelUsersSearchSortingColumn),
+  result: z.array(ZitadelUserSchema),
+})
+
+export type ZitadelUser = z.infer<typeof ZitadelUserSchema>
+export type ZitadelUsersSearchPostResponse = z.infer<typeof ZitadelUsersSearchPostResponseSchema>

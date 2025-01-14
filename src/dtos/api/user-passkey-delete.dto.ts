@@ -1,5 +1,8 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
+import { ZitadelUserByIdGetPathSchema } from '.'
 
-export interface ZitadelUserPasskeyDeletePathDto extends ZitadelUserByIdGetPathDto {
-  passkeyId: string
-}
+export const ZitadelUserPasskeyDeletePathSchema = ZitadelUserByIdGetPathSchema.extend({
+  passkeyId: z.string().min(1, 'Passkey ID is required'),
+})
+
+export type ZitadelUserPasskeyDeletePathDto = z.infer<typeof ZitadelUserPasskeyDeletePathSchema>

@@ -1,8 +1,14 @@
-import type { ZitadelUserByIdGetPathDto } from '.'
+import { z } from 'zod'
 
-export interface ZitadelUserAuthenticationMethodsPathDto extends ZitadelUserByIdGetPathDto {}
+export const ZitadelUserAuthenticationMethodsPathSchema = z.object({
+  userId: z.string().min(1, 'User  ID is required'),
+})
 
-export interface ZitadelUserAuthenticationMethodsGetQueryDto {
-  includeWithoutDomain?: boolean
-  domain?: string
-}
+export type ZitadelUserAuthenticationMethodsPathDto = z.infer<typeof ZitadelUserAuthenticationMethodsPathSchema>
+
+export const ZitadelUserAuthenticationMethodsGetQuerySchema = z.object({
+  includeWithoutDomain: z.boolean().optional(),
+  domain: z.string().optional(),
+})
+
+export type ZitadelUserAuthenticationMethodsGetQueryDto = z.infer<typeof ZitadelUserAuthenticationMethodsGetQuerySchema>
