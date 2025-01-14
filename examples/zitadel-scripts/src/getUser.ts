@@ -50,39 +50,27 @@ async function main(): Promise<void> {
   // Get machine users information by their id
   for (const machineUser of ZITADEL_PROVISIONING_RESPONSE_FILE.machineUsers) {
     const { userId } = machineUser.machineUser
-    const creLandMachineUserInfo = await zitadelClient.getUserById(
-      {
-        userId,
-      },
-    )
+    const creLandMachineUserInfo = await zitadelClient.getUserById(userId)
     creLandMachineUsers.push(creLandMachineUserInfo.user)
   }
 
   console.log('CreLand Machine Users info', creLandMachineUsers)
 
   // Get human users information by their id
-  const creLandHumanUserInfo = await zitadelClient.getUserById(
-    {
-      userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
-    },
-  )
+  const creLandHumanUserInfo = await zitadelClient.getUserById(ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId)
   console.log('CreLand Human User Info', creLandHumanUserInfo)
 
   // Get human users information by their login name
   console.log('creLandHumanUserInfo.loginNames', creLandHumanUserInfo.user)
   for (const loginName of creLandHumanUserInfo.user.loginNames) {
-    const humanUserByLoginName = await zitadelClient.getUserByLoginName({
-      loginName,
-    })
+    const humanUserByLoginName = await zitadelClient.getUserByLoginName(loginName)
     console.log('CreLand Human User By Login Name Info', humanUserByLoginName)
   }
 
   // get machine users information by their login name
   for (const machineUser of creLandMachineUsers) {
     for (const loginName of machineUser.loginNames) {
-      const machineUserByLoginName = await zitadelClient.getUserByLoginName({
-        loginName,
-      })
+      const machineUserByLoginName = await zitadelClient.getUserByLoginName(loginName)
       console.log('CreLand Machine User By Login Name Info', machineUserByLoginName)
     }
   }

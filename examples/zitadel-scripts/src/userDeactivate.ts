@@ -51,11 +51,7 @@ async function main(): Promise<void> {
   for (const machineUser of ZITADEL_PROVISIONING_RESPONSE_FILE.machineUsers) {
     const { userId } = machineUser.machineUser
     console.log('userId', userId)
-    const creLandMachineUserDeactivateResponse = await zitadelClient.userDeactivate(
-      {
-        userId,
-      },
-    )
+    const creLandMachineUserDeactivateResponse = await zitadelClient.userDeactivate(userId)
     deactivatedCreLandMachineUsers.push(creLandMachineUserDeactivateResponse)
   }
 

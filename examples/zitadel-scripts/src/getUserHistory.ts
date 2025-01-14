@@ -52,6 +52,7 @@ async function main(): Promise<void> {
 
   const creLandUserHistoryResponse: ZITADEL.ZitadelUserHistoryPostResponse
     = await zitadelClient.getUserHistory(
+      userId,
       {
         query: {
           sequence: '0',
@@ -59,12 +60,7 @@ async function main(): Promise<void> {
           asc: true,
         },
       },
-      {
-        'x-zitadel-orgid': creLandOrganization.organizationId,
-      },
-      {
-        userId,
-      },
+      creLandOrganization.organizationId,
     )
   console.log(
     'creLandUserHistoryResponse',

@@ -54,19 +54,13 @@ async function main(): Promise<void> {
       description: `Machine user for  ${creLand.creMachineUser}`,
       accessTokenType: ZITADEL.ZitadelMachineUserAccessTokenType.JWT,
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
+    creLandOrganization.organizationId,
   )
 
   console.log('created test machine user: ', machineUser)
 
   // Delete the machine user previously created by it's id
-  const deleteMachineUser = await zitadelClient.deleteUserById(
-    {
-      userId: machineUser.userId,
-    },
-  )
+  const deleteMachineUser = await zitadelClient.deleteUserById(machineUser.userId)
 
   console.log('Deleted machine user: ', deleteMachineUser)
 }

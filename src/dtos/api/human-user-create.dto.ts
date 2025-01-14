@@ -12,7 +12,7 @@ export interface ZitadelHumanUserCreateDto {
   totpSecret?: string
 }
 
-interface IdpLink {
+export interface IdpLink {
   idpId?: string
   userId?: string
   userName?: string
@@ -22,7 +22,7 @@ interface HashedPassword {
   changeRequired?: boolean
 }
 
-interface Metadata {
+export interface Metadata {
   key: string
   value: string
 }

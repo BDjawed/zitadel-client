@@ -53,9 +53,7 @@ async function main(): Promise<void> {
         // userName: 'Customer-human-12jq5',
         email: 'tech@creoox.com',
       },
-      {
-        'x-zitadel-orgid': creLandOrganization.organizationId,
-      },
+      creLandOrganization.organizationId,
     )
   console.log(
     'creLandQueryResponse',

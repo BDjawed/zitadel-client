@@ -59,9 +59,7 @@ async function main(): Promise<void> {
     {
       value,
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
+    creLandOrganization.organizationId,
   )
 
   console.log('Created metadata response: ', metadata)

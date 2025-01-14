@@ -49,9 +49,7 @@ async function main(): Promise<void> {
   const creLandOrganization = ZITADEL_PROVISIONING_RESPONSE_FILE.creLandOrganization
 
   const metadata = await zitadelClient.userMetadataSearch(
-    {
-      userId: ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
-    },
+    ZITADEL_PROVISIONING_RESPONSE_FILE.creLandHumanUser.userId,
     {
       query: {
         offset: '0',
@@ -73,9 +71,7 @@ async function main(): Promise<void> {
         },
       ],
     },
-    {
-      'x-zitadel-orgid': creLandOrganization.organizationId,
-    },
+    creLandOrganization.organizationId,
   )
 
   console.log('Metadata query result: ', JSON.stringify(metadata, null, 2))
