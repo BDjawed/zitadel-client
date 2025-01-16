@@ -5,11 +5,11 @@ import { ZitadelClient } from '@bdjawed/zitadel-client'
 import * as ZITADEL from '@bdjawed/zitadel-client'
 import * as dotenv from 'dotenv'
 import { beforeAll, describe, expect, expectTypeOf, it } from 'vitest'
-import { ZitadelAppApiAuthMethodType } from '../src/dtos/api/app-api-create.dto'
-import { ZitadelMachineUserAccessTokenType } from '../src/dtos/api/machine-user-create.dto'
-import { AuthenticatorType } from '../src/dtos/api/user-passkey-register-post.dto'
+import { ZitadelAppApiAuthMethodType } from '../src/dtos/api/app/app-api-create.dto'
+import { ZitadelMachineUserAccessTokenType } from '../src/dtos/api/users/machine/machine-user-create.dto'
+import { AuthenticatorType } from '../src/dtos/api/users/user-passkey-register-post.dto'
 import { ZitadelTextQueryMethod, ZitadelUsersSearchSortingColumn } from '../src/enums'
-import { ZitadelMachineUserKeyType } from '../src/responses/machine-user-key-by-id-get.response'
+import { ZitadelMachineUserKeyType } from '../src/responses/users/machine/machine-user-key-by-id-get.response'
 
 console.log('🚀 Starting Zitadel tests...')
 

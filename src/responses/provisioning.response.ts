@@ -24,7 +24,7 @@ export const MachineUserSchema = z.object({
   pat: PersonalAccessTokenSchema,
 })
 
-export const OrganizationSchema = z.object({
+const OrganizationSchema = z.object({
   details: DetailsSchema,
   organizationId: z.string(),
 })
