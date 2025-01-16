@@ -141,6 +141,13 @@ export class ZitadelClient {
     })
   }
 
+  /**
+   * Performs the initial setup for the client.
+   *
+   * This includes fetching the OpenID Connect well-known configuration
+   * and authenticating the service user.
+   * The setup must be called before any other method can be used.
+   */
   async setup(): Promise<void> {
     await this.fetchWellKnown()
     await this.authenticateServiceUser()
@@ -209,11 +216,9 @@ export class ZitadelClient {
   /**
    * Retrieves the current authentication response stored in the client.
    *
+   * If the authentication response has not been set, an error will be thrown.
+   *
    * @type {ZitadelAuthenticationResponse}
-   * @property {string} accessToken - The access token.
-   * @property {string} refreshToken - The refresh token.
-   * @property {string} idToken - The ID token.
-   * @property {number} expiresIn - The expiration time in seconds.
    * @returns {ZitadelAuthenticationResponse} The stored authentication response.
    * @throws {Error} If the authentication response has not been set.
    */
@@ -226,6 +231,8 @@ export class ZitadelClient {
 
   /**
    * Retrieves the user info of the authenticated user.
+   *
+   * If the wellKnown configuration has not been set, an error will be thrown.
    *
    * @type {ZitadelUserInfoGetResponse}
    * @property {string} sub - The user ID.
@@ -241,6 +248,11 @@ export class ZitadelClient {
 
   /**
    * Creates a new organization.
+   *
+   * The organization is created using the provided organization create DTO.
+   * Create a new organization with an administrative user.
+   * If no specific roles are sent for the users,
+   * they will be granted the role ORG_OWNER.
    *
    * @param {ZitadelOrganizationCreateDto} dto - The organization create DTO.
    * @returns {Promise<ZitadelOrganizationCreateResponse>} The organization create response.
@@ -260,6 +272,8 @@ export class ZitadelClient {
 
   /**
    * Deletes an organization.
+   * Deletes my organization and all its resources (Users, Projects, Grants to and from the org).
+   * Users of this organization will not be able to log in.
    *
    * @param {string} orgId - The ID of the organization to delete.
    * @returns {Promise<ZitadelOrganizationDeleteResponse>} The organization delete response.
@@ -281,6 +295,10 @@ export class ZitadelClient {
 
   /**
    * Creates a new human user.
+   * The human user is created using the provided human user create DTO.
+   * Create/import a new user with the type human.
+   * The newly created user will get a verification email if either the email address is not marked as verified
+   * and you did not request the verification to be returned.
    *
    * @param {ZitadelHumanUserCreateDto} dto - The human user create DTO.
    * @returns {Promise<ZitadelHumanUserCreateResponse>} The human user create response.
@@ -298,6 +316,9 @@ export class ZitadelClient {
 
   /**
    * Creates a new machine user.
+   * The machine user is created using the provided machine user create DTO.
+   * Create a new user with the type machine for your API, service or device.
+   * These users are used for non-interactive authentication flows.
    *
    * @param {ZitadelMachineUserCreateDto} dto - The machine user create DTO.
    * @param {string} orgId - The ID of the organization
@@ -320,6 +341,20 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates a new machine user key.
+   * The machine user key is created using the provided machine user key create DTO.
+   * If a public key is not supplied, a new key is generated and will be returned in the response.
+   * Make sure to store the returned key. If an RSA public key is supplied,
+   * the private key is omitted from the response.
+   * Machine keys are used to authenticate with jwt profile.
+   *
+   * @param {string} userId - The ID of the machine user to create the key for.
+   * @param {ZitadelMachineUserKeyCreateDto} dto - The machine user key create DTO.
+   * @param {string} [orgId] - The ID of the organization.
+   * @returns {Promise<ZitadelMachineUserKeyCreateResponse>} The machine user key create response.
+   * @throws {Error} If the request failed.
+   */
   async createMachineUserKey(
     userId: string,
     dto: ZitadelMachineUserKeyCreateDto,
@@ -339,6 +374,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves a machine user key by ID.
+   * Get the list of keys of a machine user.
+   * Machine keys are used to authenticate with jwt profile authentication.
+   * The retrieved machine user key ID and expiration is returned in the response.
+   *
+   * @param {ZitadelMachineUserKeyByIdGetPathDto} pathDto - The path DTO containing the user ID and key ID.
+   * @param {string} [orgId] - The ID of the organization.
+   * @returns {Promise<ZitadelMachineUserKeyByIdGetResponse>} The machine user key response.
+   * @throws {Error} If the request failed.
+   */
   async getMachineUserKeyById(
     pathDto: ZitadelMachineUserKeyByIdGetPathDto,
     orgId?: string,
@@ -356,6 +402,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves a list of machine user keys.
+   *
+   * Get the list of keys of a machine user.
+   *
+   * Machine keys are used to authenticate with jwt profile authentication.
+   *
+   * @param {string} userId - The ID of the machine user to retrieve the keys for.
+   * @param {ZitadelMachineUserKeysGetDto} dto - The machine user keys get DTO.
+   * @param {string} [orgId] - The ID of the organization.
+   * @returns {Promise<ZitadelMachineUserKeysGetResponse>} The machine user keys response.
+   * @throws {Error} If the request failed.
+   */
   async getMachineUserKeys(
     userId: string,
     dto: ZitadelMachineUserKeysGetDto,
@@ -375,6 +434,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deactivates a user.
+   * The state of the user will be changed to 'deactivated'.
+   *
+   * The user will not be able to log in anymore. The method returns an error if the user is already in the state 'deactivated'.
+   *
+   * Use deactivate user when the user should not be able to use the account anymore,
+   * but you still need access to the user data..
+   *
+   * @param {string} userId - The ID of the user to deactivate.
+   * @returns {Promise<ZitadelUserDeactivatePostResponse>} The deactivate user response.
+   * @throws {Error} If the request failed.
+   */
   async userDeactivate(
     userId: string,
   ): Promise<ZitadelUserDeactivatePostResponse> {
@@ -389,6 +461,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Reactivates a user.
+   *
+   * Reactivate a user with the state 'deactivated'.
+   *
+   * The user will be able to log in again afterward.
+   *
+   * The method returns an error if the user is not in the state 'deactivated'..
+   *
+   * @param {string} userId - The ID of the user to reactivate.
+   * @returns {Promise<ZitadelUserReactivatePostResponse>} The reactivate user response.
+   * @throws {Error} If the request failed.
+   */
   async userReactivate(
     userId: string,
   ): Promise<ZitadelUserReactivatePostResponse> {
@@ -403,6 +488,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Locks a user account.
+   *
+   * The state of the user will be changed to 'locked'.
+   *
+   * The user will not be able to log in anymore. The method returns an error if the user is already in the state 'locked'.
+   *
+   * Use this method if the user should not be able to log in temporarily because of an event that happened (wrong password, etc.)..
+   *
+   * @param {string} userId - The ID of the user to lock.
+   * @returns {Promise<ZitadelUserLockPostResponse>} The lock user response.
+   * @throws {Error} If the request failed.
+   */
   async userLock(
     userId: string,
   ): Promise<ZitadelUserLockPostResponse> {
@@ -417,6 +515,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Unlocks a user account.
+   *
+   * Unlock a previously locked user and change the state to 'active'.
+   *
+   * The user will be able to log in again.
+   *
+   * The method returns an error if the user is not in the state 'locked'.
+   *
+   * @param {string} userId - The ID of the user to unlock.
+   * @returns {Promise<ZitadelUserUnlockPostResponse>} The unlock user response.
+   * @throws {Error} If the request failed.
+   */
   async userUnlock(
     userId: string,
   ): Promise<ZitadelUserUnlockPostResponse> {
@@ -431,6 +542,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Generates a new personal access token (PAT).
+   * Currently only available for machine users.
+   *
+   * The token will be returned in the response, make sure to store it.
+   * PATs are ready-to-use tokens and can be sent directly in the authentication header.
+   *
+   * @param {string} userId - The ID of the machine user for whom the PAT is being created.
+   * @param {ZitadelMachineUserPatCreateDto} dto - The DTO containing details for the PAT creation.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserPatCreateResponse>} The response containing the newly created PAT details.
+   * @throws {Error} If the request failed.
+   */
   async createMachineUserPAT(
     userId: string,
     dto: ZitadelMachineUserPatCreateDto,
@@ -450,6 +574,18 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves a machine user personal access token (PAT) by its ID.
+   *
+   * Returns the PAT for a user, currently only available for machine users/service accounts.
+   *
+   * PATs are ready-to-use tokens and can be sent directly in the authentication header.
+   *
+   * @param {ZitadelMachineUserPatGetPathDto} pathDto - The DTO containing the machine user ID and PAT ID.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserPatGetResponse>} The response containing the PAT details.
+   * @throws {Error} If the request failed.
+   */
   async getMachineUserPAT(
     pathDto: ZitadelMachineUserPatGetPathDto,
     orgId?: string,
@@ -467,6 +603,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Returns a list of personal access tokens (PATs) for a user.
+   *
+   * currently only available for machine users/service accounts.
+   *
+   * PATs are ready-to-use tokens and can be sent directly in the authentication header.
+   *
+   * @param {string} userId - The ID of the machine user whose PATs are being retrieved.
+   * @param {ZitadelMachineUserPatsListGetDto} dto - The DTO containing query parameters for the PAT list retrieval.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserPatsListGetResponse>} The response containing the list of PATs.
+   * @throws {Error} If the request failed.
+   */
   async getMachineUserPATsList(
     userId: string,
     dto: ZitadelMachineUserPatsListGetDto,
@@ -486,6 +635,14 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Returns a list of links to an identity provider of an user.
+   *
+   * @param {string} userId - The ID of the user whose links are being retrieved.
+   * @param {ZitadelMachineUserIdpsListGetDto} dto - The DTO containing query parameters for the link list retrieval.
+   * @returns {Promise<ZitadelMachineUserIdpsListGetResponse>} The response containing the list of user links.
+   * @throws {Error} If the request failed.
+   */
   async getUserIDPsList(
     userId: string,
     dto: ZitadelMachineUserIdpsListGetDto,
@@ -501,6 +658,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes a personal access token (PAT) from a user.
+   *
+   * Afterward, the user will not be able to authenticate with that token anymore.
+   *
+   * @param {ZitadelMachineUserPatDeletePathDto} pathDto - The DTO containing the user ID and PAT ID to delete.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserPatDeleteResponse>} The response confirming the deletion of the PAT.
+   * @throws {Error} If the request failed.
+   */
   async deleteMachineUserPAT(
     pathDto: ZitadelMachineUserPatDeletePathDto,
     orgId?: string,
@@ -518,6 +685,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Create a new project.
+   *
+   * A Project is a vessel for different applications sharing the same role context.
+   *
+   * @param {ZitadelProjectCreateDto} dto - The project create DTO.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelProjectCreateResponse>} The project create response.
+   * @throws {Error} If the request failed.
+   */
   async createProject(
     dto: ZitadelProjectCreateDto,
     orgId?: string,
@@ -534,6 +711,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Create a new API APP client.
+   *
+   * The client id will be generated and returned in the response.
+   *
+   * Depending on the chosen configuration also a secret will be generated and returned.
+   *
+   * @param {string} projectId - The ID of the project to create the API for.
+   * @param {ZitadelAppApiCreateDto} dto - The project API create DTO.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelAppApiCreateResponse>} The project API create response.
+   * @throws {Error} If the request failed.
+   */
   async createAppApi(
     projectId: string,
     dto: ZitadelAppApiCreateDto,
@@ -553,6 +743,18 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Remove an application.
+   *
+   * It is not possible to request tokens for removed apps.
+   *
+   * Returns an error if the application is already deactivated.
+   *
+   * @param {ZitadelAppApiDeletePathDto} pathDto - The delete API APP path DTO.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelAppApiDeleteResponse>} The delete API APP response.
+   * @throws {Error} If the request failed.
+   */
   async deleteAppApi(
     pathDto: ZitadelAppApiDeletePathDto,
     orgId?: string,
@@ -570,6 +772,18 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates a new client secret for an API application.
+   *
+   * Generates a new client secret for the API application, make sure to store the response
+   *
+   * The generated client secret is returned in the response.
+   *
+   * @param {ZitadelAppClientSecretCreatePathDto} pathDto - The path DTO containing the project ID and app ID.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelAppClientSecretCreateResponse>} The response containing the newly created client secret.
+   * @throws {Error} If the request failed.
+   */
   async createAppApiClientSecret(
     pathDto: ZitadelAppClientSecretCreatePathDto,
     orgId?: string,
@@ -587,6 +801,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Create a new OIDC client.
+   *
+   * The client id will be generated and returned in the response.
+   *
+   * Depending on the chosen configuration also a secret will be returned.
+   *
+   * @param {string} projectId - The ID of the project to create the OIDC application for.
+   * @param {ZitadelAppOidcCreateDto} dto - The OIDC application create DTO containing the configuration details.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelAppOidcCreateResponse>} The response containing the OIDC application details, including client ID and secret.
+   * @throws {Error} If the request fails.
+   */
   async createAppOidc(
     projectId: string,
     dto: ZitadelAppOidcCreateDto,
@@ -606,6 +833,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Change the login settings for the organization, that overwrites the default settings for this organization.
+   *
+   * The login policy defines what kind of authentication possibilities the user should have.
+   * Generally speaking the behavior of the login and register UI.
+   *
+   * @param {ZitadelLoginSettingsUpdateDto} dto - The login settings update DTO containing the new configuration.
+   * @returns {Promise<ZitadelLoginSettingsUpdateResponse>} The response containing the updated login settings configuration.
+   * @throws {Error} If the request fails.
+   */
   async updateLoginSettings(
     dto: ZitadelLoginSettingsUpdateDto,
   ): Promise<ZitadelLoginSettingsUpdateResponse> {
@@ -618,6 +855,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves the login settings for the organization.
+   *
+   * Returns the login settings defined on the organization level.
+   *
+   * It will trigger as soon as the organization is identified (scope, user identification).
+   * The login policy defines what kind of authentication possibilities the user should have.
+   * Generally speaking the behavior of the login and register UI.
+   *
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelLoginSettingsGetResponse>} The response containing the login settings configuration.
+   * @throws {Error} If the request fails.
+   */
   async getLoginSettings(
     orgId?: string,
   ): Promise<ZitadelLoginSettingsGetResponse> {
@@ -634,16 +884,11 @@ export class ZitadelClient {
 
   /**
    * Retrieves a user by ID.
+   *
+   * Returns the full user object (human or machine) including the profile, email, etc..
    * @param {string} userId - The unique identifier of the user to retrieve.
    * @returns {Promise<ZitadelUserByIdGetResponse>} A promise that resolves to the user data.
-   * @example
-   * ```typescript
-   * const userId = '1234567890'
-   * const userInfo = await zitadelClient.getUserById(userId);
-   * ```
-   * @throws {TypeError} Thrown if the user ID is not provided.
-   * @throws {Error} Thrown if the user is not found.
-   * @throws {Error} Thrown if access is forbidden.
+   * @throws {Error} Thrown if the user ID is not provided, user not found or access is forbidden.
    */
   async getUserById(
     userId: string,
@@ -656,6 +901,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes a user by ID.
+   *
+   * The state of the user will be changed to 'deleted'.
+   *
+   * The user will not be able to log in anymore. Methods requesting this user will return an error 'User not found..
+   *
+   * @param {string} userId - The unique identifier of the user to delete.
+   * @returns {Promise<ZitadelUserDeleteResponse>} The response containing the deleted user data.
+   * @throws {Error} If the request fails.
+   */
   async deleteUserById(
     userId: string,
   ): Promise<ZitadelUserDeleteResponse> {
@@ -669,16 +925,17 @@ export class ZitadelClient {
 
   /**
    * Retrieves a user by login name.
+   *
+   * Get a user by login name searched over all organizations.
+   *
+   * The request only returns data if the login name matches exactly.
+   *
+   * @deprecated Use {@link usersSearch()} instead.
+   *
+   * @see {@link usersSearch()} for the recommended method to retrieve users.
    * @param {string} loginName - The login name of the user to retrieve.
    * @returns {Promise<ZitadelUserByLoginNameGetResponse>} A promise that resolves to the user data.
-   * @example
-   * ```typescript
-   * const loginName = 'User123'
-   * const userInfo = await zitadelClient.getUserByLoginName(loginName);
-   * ```
-   * @throws {TypeError} Thrown if the loginName is not provided.
-   * @throws {Error} Thrown if the user is not found.
-   * @throws {Error} Thrown if access is forbidden.
+   * @throws {Error} Thrown if the loginName is not provided, user not found or access is forbidden.
    */
   async getUserByLoginName(
     loginName: string,
@@ -692,6 +949,18 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves a list of users based on the given search query.
+   *
+   * Search for users.
+   *
+   * By default, we will return all users of your instance that you have permission to read.
+   * Make sure to include a limit and sorting for pagination.
+   *
+   * @param {ZitadelUsersSearchDto} dto - The search query.
+   * @returns {Promise<ZitadelUsersSearchPostResponse>} A promise that resolves to the list of users.
+   * @throws {Error} Thrown if the request fails.
+   */
   async usersSearch(
     dto: ZitadelUsersSearchDto,
   ): Promise<ZitadelUsersSearchPostResponse> {
@@ -705,6 +974,19 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves a list of history events for the given user.
+   *
+   * Returns a list of changes/events that have happened on the user.
+   *
+   * It's the history of the user. Make sure to send a limit.
+   *
+   * @param {string} userId - The unique identifier of the user to retrieve the history for.
+   * @param {ZitadelUserHistoryPostDto} dto - The query parameters for the search.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserHistoryPostResponse>} A promise that resolves to the list of user history events.
+   * @throws {Error} Thrown if the request fails.
+   */
   async getUserHistory(
     userId: string,
     dto: ZitadelUserHistoryPostDto,
@@ -724,7 +1006,20 @@ export class ZitadelClient {
     return response
   }
 
-  // deprecated use usersSearch with query search instead
+  /**
+   * Checks if a user is unique.
+   *
+   * Returns if a user with the requested email or username is unique. So you can create the user.
+   *
+   * @deprecated Use {@link isUserUnique()} instead.
+   *
+   * @see {@link isUserUnique()} for more information.
+   *
+   * @param {ZitadelUserExistingCheckByUserNameOrEmailDto} dto - The query parameters for the search.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserExistingCheckGetResponse>} A promise that resolves to the result of the uniqueness check.
+   * @throws {Error} Thrown if the request fails.
+   */
   async isUserUnique(
     dto: ZitadelUserExistingCheckByUserNameOrEmailDto,
     orgId?: string,
@@ -761,6 +1056,14 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Get a metadata object from a user by a specific key.
+   *
+   * @param {ZitadelUserMetadataByKeyPathGetDto} dto - The DTO containing the user ID and key.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserMetadataByKeyGetResponse>} A promise that resolves to the response containing the metadata value.
+   * @throws {Error} Thrown if the request fails.
+   */
   async getMetadataByKey(
     dto: ZitadelUserMetadataByKeyPathGetDto,
     orgId?: string,
@@ -782,6 +1085,14 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Delete a metadata object from a user by a specific key.
+   *
+   * @param {ZitadelUserMetadataByKeyPathDeleteDto} pathDto - The DTO containing the user ID and key.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserMetadataByKeyDeleteResponse>} A promise that resolves to the response containing the deleted metadata value.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteMetadataByKey(
     pathDto: ZitadelUserMetadataByKeyPathDeleteDto,
     orgId?: string,
@@ -799,6 +1110,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates metadata for a user with a specific key.
+   *
+   * This method either adds or updates a metadata value for the requested key.
+   *
+   * @param {ZitadelUserMetadataByKeyCreatePathDto} pathDto - The DTO containing the user ID and key.
+   * @param {ZitadelUserMetadataByKeyCreateDto} dto - The DTO containing the metadata value to be created.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserMetadataByKeyCreateResponse>} A promise that resolves to the response containing the created metadata.
+   * @throws {Error} Thrown if the request fails.
+   */
   async createMetadataByKey(
     pathDto: ZitadelUserMetadataByKeyCreatePathDto,
     dto: ZitadelUserMetadataByKeyCreateDto,
@@ -821,6 +1143,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes multiple metadata for a user with the provided keys.
+   *
+   * Remove a list of metadata objects from a user with a list of keys.
+   *
+   * @param {string} userId - The ID of the user to delete the metadata for.
+   * @param {ZitadelUserMetadataByKeyBulkDeleteDto} dto - The DTO containing the keys to be deleted.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserMetadataByKeyBulkDeleteResponse>} A promise that resolves to the response containing the deleted metadata.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteBulkMetadataByKey(
     userId: string,
     dto: ZitadelUserMetadataByKeyBulkDeleteDto,
@@ -840,6 +1173,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates multiple metadata objects for a user with the provided keys.
+   *
+   * Add or update multiple metadata values for a user.
+   *
+   * @param {string} userId - The ID of the user to create the metadata for.
+   * @param {ZitadelUserMetadataByKeyBulkCreateDto} dto - The DTO containing the keys and their respective values to be created.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserMetadataByKeyBulkCreateResponse>} A promise that resolves to the response containing the created metadata.
+   * @throws {Error} Thrown if the request fails.
+   */
   async createBulkMetadataByKey(
     userId: string,
     dto: ZitadelUserMetadataByKeyBulkCreateDto,
@@ -864,6 +1208,15 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Get the metadata of a user filtered by your query.
+   *
+   * @param {string} userId - The ID of the user to search the metadata for.
+   * @param {ZitadelUserMetadataSearchDto} dto - The DTO containing the search query.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserMetadataSearchGetResponse>} A promise that resolves to the response containing the search result.
+   * @throws {Error} Thrown if the request fails.
+   */
   async userMetadataSearch(
     userId: string,
     dto: ZitadelUserMetadataSearchDto,
@@ -892,6 +1245,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Delete a user avatar.
+   *
+   * Removes the avatar that is currently set on the user.
+   *
+   * @param {string} userId - The ID of the user to delete the avatar for.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserAvatarDeleteResponse>} A promise that resolves to the response containing the deleted avatar data.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteUserAvatar(
     userId: string,
     orgId?: string,
@@ -909,6 +1272,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Update a machine user.
+   *
+   * Change a service account/machine user. It is used for accounts with non-interactive authentication possibilities.
+   *
+   * @param {string} userId - The ID of the machine user to update.
+   * @param {ZitadelMachineUserUpdateDto} dto - The machine user update DTO.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserUpdateResponse>} A promise that resolves to the response containing the updated machine user.
+   * @throws {Error} Thrown if the request fails.
+   */
   async updateMachineUser(
     userId: string,
     dto: ZitadelMachineUserUpdateDto,
@@ -928,6 +1302,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Update a human user.
+   *
+   * Update all information from a user..
+   *
+   * @param {string} userId - The ID of the human user to update.
+   * @param {ZitadelHumanUserUpdateDto} dto - The human user update DTO.
+   * @returns {Promise<ZitadelHumanUserUpdateResponse>} A promise that resolves to the response containing the updated human user.
+   * @throws {Error} Thrown if the request fails.
+   */
   async updateHumanUser(
     userId: string,
     dto: ZitadelHumanUserUpdateDto,
@@ -943,6 +1327,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes the secret of a machine user.
+   *
+   * Delete a secret of a machine user/service account.
+   * The user will not be able to authenticate with the secret afterward.
+   *
+   * @param {string} userId - The ID of the machine user to delete the secret for.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserSecretDeleteResponse>} A promise that resolves to the response containing the deleted secret.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteMachineUserSecret(
     userId: string,
     orgId?: string,
@@ -960,6 +1355,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes a machine user key by its ID.
+   *
+   * Delete a specific key from a user.
+   * The user will not be able to authenticate with that key afterward.
+   *
+   * @param {ZitadelMachineUserKeyDeletePathDto} pathDto - The DTO containing the user ID and key ID for the key to be deleted.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserKeyDeleteResponse>} A promise that resolves to the response containing the key deletion confirmation.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteMachineUserKey(
     pathDto: ZitadelMachineUserKeyDeletePathDto,
     orgId?: string,
@@ -977,6 +1383,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates a secret for a machine user.
+   *
+   * Create a new secret for a machine user/service account.
+   *  It is used to authenticate the user (client credential grant).
+   *
+   * @param {string} userId - The ID of the user to create the secret for.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelMachineUserSecretCreateResponse>} A promise that resolves to the response containing the created secret.
+   * @throws {Error} Thrown if the request fails.
+   */
   async createMachineUserSecret(
     userId: string,
     orgId?: string,
@@ -994,7 +1411,18 @@ export class ZitadelClient {
     return response
   }
 
-  // choose between sendCode or returnCode, if both are set, will return an error
+  /**
+   * Creates a new email for a user.
+   *
+   * Change the email address of a user.
+   * If the state is set to not verified, a verification code will be generated,
+   * which can be either returned or sent to the user by email..
+   *
+   * @param {string} userId - The ID of the user to create the email address for.
+   * @param {ZitadelUserEmailCreatePostDto} dto - The DTO containing the new email address.
+   * @returns {Promise<ZitadelUserEmailCreateResponse>} A promise that resolves to the response containing the created email address.
+   * @throws {Error} Thrown if the request fails.
+   */
   async createUserEmail(
     userId: string,
     dto: ZitadelUserEmailCreatePostDto,
@@ -1010,6 +1438,13 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes a phone number for a user.
+   *
+   * @param {string} userId - The ID of the user to delete the phone number for.
+   * @returns {Promise<ZitadelUserPhoneDeleteResponse>} A promise that resolves to the response containing the deleted phone number.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteUserPhone(
     userId: string,
   ): Promise<ZitadelUserPhoneDeleteResponse> {
@@ -1023,6 +1458,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates a new phone number for a user.
+   *
+   * Set the phone number of a user. If the state is set to not verified, a verification code will be generated,
+   *  which can be either returned or sent to the user by sms..
+   *
+   * @param {string} userId - The ID of the user to create the phone number for.
+   * @param {ZitadelUserPhoneCreateDto} dto - The DTO containing the new phone number information.
+   * @returns {Promise<ZitadelUserPhoneCreateResponse>} A promise that resolves to the response containing the created phone number details.
+   * @throws {Error} Thrown if the request fails.
+   */
   async createUserPhone(
     userId: string,
     dto: ZitadelUserPhoneCreateDto,
@@ -1038,6 +1484,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates a password for a user.
+   *
+   * Change the password of a user with either a verification code or the current password..
+   *
+   * @param {string} userId - The ID of the user to create the password for.
+   * @param {ZitadelUserPasswordCreateDto} dto - The DTO containing the password information.
+   * @returns {Promise<ZitadelUserPasswordCreateResponse>} A promise that resolves to the response containing the created password details.
+   * @throws {Error} Thrown if the request fails.
+   */
   async createUserPassword(
     userId: string,
     dto: ZitadelUserPasswordCreateDto,
@@ -1053,6 +1509,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates a password reset code for a user.
+   *
+   * Request a verification code to reset a password..
+   *
+   * @param {string} userId - The ID of the user to create the password reset code for.
+   * @param {ZitadelUserPasswordResetCodeCreateDto} dto - The DTO containing the password reset information.
+   * @returns {Promise<ZitadelUserPasswordResetCodeCreateResponse>} A promise that resolves to the response containing the created password reset code.
+   * @throws {Error} Thrown if the request fails.
+   */
   async createUserPasswordResetCode(
     userId: string,
     dto: ZitadelUserPasswordResetCodeCreateDto,
@@ -1068,6 +1534,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Resend the verification code for a user's email address.
+   *
+   * Resend code to verify user email.
+   *
+   * @param {string} userId - The ID of the user to resend the verification code for.
+   * @param {ZitadelUserResendVerifyCodeByEmailPostDto} dto - The DTO containing the resend verification code information.
+   * @returns {Promise<ZitadelUserResendVerifyCodeByEmailPostResponse>} A promise that resolves to the response containing the resent verification code details.
+   * @throws {Error} Thrown if the request fails.
+   */
   async resendUserEmailVerificationCode(
     userId: string,
     dto: ZitadelUserResendVerifyCodeByEmailPostDto,
@@ -1083,6 +1559,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Resend the verification code for a user's phone number.
+   *
+   * Resend code to verify user phone.
+   *
+   * @param {string} userId - The ID of the user to resend the verification code for.
+   * @param {ZitadelUserResendVerifyCodeByPhonePostDto} dto - The DTO containing the resend verification code information.
+   * @returns {Promise<ZitadelUserResendVerifyCodeByPhonePostResponse>} A promise that resolves to the response containing the resent verification code details.
+   * @throws {Error} Thrown if the request fails.
+   */
   async resendUserPhoneVerificationCode(
     userId: string,
     dto: ZitadelUserResendVerifyCodeByPhonePostDto,
@@ -1098,6 +1584,18 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves the authentication methods of a user.
+   *
+   * List all possible authentication methods of a user like password, passwordless, (T)OTP and more..
+   *
+   * You can filter the results by providing a domain parameters.
+   *
+   * @param {string} userId - The ID of the user to retrieve the authentication methods for.
+   * @param {ZitadelUserAuthenticationMethodsGetQueryDto} dto - The DTO containing the query parameters.
+   * @returns {Promise<ZitadelUserAuthenticationMethodsGetResponse>} A promise that resolves to the list of authentication methods.
+   * @throws {Error} Thrown if the request fails.
+   */
   async getUserAuthMethods(
     userId: string,
     dto: ZitadelUserAuthenticationMethodsGetQueryDto,
@@ -1123,6 +1621,18 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes the Time-based One-Time Password (TOTP) configuration for a user.
+   *
+   * Remove the configured TOTP generator of a user.
+   *
+   * Note: As only one TOTP generator per user is allowed, the user will not have TOTP as a second factor afterward.
+   *
+   * @param {string} userId - The ID of the user whose TOTP configuration is to be deleted.
+   * @returns {Promise<ZitadelUserTotpDeleteResponse>} A promise that resolves to the response
+   * indicating the result of the TOTP deletion operation.
+   * @throws {Error} If the request fails.
+   */
   async deleteUserTotp(
     userId: string,
   ): Promise<ZitadelUserTotpDeleteResponse> {
@@ -1135,6 +1645,15 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes a U2F token for a user.
+   *
+   * Removes the specified U2F token from the user.
+   *
+   * @param {ZitadelUserU2fDeletePathDto} pathDto - The DTO containing the user ID and U2F token ID.
+   * @returns {Promise<ZitadelUserU2fDeleteResponse>} A promise that resolves to the response indicating the result of the U2F token deletion.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteUserU2fToken(
     pathDto: ZitadelUserU2fDeletePathDto,
   ): Promise<ZitadelUserU2fDeleteResponse> {
@@ -1147,6 +1666,15 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes the configured One-Time Password (OTP) SMS factor for a user.
+   *
+   * Note: As only one OTP SMS per user is allowed, the user will not have OTP SMS as a second factor afterward.
+   *
+   * @param {string} userId - The ID of the user whose OTP SMS configuration is to be deleted.
+   * @returns {Promise<ZitadelUserOtpSmsDeleteResponse>} A promise that resolves to the response indicating the result of the OTP SMS deletion operation.
+   * @throws {Error} If the request fails.
+   */
   async deleteUserOtpSms(
     userId: string,
   ): Promise<ZitadelUserOtpSmsDeleteResponse> {
@@ -1159,6 +1687,15 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes the configured One-Time Password (OTP) Email factor for a user.
+   *
+   * Note: As only one OTP Email per user is allowed, the user will not have OTP Email as a second factor afterward.
+   *
+   * @param {string} userId - The ID of the user whose OTP Email configuration is to be deleted.
+   * @returns {Promise<ZitadelUserOtpEmailDeleteResponse>} A promise that resolves to the response indicating the result of the OTP Email deletion operation.
+   * @throws {Error} If the request fails.
+   */
   async deleteUserOtpEmail(
     userId: string,
   ): Promise<ZitadelUserOtpEmailDeleteResponse> {
@@ -1171,6 +1708,14 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves a list of WebAuthn passkeys for the given user.
+   *
+   * @param {string} userId - The ID of the user whose passkeys are to be retrieved.
+   * @param {ZitadelUserPasskeysGetDto} dto - The query parameters for the passkey list retrieval.
+   * @returns {Promise<ZitadelUserPasskeysGetResponse>} A promise that resolves to the response containing the list of user passkeys.
+   * @throws {Error} Thrown if the request fails.
+   */
   async getUserPasskeys(
     userId: string,
     dto: ZitadelUserPasskeysGetDto,
@@ -1186,6 +1731,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Starts the registration of a WebAuthn passkey for a user.
+   *
+   * As a response the public key credential creation options are returned, which are used to verify the passkey..
+   *
+   * @param {string} userId - The ID of the user for whom the passkey registration is to be started.
+   * @param {ZitadelUserPasskeyRegisterPostDto} dto - The DTO containing the details required for the passkey registration.
+   * @returns {Promise<ZitadelUserPasskeyRegisterPostResponse>} A promise that resolves to the response containing the details of the registered passkey.
+   * @throws {Error} Thrown if the request fails.
+   */
   async registerUserPasskey(
     userId: string,
     dto: ZitadelUserPasskeyRegisterPostDto,
@@ -1201,6 +1756,16 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Creates a registration link for a WebAuthn passkey for a user.
+   *
+   * Create a passkey registration link which includes a code and either return it or send it to the user..
+   *
+   * @param {string} userId - The ID of the user for whom the passkey registration link is to be created.
+   * @param {ZitadelUserPasskeyLinkRegistrationPostDto} dto - The DTO containing the details required for the passkey registration link.
+   * @returns {Promise<ZitadelUserPasskeyLinkRegistrationPostResponse>} A promise that resolves to the response containing the passkey registration link.
+   * @throws {Error} Thrown if the request fails.
+   */
   async registerUserPasskeyLink(
     userId: string,
     dto: ZitadelUserPasskeyLinkRegistrationPostDto,
@@ -1216,6 +1781,15 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Deletes a registered WebAuthn passkey for a user.
+   *
+   * Remove a registered passkey from a user.
+   *
+   * @param {ZitadelUserPasskeyDeletePathDto} pathDto - The DTO containing the user ID and passkey ID of the passkey to be deleted.
+   * @returns {Promise<ZitadelUserPasskeyDeleteResponse>} A promise that resolves to the response containing the deleted passkey.
+   * @throws {Error} Thrown if the request fails.
+   */
   async deleteRegisteredUserPasskey(
     pathDto: ZitadelUserPasskeyDeletePathDto,
   ): Promise<ZitadelUserPasskeyDeleteResponse> {
@@ -1228,6 +1802,17 @@ export class ZitadelClient {
     return response
   }
 
+  /**
+   * Retrieves the permissions of a user.
+   *
+   * Show all the permissions the user has in ZITADEL (ZITADEL Manager).
+   *
+   * @param {string} userId - The ID of the user whose permissions are to be retrieved.
+   * @param {ZitadelUserPermissionsGetDto} dto - The query parameters for the permission search.
+   * @param {string} [orgId] - Optional organization ID to include in the request headers.
+   * @returns {Promise<ZitadelUserPermissionsGetResponseDto>} A promise that resolves to the response containing the user permissions.
+   * @throws {Error} Thrown if the request fails.
+   */
   async getUserPermissions(
     userId: string,
     dto: ZitadelUserPermissionsGetDto,
