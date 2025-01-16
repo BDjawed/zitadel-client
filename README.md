@@ -863,8 +863,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 [npm-downloads-href]: https://npmjs.com/package/@bdjawed/zitadel-client
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/@bdjawed/zitadel-client?style=flat&colorA=080f12&colorB=1fa669&label=minzip
 [bundle-href]: https://bundlephobia.com/result?p=@bdjawed/zitadel-client
-[license-src]: https://img.shields.io/github/license/Creoox/zitadel-client.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/Creoox/zitadel-client/blob/main/LICENSE.md
+[license-src]: https://img.shields.io/github/license/Bdjawed/zitadel-client.svg?style=flat&colorA=080f12&colorB=1fa669
+[license-href]: https://github.com/Bdjawed/zitadel-client/blob/main/LICENSE.md
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
 [jsdocs-href]: https://www.jsdocs.io/package/@bdjawed/zitadel-client
 
