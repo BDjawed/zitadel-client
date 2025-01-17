@@ -54,7 +54,7 @@ export const ZitadelAppOidcCreateSchema = z.object({
   clockSkew: z.string(),
   additionalOrigins: z.array(z.string()),
   skipNativeAppSuccessPage: z.boolean(),
-  backChannelLogoutUri: z.array(z.string()),
+  backChannelLogoutUri: z.array(z.string()).optional(),
 })
 
 export type ZitadelAppOidcCreateDto = z.infer<typeof ZitadelAppOidcCreateSchema>
