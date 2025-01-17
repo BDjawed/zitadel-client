@@ -283,8 +283,9 @@ describe('zitadel methods test', () => {
 
   it('should create an organization', async () => {
     try {
+      const orgName = `test-org-${Math.floor(Math.random() * 1000)}`
       const organization = await zitadelClient.createOrganization({
-        name: 'TestOrganization',
+        name: orgName,
       })
       expectTypeOf(organization).toEqualTypeOf<ZITADEL.ZitadelOrganizationCreateResponse>()
       console.log('✓ Organization created successfully')
