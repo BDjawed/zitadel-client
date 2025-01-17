@@ -83,7 +83,8 @@ describe('zitadel methods test', () => {
   let multipleMetadata: { key: string, value: string }[]
   // let retrievedHumanUser: ZITADEL.ZitadelUserByIdGetResponse
   let passwordResetCode: string
-  let userPassKey: { id: string, code: string }
+  let userPassKeyLink: { id: string, code: string }
+  let userPassKey: { id: string, key: unknown }
   let managerId: string
 
   /* const testHumanUserData1 = {
@@ -593,7 +594,9 @@ describe('zitadel methods test', () => {
     }
   })
 
-  it('should remove the configured TOTP generator of a user', async () => {
+  // uncomment when create method is implemented
+
+  /* it('should remove the configured TOTP generator of a user', async () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
@@ -656,7 +659,7 @@ describe('zitadel methods test', () => {
       console.error('❌ OTP Email factor removal failed:', error)
       throw error
     }
-  })
+  }) */
 
   it('should create a passkey registration link which includes a code and either return it or send it to the user', async () => {
     try {
@@ -674,10 +677,36 @@ describe('zitadel methods test', () => {
 
       expectTypeOf(createPasskeyRegistrationLink).toEqualTypeOf<ZITADEL.ZitadelUserPasskeyLinkRegistrationPostResponse>()
       console.log('✓ Passkey registration link created successfully, CODE:', createPasskeyRegistrationLink.code)
-      userPassKey = createPasskeyRegistrationLink.code
+      userPassKeyLink = createPasskeyRegistrationLink.code
     }
     catch (error) {
       console.error('❌ Passkey registration link creation failed:', error)
+      throw error
+    }
+  })
+
+  it('should start the registration of a passkey for a user', async () => {
+    try {
+      if (!testHumanUser.userId)
+        throw new Error('User ID is not defined')
+      const startPasskeyRegistration = await zitadelClient.registerUserPasskey(
+        testHumanUser.userId,
+        {
+          code: {
+            id: userPassKeyLink.id,
+            code: userPassKeyLink.code,
+          },
+          authenticator: AuthenticatorType.UNSPECIFIED,
+          domain: 'localhost',
+        },
+      )
+
+      expectTypeOf(startPasskeyRegistration).toEqualTypeOf<ZITADEL.ZitadelUserPasskeyRegisterPostResponse>()
+      console.log('✓ Passkey registration started successfully, PASSKEY:', { id: startPasskeyRegistration.passkeyId, key: startPasskeyRegistration.publicKeyCredentialCreationOptions })
+      userPassKey = { id: startPasskeyRegistration.passkeyId, key: startPasskeyRegistration.publicKeyCredentialCreationOptions }
+    }
+    catch (error) {
+      console.error('❌ Passkey registration failed:', error)
       throw error
     }
   })
@@ -692,35 +721,10 @@ describe('zitadel methods test', () => {
       )
 
       expectTypeOf(listPasskeys).toEqualTypeOf<ZITADEL.ZitadelUserPasskeysGetResponse>()
-      console.log('✓ Passkeys listed successfully, PASS_KEYS:', listPasskeys.result)
+      console.log('✓ Passkeys listed successfully, PASS_KEYS:', listPasskeys)
     }
     catch (error) {
       console.error('❌ Passkeys listing failed:', error)
-      throw error
-    }
-  })
-
-  it('should start the registration of a passkey for a user', async () => {
-    try {
-      if (!testHumanUser.userId)
-        throw new Error('User ID is not defined')
-      const startPasskeyRegistration = await zitadelClient.registerUserPasskey(
-        testHumanUser.userId,
-        {
-          code: {
-            id: userPassKey.id,
-            code: userPassKey.code,
-          },
-          authenticator: AuthenticatorType.UNSPECIFIED,
-          domain: 'localhost',
-        },
-      )
-
-      expectTypeOf(startPasskeyRegistration).toEqualTypeOf<ZITADEL.ZitadelUserPasskeyRegisterPostResponse>()
-      console.log('✓ Passkey registration started successfully, PASSKEY:', { id: startPasskeyRegistration.passkeyId, key: startPasskeyRegistration.publicKeyCredentialCreationOptions })
-    }
-    catch (error) {
-      console.error('❌ Passkey registration failed:', error)
       throw error
     }
   })
@@ -971,7 +975,7 @@ describe('zitadel methods test', () => {
       )
 
       expectTypeOf(users).toEqualTypeOf<ZITADEL.ZitadelUsersSearchPostResponse>()
-      console.log(`✓ Users retrieved successfully with query, found: ${users.details.totalResult} user(s), IDs: ${users.result.map(user => user.userId).join(', ')}`)
+      console.log(`✓ Users retrieved successfully with query, found: ${users.details.totalResult} user(s), IDs: ${users.result}`)
     }
     catch (error) {
       console.error('❌ Users retrieval failed:', error)
@@ -1159,7 +1163,7 @@ describe('zitadel methods test', () => {
           authMethodType: ZITADEL.ZitadelAppOidcAuthMethodType.POST,
           postLogoutRedirectUris: [],
           version: ZITADEL.ZitadelAppOidcVersionType['1_0'],
-          devMode: true,
+          devMode: false,
           accessTokenType: ZITADEL.ZitadelAppOidcAccessTokenType.JWT,
           accessTokenRoleAssertion: false,
           idTokenRoleAssertion: false,
@@ -1167,7 +1171,7 @@ describe('zitadel methods test', () => {
           clockSkew: '1s',
           additionalOrigins: [],
           skipNativeAppSuccessPage: true,
-          backChannelLogoutUri: [],
+          // backChannelLogoutUri: [],
         },
         testOrganization.organizationId,
       )

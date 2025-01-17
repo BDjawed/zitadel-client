@@ -26,6 +26,9 @@ jobs:
       - run: pnpm dlx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ZITADEL_INSTANCE_URL: ${{ secrets.ZITADEL_INSTANCE_URL }}
+          ZITADEL_KEY_FILE_PATH: ${{ secrets.ZITADEL_KEY_FILE_PATH }}
+          ZITADEL_APP_OIDC_REDIRECT_URI: ${{ secrets.ZITADEL_APP_OIDC_REDIRECT_URI }}
 
       # # Uncomment the following lines to publish to npm on CI
       #
