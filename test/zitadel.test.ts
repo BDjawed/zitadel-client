@@ -363,6 +363,8 @@ describe('zitadel methods test', () => {
 
   it('should create a human user', async () => {
     try {
+      testHumanUserData.username = `test-human-user-${Math.floor(Math.random() * 1000)}`
+      testHumanUserData.email.email = `${testHumanUserData.username}@example.com`
       const humanUser = await zitadelClient.createHumanUser(testHumanUserData)
 
       expectTypeOf(humanUser).toEqualTypeOf<ZITADEL.ZitadelHumanUserCreateResponse>()
@@ -1189,9 +1191,10 @@ describe('zitadel methods test', () => {
 
   it('should create a machine user', async () => {
     try {
+      const userName = `TestMachineUser${Math.floor(Math.random() * 1000)}`
       const machineUser = await zitadelClient.createMachineUser(
         {
-          userName: 'TestMachineUser',
+          userName,
           name: 'Test Machine User',
           description: 'Test machine user description',
           accessTokenType: ZITADEL.ZitadelMachineUserAccessTokenType.JWT,
