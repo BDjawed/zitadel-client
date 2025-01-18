@@ -105,7 +105,7 @@ await zitadelClient.setup()
 Retrieves the authenticated user's information.
 
 ```typescript
-const userInfo = await zitadelClient.getUserInfo()
+const userInfo = await zitadelClient.auth.getUserInfo()
 console.log(userInfo)
 ```
 
@@ -114,7 +114,7 @@ console.log(userInfo)
 Creates a new organization.
 
 ```typescript
-const organization = await zitadelClient.createOrganization({
+const organization = await zitadelClient.organization.create({
   name: 'TestOrganization',
 })
 console.log(organization)
@@ -125,7 +125,7 @@ console.log(organization)
 Deletes an organization.
 
 ```typescript
-await zitadelClient.deleteOrganization('organizationId')
+await zitadelClient.organization.delete('organizationId')
 console.log('Organization deleted')
 ```
 
@@ -134,7 +134,7 @@ console.log('Organization deleted')
 Creates a new human user.
 
 ```typescript
-const humanUser = await zitadelClient.createHumanUser({
+const humanUser = await zitadelClient.userHuman.create({
   username: 'minnie-mouse',
   profile: {
     givenName: 'Minnie',
@@ -159,7 +159,7 @@ console.log(humanUser)
 Creates a new machine user.
 
 ```typescript
-const machineUser = await zitadelClient.createMachineUser({
+const machineUser = await zitadelClient.userMachine.create({
   userName: 'TestMachineUser',
   name: 'Test Machine User',
   description: 'Test machine user description',
@@ -173,7 +173,7 @@ console.log(machineUser)
 Creates a key for a machine user.
 
 ```typescript
-const machineUserKey = await zitadelClient.createMachineUserKey('userId', {
+const machineUserKey = await zitadelClient.userMachine.key.create('userId', {
   type: 'JSON',
   expirationDate: new Date('2023-12-31'),
 }, 'organizationId')
@@ -185,7 +185,7 @@ console.log(machineUserKey)
 Retrieves a machine user key by ID.
 
 ```typescript
-const machineUserKey = await zitadelClient.getMachineUserKeyById({
+const machineUserKey = await zitadelClient.userMachine.key.getById({
   userId: 'userId',
   keyId: 'keyId',
 }, 'organizationId')
@@ -197,7 +197,7 @@ console.log(machineUserKey)
 Retrieves the list of keys for a machine user.
 
 ```typescript
-const machineUserKeys = await zitadelClient.getMachineUserKeys('userId', {
+const machineUserKeys = await zitadelClient.userMachine.key.list('userId', {
   query: {
     offset: '0',
     limit: 100,
@@ -212,7 +212,7 @@ console.log(machineUserKeys)
 Deactivates a user.
 
 ```typescript
-await zitadelClient.userDeactivate('userId')
+await zitadelClient.user.deactivate('userId')
 console.log('User deactivated')
 ```
 
@@ -221,7 +221,7 @@ console.log('User deactivated')
 Reactivates a user.
 
 ```typescript
-await zitadelClient.userReactivate('userId')
+await zitadelClient.user.reactivate('userId')
 console.log('User reactivated')
 ```
 
@@ -230,7 +230,7 @@ console.log('User reactivated')
 Locks a user.
 
 ```typescript
-await zitadelClient.userLock('userId')
+await zitadelClient.user.lock('userId')
 console.log('User locked')
 ```
 
@@ -239,7 +239,7 @@ console.log('User locked')
 Unlocks a user.
 
 ```typescript
-await zitadelClient.userUnlock('userId')
+await zitadelClient.user.unlock('userId')
 console.log('User unlocked')
 ```
 
@@ -248,7 +248,7 @@ console.log('User unlocked')
 Creates a PAT for a machine user.
 
 ```typescript
-const machineUserPat = await zitadelClient.createMachineUserPAT('userId', {
+const machineUserPat = await zitadelClient.userMachine.pat.create('userId', {
   expirationDate: new Date('2023-12-31'),
 }, 'organizationId')
 console.log(machineUserPat)
@@ -259,7 +259,7 @@ console.log(machineUserPat)
 Retrieves a machine user PAT by ID.
 
 ```typescript
-const machineUserPat = await zitadelClient.getMachineUserPAT({
+const machineUserPat = await zitadelClient.userMachine.pat.getById({
   userId: 'userId',
   tokenId: 'tokenId',
 }, 'organizationId')
@@ -271,7 +271,7 @@ console.log(machineUserPat)
 Retrieves the list of PATs for a machine user.
 
 ```typescript
-const machineUserPats = await zitadelClient.getMachineUserPATsList('userId', {
+const machineUserPats = await zitadelClient.userMachine.pat.list('userId', {
   offset: '0',
   limit: 100,
   asc: true,
@@ -284,7 +284,7 @@ console.log(machineUserPats)
 Deletes a machine user PAT.
 
 ```typescript
-await zitadelClient.deleteMachineUserPAT({
+await zitadelClient.userMachine.pat.delete({
   userId: 'userId',
   tokenId: 'tokenId',
 }, 'organizationId')
@@ -296,7 +296,7 @@ console.log('PAT deleted')
 Retrieves the list of IDPs for a user.
 
 ```typescript
-const userIdps = await zitadelClient.getUserIDPsList('userId', {
+const userIdps = await zitadelClient.userHuman.idp.list('userId', {
   query: {
     offset: '0',
     limit: 100,
@@ -311,7 +311,7 @@ console.log(userIdps)
 Deletes a machine user key by ID.
 
 ```typescript
-await zitadelClient.deleteMachineUserKey({
+await zitadelClient.userMachine.key.delete({
   userId: 'userId',
   keyId: 'keyId',
 }, 'organizationId')
@@ -323,7 +323,7 @@ console.log('Machine user key deleted')
 Creates a new project.
 
 ```typescript
-const project = await zitadelClient.createProject({
+const project = await zitadelClient.project.create({
   name: 'TestProject',
   projectRoleAssertion: true,
   projectRoleCheck: true,
@@ -338,7 +338,7 @@ console.log(project)
 Creates a new API for a project.
 
 ```typescript
-const appApi = await zitadelClient.createAppApi('projectId', {
+const appApi = await zitadelClient.app.create('projectId', {
   name: 'TestAppApi',
   authMethodType: 'BASIC',
 }, 'organizationId')
@@ -350,7 +350,7 @@ console.log(appApi)
 Deletes an API from a project.
 
 ```typescript
-await zitadelClient.deleteAppApi({
+await zitadelClient.app.delete({
   projectId: 'projectId',
   appId: 'appId',
 }, 'organizationId')
@@ -362,7 +362,7 @@ console.log('App API deleted')
 Creates a client secret for an API.
 
 ```typescript
-const appApiClientSecret = await zitadelClient.createAppApiClientSecret({
+const appApiClientSecret = await zitadelClient.app.createClientSecret({
   projectId: 'projectId',
   appId: 'appId',
 }, 'organizationId')
@@ -374,7 +374,7 @@ console.log(appApiClientSecret)
 Creates a new OIDC application for a project.
 
 ```typescript
-const oidcApp = await zitadelClient.createAppOidc('projectId', {
+const oidcApp = await zitadelClient.app.createOidc('projectId', {
   name: 'TestOIDCApp',
   redirectUris: ['https://example.com/callback'],
   responseTypes: 'OIDC_RESPONSE_TYPE_CODE',
@@ -401,7 +401,7 @@ console.log(oidcApp)
 Updates the login settings for the organization.
 
 ```typescript
-const loginSettings = await zitadelClient.updateLoginSettings({
+const loginSettings = await zitadelClient.policies.updateLoginSettings({
   passwordlessType: 'NOT_ALLOWED',
   forceMfa: false,
   allowUsernamePassword: true,
@@ -421,7 +421,7 @@ console.log(loginSettings)
 Retrieves the login settings for the organization.
 
 ```typescript
-const loginSettings = await zitadelClient.getLoginSettings('organizationId')
+const loginSettings = await zitadelClient.policies.getLoginSettings('organizationId')
 console.log(loginSettings)
 ```
 
@@ -430,7 +430,7 @@ console.log(loginSettings)
 Retrieves a user by ID.
 
 ```typescript
-const user = await zitadelClient.getUserById('userId')
+const user = await zitadelClient.user.getById('userId')
 console.log(user)
 ```
 
@@ -439,7 +439,7 @@ console.log(user)
 Deletes a user by ID.
 
 ```typescript
-await zitadelClient.deleteUserById('userId')
+await zitadelClient.user.deleteById('userId')
 console.log('User deleted')
 ```
 
@@ -448,7 +448,7 @@ console.log('User deleted')
 Retrieves a user by login name.
 
 ```typescript
-const user = await zitadelClient.getUserByLoginName('loginName')
+const user = await zitadelClient.user.getByLoginName('loginName')
 console.log(user)
 ```
 
@@ -457,7 +457,7 @@ console.log(user)
 Searches for users based on the given query.
 
 ```typescript
-const users = await zitadelClient.usersSearch({
+const users = await zitadelClient.user.search({
   query: {
     offset: '0',
     limit: 100,
@@ -481,7 +481,7 @@ console.log(users)
 Retrieves the history of events for a given user.
 
 ```typescript
-const userHistory = await zitadelClient.getUserHistory('userId', {
+const userHistory = await zitadelClient.user.getHistory('userId', {
   query: {
     sequence: '0',
     limit: 100,
@@ -496,7 +496,7 @@ console.log(userHistory)
 Checks if a user is unique.
 
 ```typescript
-const isUserNameUnique = await zitadelClient.isUserUnique({
+const isUserNameUnique = await zitadelClient.user.isUnique({
   userName: 'minnie-mouse',
 }, 'organizationId')
 console.log(isUserNameUnique)
@@ -507,7 +507,7 @@ console.log(isUserNameUnique)
 Retrieves a metadata object from a user by a specific key.
 
 ```typescript
-const userMetadata = await zitadelClient.getMetadataByKey({
+const userMetadata = await zitadelClient.user.metadata.getByKey({
   userId: 'userId',
   key: 'my-key',
 }, 'organizationId')
@@ -519,7 +519,7 @@ console.log(userMetadata)
 Deletes a metadata object from a user by a specific key.
 
 ```typescript
-await zitadelClient.deleteMetadataByKey({
+await zitadelClient.user.metadata.deleteByKey({
   userId: 'userId',
   key: 'my-key',
 }, 'organizationId')
@@ -531,7 +531,7 @@ console.log('Metadata deleted')
 Creates metadata for a user with a specific key.
 
 ```typescript
-const userMetadata = await zitadelClient.createMetadataByKey({
+const userMetadata = await zitadelClient.user.metadata.createByKey({
   userId: 'userId',
   key: 'my-key',
 }, {
@@ -545,7 +545,7 @@ console.log(userMetadata)
 Deletes multiple metadata for a user with the provided keys.
 
 ```typescript
-await zitadelClient.deleteBulkMetadataByKey('userId', {
+await zitadelClient.user.metadata.bulkDeleteByKey('userId', {
   keys: ['key1', 'key2'],
 }, 'organizationId')
 console.log('Bulk metadata deleted')
@@ -556,7 +556,7 @@ console.log('Bulk metadata deleted')
 Creates multiple metadata objects for a user with the provided keys.
 
 ```typescript
-const userMetadataBulk = await zitadelClient.createBulkMetadataByKey('userId', {
+const userMetadataBulk = await zitadelClient.user.metadata.bulkCreateByKey('userId', {
   metadata: [
     { key: 'key1', value: 'value1' },
     { key: 'key2', value: 'value2' },
@@ -570,7 +570,7 @@ console.log(userMetadataBulk)
 Searches for user metadata filtered by your query.
 
 ```typescript
-const userMetadata = await zitadelClient.userMetadataSearch('userId', {
+const userMetadata = await zitadelClient.user.metadata.search('userId', {
   query: {
     offset: '0',
     limit: 100,
@@ -593,7 +593,7 @@ console.log(userMetadata)
 Deletes a user's avatar.
 
 ```typescript
-await zitadelClient.deleteUserAvatar('userId', 'organizationId')
+await zitadelClient.user.deleteAvatar('userId', 'organizationId')
 console.log('User avatar deleted')
 ```
 
@@ -602,7 +602,7 @@ console.log('User avatar deleted')
 Updates a machine user.
 
 ```typescript
-const machineUser = await zitadelClient.updateMachineUser('userId', {
+const machineUser = await zitadelClient.userMachine.update('userId', {
   name: 'Updated Machine User',
   description: 'Updated machine user description',
   accessTokenType: 'BEARER',
@@ -615,7 +615,7 @@ console.log(machineUser)
 Updates a human user.
 
 ```typescript
-const updatedUser = await zitadelClient.updateHumanUser('userId', {
+const updatedUser = await zitadelClient.userHuman.update('userId', {
   username: 'UpdatedTestHumanUser',
   profile: {
     givenName: 'UpdatedTest',
@@ -639,7 +639,7 @@ console.log(updatedUser)
 Deletes a machine user's secret.
 
 ```typescript
-await zitadelClient.deleteMachineUserSecret('userId', 'organizationId')
+await zitadelClient.userMachine.secret.delete('userId', 'organizationId')
 console.log('Machine user secret deleted')
 ```
 
@@ -648,7 +648,7 @@ console.log('Machine user secret deleted')
 Creates a secret for a machine user.
 
 ```typescript
-const machineUserSecret = await zitadelClient.createMachineUserSecret('userId', 'organizationId')
+const machineUserSecret = await zitadelClient.userMachine.secret.create('userId', 'organizationId')
 console.log(machineUserSecret)
 ```
 
@@ -657,7 +657,7 @@ console.log(machineUserSecret)
 Creates a new email address for a user.
 
 ```typescript
-const userEmail = await zitadelClient.createUserEmail('userId', {
+const userEmail = await zitadelClient.user.createEmail('userId', {
   email: 'mini321@mouse.com',
 })
 console.log(userEmail)
@@ -668,7 +668,7 @@ console.log(userEmail)
 Deletes a phone number for a user.
 
 ```typescript
-await zitadelClient.deleteUserPhone('userId')
+await zitadelClient.user.deletePhone('userId')
 console.log('User phone deleted')
 ```
 
@@ -677,8 +677,9 @@ console.log('User phone deleted')
 Creates a new phone number for a user.
 
 ```typescript
-const userPhone = await zitadelClient.createUserPhone('userId', {
+const userPhone = await zitadelClient.user.createPhone('userId', {
   phone: '+1 123 456 7890',
+  returnCode: {},
 })
 console.log(userPhone)
 ```
@@ -688,7 +689,7 @@ console.log(userPhone)
 Creates a password for a user.
 
 ```typescript
-const userPassword = await zitadelClient.createUserPassword('userId', {
+const userPassword = await zitadelClient.user.createPassword('userId', {
   newPassword: {
     password: 'Secr3tP4ssw0rd!',
     changeRequired: false,
@@ -702,7 +703,7 @@ console.log(userPassword)
 Creates a password reset code for a user.
 
 ```typescript
-const passwordResetCode = await zitadelClient.createUserPasswordResetCode('userId', {
+const passwordResetCode = await zitadelClient.user.createPasswordResetCode('userId', {
   returnCode: {},
 })
 console.log(passwordResetCode)
@@ -713,7 +714,7 @@ console.log(passwordResetCode)
 Resend the verification code for a user's email address.
 
 ```typescript
-const resendVerificationCode = await zitadelClient.resendUserEmailVerificationCode('userId', {
+const resendVerificationCode = await zitadelClient.user.resendEmailVerificationCode('userId', {
   returnCode: {},
 })
 console.log(resendVerificationCode)
@@ -724,7 +725,7 @@ console.log(resendVerificationCode)
 Resend the verification code for a user's phone number.
 
 ```typescript
-const resendVerificationCode = await zitadelClient.resendUserPhoneVerificationCode('userId', {
+const resendVerificationCode = await zitadelClient.user.resendPhoneVerificationCode('userId', {
   returnCode: {},
 })
 console.log(resendVerificationCode)
@@ -735,7 +736,7 @@ console.log(resendVerificationCode)
 Retrieves the authentication methods of a user.
 
 ```typescript
-const authMethods = await zitadelClient.getUserAuthMethods('userId', {
+const authMethods = await zitadelClient.user.getAuthMethods('userId', {
   includeWithoutDomain: true,
   domain: 'localhost',
 })
@@ -747,7 +748,7 @@ console.log(authMethods)
 Deletes the TOTP configuration for a user.
 
 ```typescript
-await zitadelClient.deleteUserTotp('userId')
+await zitadelClient.user.totp.delete('userId')
 console.log('User TOTP deleted')
 ```
 
@@ -756,7 +757,7 @@ console.log('User TOTP deleted')
 Deletes a U2F token for a user.
 
 ```typescript
-await zitadelClient.deleteUserU2fToken({
+await zitadelClient.user.u2f.deleteToken({
   userId: 'userId',
   u2fId: 'u2fId',
 })
@@ -768,7 +769,7 @@ console.log('User U2F token deleted')
 Deletes the OTP SMS configuration for a user.
 
 ```typescript
-await zitadelClient.deleteUserOtpSms('userId')
+await zitadelClient.user.otp.deleteOtpSms('userId')
 console.log('User OTP SMS deleted')
 ```
 
@@ -777,7 +778,7 @@ console.log('User OTP SMS deleted')
 Deletes the OTP Email configuration for a user.
 
 ```typescript
-await zitadelClient.deleteUserOtpEmail('userId')
+await zitadelClient.user.otp.deleteOtpEmail('userId')
 console.log('User OTP Email deleted')
 ```
 
@@ -786,7 +787,7 @@ console.log('User OTP Email deleted')
 Retrieves the list of WebAuthn passkeys for a user.
 
 ```typescript
-const passkeys = await zitadelClient.getUserPasskeys('userId', {})
+const passkeys = await zitadelClient.user.passkey.list('userId', {})
 console.log(passkeys)
 ```
 
@@ -795,7 +796,7 @@ console.log(passkeys)
 Starts the registration of a WebAuthn passkey for a user.
 
 ```typescript
-const passkey = await zitadelClient.registerUserPasskey('userId', {
+const passkey = await zitadelClient.user.passkey.register('userId', {
   code: {
     id: 'codeId',
     code: 'code',
@@ -811,7 +812,7 @@ console.log(passkey)
 Creates a registration link for a WebAuthn passkey for a user.
 
 ```typescript
-const passkeyLink = await zitadelClient.registerUserPasskeyLink('userId', {
+const passkeyLink = await zitadelClient.user.passkey.createRegistrationLink('userId', {
   returnCode: {},
 })
 console.log(passkeyLink)
@@ -822,7 +823,7 @@ console.log(passkeyLink)
 Deletes a registered WebAuthn passkey for a user.
 
 ```typescript
-await zitadelClient.deleteRegisteredUserPasskey({
+await zitadelClient.user.passkey.delete({
   userId: 'userId',
   passkeyId: 'passkeyId',
 })
@@ -834,7 +835,7 @@ console.log('User passkey deleted')
 Retrieves the permissions of a user.
 
 ```typescript
-const permissions = await zitadelClient.getUserPermissions('userId', {
+const permissions = await zitadelClient.user.getPermissions('userId', {
   query: {
     offset: '0',
     limit: 100,
