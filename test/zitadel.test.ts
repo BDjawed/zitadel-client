@@ -208,7 +208,7 @@ describe('zitadel methods test', () => {
   // Check if the client is authenticated
   it('should be authenticated', async () => {
     try {
-      authenticationStatus = zitadelClient.getAuthenticationResponse()
+      authenticationStatus = zitadelClient.auth.getAuthenticationResponse()
       expectTypeOf(authenticationStatus).toEqualTypeOf<ZITADEL.ZitadelAuthenticationResponse>()
       console.log('✓ Zitadel client authenticated')
       // export ZitadelAuthenticationResponse into a file
@@ -227,7 +227,7 @@ describe('zitadel methods test', () => {
 
   it('should get user info', async () => {
     try {
-      const userInfos = await zitadelClient.getUserInfo()
+      const userInfos = await zitadelClient.auth.getUserInfo()
       expectTypeOf(userInfos).toEqualTypeOf<ZITADEL.ZitadelUserInfoGetResponse>()
       console.log('✓ User info retrieved, USER_ID:', userInfos.sub)
       managerId = userInfos.sub
@@ -240,7 +240,7 @@ describe('zitadel methods test', () => {
 
   it('should get default login settings', async () => {
     try {
-      const loginSettings = await zitadelClient.getLoginSettings()
+      const loginSettings = await zitadelClient.policies.getLoginSettings()
       expectTypeOf(loginSettings).toEqualTypeOf<ZITADEL.ZitadelLoginSettingsGetResponse>()
       console.log('✓ Default login settings fetched successfully')
       defaultLoginSettings = loginSettings
@@ -272,7 +272,7 @@ describe('zitadel methods test', () => {
       defaultRedirectUri: '',
     }
     try {
-      await zitadelClient.updateLoginSettings(loginSettings)
+      await zitadelClient.policies.updateLoginSettings(loginSettings)
       console.log('✓ Login settings updated successfully')
     }
     catch (error) {
@@ -284,7 +284,7 @@ describe('zitadel methods test', () => {
   it('should create an organization', async () => {
     try {
       const orgName = `test-org-${Math.floor(Math.random() * 1000)}`
-      const organization = await zitadelClient.createOrganization({
+      const organization = await zitadelClient.organization.create({
         name: orgName,
       })
       expectTypeOf(organization).toEqualTypeOf<ZITADEL.ZitadelOrganizationCreateResponse>()
@@ -300,7 +300,7 @@ describe('zitadel methods test', () => {
 
   it('should show all the permissions the user has in ZITADEL (ZITADEL Manager)', async () => {
     try {
-      const permissions = await zitadelClient.getUserPermissions(
+      const permissions = await zitadelClient.user.getPermissions(
         managerId,
         {
           query: {
@@ -339,7 +339,7 @@ describe('zitadel methods test', () => {
 
   it('should check if a user is unique', async () => {
     try {
-      const isUserNameUnique = await zitadelClient.isUserUnique(
+      const isUserNameUnique = await zitadelClient.user.isUnique(
         {
           userName: testHumanUserData.username,
         },
@@ -365,7 +365,7 @@ describe('zitadel methods test', () => {
     try {
       testHumanUserData.username = `test-human-user-${Math.floor(Math.random() * 1000)}`
       testHumanUserData.email.email = `${testHumanUserData.username}@example.com`
-      const humanUser = await zitadelClient.createHumanUser(testHumanUserData)
+      const humanUser = await zitadelClient.userHuman.create(testHumanUserData)
 
       expectTypeOf(humanUser).toEqualTypeOf<ZITADEL.ZitadelHumanUserCreateResponse>()
       console.log('✓ Human user created successfully with ID:', humanUser.userId)
@@ -382,7 +382,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const humanUserEmail = await zitadelClient.createUserEmail(
+      const humanUserEmail = await zitadelClient.user.createEmail(
         testHumanUser.userId,
         {
           email: 'mini321@mouse.com',
@@ -406,7 +406,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const humanUserPhone = await zitadelClient.createUserPhone(
+      const humanUserPhone = await zitadelClient.user.createPhone(
         testHumanUser.userId,
         {
           phone: '+1 123 456 7890',
@@ -427,7 +427,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const humanUserPhone = await zitadelClient.deleteUserPhone(testHumanUser.userId)
+      const humanUserPhone = await zitadelClient.user.deletePhone(testHumanUser.userId)
 
       expectTypeOf(humanUserPhone).toEqualTypeOf<ZITADEL.ZitadelUserPhoneDeleteResponse>()
       console.log('✓ Human user phone deleted successfully')
@@ -443,7 +443,7 @@ describe('zitadel methods test', () => {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
       const returnCode = {}
-      const verificationCode = await zitadelClient.createUserPasswordResetCode(
+      const verificationCode = await zitadelClient.user.createPasswordResetCode(
         testHumanUser.userId,
         {
           /* sendLink: {
@@ -468,7 +468,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const createPasswordByVerificationCode = await zitadelClient.createUserPassword(
+      const createPasswordByVerificationCode = await zitadelClient.user.createPassword(
         testHumanUser.userId,
         {
           newPassword: {
@@ -493,7 +493,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const createPasswordByCurrentPassword = await zitadelClient.createUserPassword(
+      const createPasswordByCurrentPassword = await zitadelClient.user.createPassword(
         testHumanUser.userId,
         {
           newPassword: {
@@ -518,7 +518,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const resendVerificationCode = await zitadelClient.resendUserEmailVerificationCode(
+      const resendVerificationCode = await zitadelClient.user.resendEmailVerificationCode(
         testHumanUser.userId,
         {
           sendCode: {
@@ -539,7 +539,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const returnVerificationCode = await zitadelClient.resendUserEmailVerificationCode(
+      const returnVerificationCode = await zitadelClient.user.resendEmailVerificationCode(
         testHumanUser.userId,
         {
           returnCode: {},
@@ -559,7 +559,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const resendVerificationCode = await zitadelClient.resendUserPhoneVerificationCode(
+      const resendVerificationCode = await zitadelClient.user.resendPhoneVerificationCode(
         testHumanUser.userId,
         {
           // sendCode: {},
@@ -580,7 +580,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const authenticationMethods = await zitadelClient.getUserAuthMethods(
+      const authenticationMethods = await zitadelClient.user.getAuthMethods(
         testHumanUser.userId,
         {
           includeWithoutDomain: true,
@@ -603,7 +603,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const removeTotpGenerator = await zitadelClient.deleteUserTotp(testHumanUser.userId)
+      const removeTotpGenerator = await zitadelClient.user.totp.delete(testHumanUser.userId)
 
       expectTypeOf(removeTotpGenerator).toEqualTypeOf<ZITADEL.ZitadelUserTotpDeleteResponse>()
       console.log('✓ TOTP generator removed successfully')
@@ -618,7 +618,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const removeU2fToken = await zitadelClient.deleteUserU2fToken(
+      const removeU2fToken = await zitadelClient.user.u2f.deleteToken(
         {
           userId: testHumanUser.userId,
           u2fId: '123456',
@@ -638,7 +638,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const removeOtpSmsFactor = await zitadelClient.deleteUserOtpSms(testHumanUser.userId)
+      const removeOtpSmsFactor = await zitadelClient.user.otp.deleteOtpSms(testHumanUser.userId)
 
       expectTypeOf(removeOtpSmsFactor).toEqualTypeOf<ZITADEL.ZitadelUserOtpSmsDeleteResponse>()
       console.log('✓ OTP SMS factor removed successfully')
@@ -653,7 +653,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const removeOtpEmailFactor = await zitadelClient.deleteUserOtpEmail(testHumanUser.userId)
+      const removeOtpEmailFactor = await zitadelClient.user.otp.deleteOtpEmail(testHumanUser.userId)
 
       expectTypeOf(removeOtpEmailFactor).toEqualTypeOf<ZITADEL.ZitadelUserOtpEmailDeleteResponse>()
       console.log('✓ OTP Email factor removed successfully')
@@ -668,7 +668,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const createPasskeyRegistrationLink = await zitadelClient.registerUserPasskeyLink(
+      const createPasskeyRegistrationLink = await zitadelClient.user.passkey.createRegistrationLink(
         testHumanUser.userId,
         {
           /* sendLink: {
@@ -692,7 +692,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const startPasskeyRegistration = await zitadelClient.registerUserPasskey(
+      const startPasskeyRegistration = await zitadelClient.user.passkey.register(
         testHumanUser.userId,
         {
           code: {
@@ -718,9 +718,8 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const listPasskeys = await zitadelClient.getUserPasskeys(
+      const listPasskeys = await zitadelClient.user.passkey.list(
         testHumanUser.userId,
-        {},
       )
 
       expectTypeOf(listPasskeys).toEqualTypeOf<ZITADEL.ZitadelUserPasskeysGetResponse>()
@@ -736,7 +735,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const removePasskey = await zitadelClient.deleteRegisteredUserPasskey(
+      const removePasskey = await zitadelClient.user.passkey.delete(
         {
           passkeyId: userPassKey.id,
           userId: testHumanUser.userId,
@@ -762,7 +761,7 @@ describe('zitadel methods test', () => {
       })
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const userMetadata = await zitadelClient.createMetadataByKey(
+      const userMetadata = await zitadelClient.user.metadata.createByKey(
         {
           key: metadata.key,
           userId: testHumanUser.userId,
@@ -792,7 +791,7 @@ describe('zitadel methods test', () => {
       }))
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const userMetadataBulk = await zitadelClient.createBulkMetadataByKey(
+      const userMetadataBulk = await zitadelClient.user.metadata.bulkCreateByKey(
         testHumanUser.userId,
         {
           metadata: bulkMetadata,
@@ -814,7 +813,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const userMetadata = await zitadelClient.getMetadataByKey(
+      const userMetadata = await zitadelClient.user.metadata.getByKey(
         {
           userId: testHumanUser.userId,
           key: singleMetadata.key,
@@ -834,7 +833,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const userMetadata = await zitadelClient.userMetadataSearch(
+      const userMetadata = await zitadelClient.user.metadata.search(
         testHumanUser.userId,
         {
           query: {
@@ -874,7 +873,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const response = await zitadelClient.deleteUserAvatar(testHumanUser.userId, testOrganization.organizationId)
+      const response = await zitadelClient.user.deleteAvatar(testHumanUser.userId, testOrganization.organizationId)
 
       expectTypeOf(response).toEqualTypeOf<ZITADEL.ZitadelUserAvatarDeleteResponse>()
       console.log('✓ User avatar deleted successfully')
@@ -889,7 +888,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const userMetadata = await zitadelClient.deleteMetadataByKey(
+      const userMetadata = await zitadelClient.user.metadata.deleteByKey(
         {
           userId: testHumanUser.userId,
           key: singleMetadata.key,
@@ -910,7 +909,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const bulkMetadata = await zitadelClient.deleteBulkMetadataByKey(
+      const bulkMetadata = await zitadelClient.user.metadata.bulkDeleteByKey(
         testHumanUser.userId,
         {
           keys: multipleMetadata.map(metadata => metadata.key),
@@ -931,7 +930,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const user = await zitadelClient.getUserById(testHumanUser.userId)
+      const user = await zitadelClient.user.getById(testHumanUser.userId)
 
       expectTypeOf(user).toEqualTypeOf<ZITADEL.ZitadelUserByIdGetResponse>()
       console.log('✓ User retrieved successfully with ID:', user.user.userId)
@@ -945,7 +944,7 @@ describe('zitadel methods test', () => {
 
   it('should get user by login name', async () => {
     try {
-      const user = await zitadelClient.getUserByLoginName(testHumanUserData.username)
+      const user = await zitadelClient.user.getByLoginName(testHumanUserData.username)
 
       expectTypeOf(user).toEqualTypeOf<ZITADEL.ZitadelUserByLoginNameGetResponse>()
       console.log('✓ User retrieved successfully with login name, ID:', user.user.id)
@@ -958,7 +957,7 @@ describe('zitadel methods test', () => {
 
   it('should search users by query', async () => {
     try {
-      const users = await zitadelClient.usersSearch(
+      const users = await zitadelClient.user.search(
         {
           query: {
             offset: '0',
@@ -990,7 +989,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const userHistory = await zitadelClient.getUserHistory(
+      const userHistory = await zitadelClient.user.getHistory(
         testHumanUser.userId,
         {
           query: {
@@ -1018,7 +1017,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const deactivatedUser = await zitadelClient.userDeactivate(testHumanUser.userId)
+      const deactivatedUser = await zitadelClient.user.deactivate(testHumanUser.userId)
 
       expectTypeOf(deactivatedUser).toEqualTypeOf<ZITADEL.ZitadelUserDeactivatePostResponse>()
       console.log('✓ User deactivated successfully with ID:', testHumanUser.userId)
@@ -1033,7 +1032,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const reactivatedUser = await zitadelClient.userReactivate(testHumanUser.userId)
+      const reactivatedUser = await zitadelClient.user.reactivate(testHumanUser.userId)
 
       expectTypeOf(reactivatedUser).toEqualTypeOf<ZITADEL.ZitadelUserReactivatePostResponse>()
       console.log('✓ User reactivated successfully with ID:', testHumanUser.userId)
@@ -1048,7 +1047,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const lockedUser = await zitadelClient.userLock(testHumanUser.userId)
+      const lockedUser = await zitadelClient.user.lock(testHumanUser.userId)
 
       expectTypeOf(lockedUser).toEqualTypeOf<ZITADEL.ZitadelUserLockPostResponse>()
       console.log('✓ User locked successfully, USER_ID:', testHumanUser.userId)
@@ -1063,7 +1062,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const unlockedUser = await zitadelClient.userUnlock(testHumanUser.userId)
+      const unlockedUser = await zitadelClient.user.unlock(testHumanUser.userId)
 
       expectTypeOf(unlockedUser).toEqualTypeOf<ZITADEL.ZitadelUserUnlockPostResponse>()
       console.log('✓ User unlocked successfully, USER_ID:', testHumanUser.userId)
@@ -1076,7 +1075,7 @@ describe('zitadel methods test', () => {
 
   it('should create a project', async () => {
     try {
-      const project = await zitadelClient.createProject({
+      const project = await zitadelClient.project.create({
         name: 'TestProject',
         projectRoleAssertion: true,
         projectRoleCheck: true,
@@ -1096,7 +1095,7 @@ describe('zitadel methods test', () => {
 
   it('should create app api', async () => {
     try {
-      const appApi = await zitadelClient.createAppApi(
+      const appApi = await zitadelClient.app.create(
         testProject.id,
         {
           name: 'TestAppApi',
@@ -1117,7 +1116,7 @@ describe('zitadel methods test', () => {
 
   it('should create app api client secret', async () => {
     try {
-      const appApiClientSecret = await zitadelClient.createAppApiClientSecret(
+      const appApiClientSecret = await zitadelClient.app.createClientSecret(
         {
           projectId: testProject.id,
           appId: testAppApi.appId,
@@ -1136,7 +1135,7 @@ describe('zitadel methods test', () => {
 
   it('should delete app api', async () => {
     try {
-      const response = await zitadelClient.deleteAppApi(
+      const response = await zitadelClient.app.delete(
         {
           projectId: testProject.id,
           appId: testAppApi.appId,
@@ -1155,7 +1154,7 @@ describe('zitadel methods test', () => {
 
   it('should create an OIDC application', async () => {
     try {
-      const oidcApp = await zitadelClient.createAppOidc(
+      const oidcApp = await zitadelClient.app.createOidc(
         testProject.id,
         {
           name: 'TestOIDCApp',
@@ -1192,7 +1191,7 @@ describe('zitadel methods test', () => {
   it('should create a machine user', async () => {
     try {
       const userName = `TestMachineUser${Math.floor(Math.random() * 1000)}`
-      const machineUser = await zitadelClient.createMachineUser(
+      const machineUser = await zitadelClient.userMachine.create(
         {
           userName,
           name: 'Test Machine User',
@@ -1214,7 +1213,7 @@ describe('zitadel methods test', () => {
 
   it('should create machine user secret', async () => {
     try {
-      const machineUserSecretCreate = await zitadelClient.createMachineUserSecret(testMachineUser.userId, testOrganization.organizationId)
+      const machineUserSecretCreate = await zitadelClient.userMachine.secret.create(testMachineUser.userId, testOrganization.organizationId)
 
       expectTypeOf(machineUserSecretCreate).toEqualTypeOf<ZITADEL.ZitadelMachineUserSecretCreateResponse>()
       console.log('✓ Machine user secret created successfully, CLIENT_SECRET:', machineUserSecretCreate.clientSecret)
@@ -1227,7 +1226,7 @@ describe('zitadel methods test', () => {
 
   it('should delete machine user secret', async () => {
     try {
-      const machineUserSecretDelete = await zitadelClient.deleteMachineUserSecret(testMachineUser.userId, testOrganization.organizationId)
+      const machineUserSecretDelete = await zitadelClient.userMachine.secret.delete(testMachineUser.userId, testOrganization.organizationId)
 
       expectTypeOf(machineUserSecretDelete).toEqualTypeOf<ZITADEL.ZitadelMachineUserSecretDeleteResponse>()
       console.log('✓ Machine user secret deleted successfully')
@@ -1240,7 +1239,7 @@ describe('zitadel methods test', () => {
 
   it('should update a machine user', async () => {
     try {
-      const machineUser = await zitadelClient.updateMachineUser(
+      const machineUser = await zitadelClient.userMachine.update(
         testMachineUser.userId,
         {
           name: 'Updated Machine User',
@@ -1261,7 +1260,7 @@ describe('zitadel methods test', () => {
 
   it('should create a machine user PAT', async () => {
     try {
-      const machineUserPat = await zitadelClient.createMachineUserPAT(
+      const machineUserPat = await zitadelClient.userMachine.pat.create(
         testMachineUser.userId,
         {
           expirationDate: new Date(ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE as string),
@@ -1282,7 +1281,7 @@ describe('zitadel methods test', () => {
   it('should create machine user key', async () => {
     try {
       const type = ZitadelMachineUserKeyType.JSON
-      const machineUserKey = await zitadelClient.createMachineUserKey(
+      const machineUserKey = await zitadelClient.userMachine.key.create(
         testMachineUser.userId,
         {
           type,
@@ -1303,7 +1302,7 @@ describe('zitadel methods test', () => {
 
   it('should get machine user key by ID', async () => {
     try {
-      const machineUserKey = await zitadelClient.getMachineUserKeyById(
+      const machineUserKey = await zitadelClient.userMachine.key.getById(
         {
           userId: testMachineUser.userId,
           keyId: testMachineUserKey.keyId,
@@ -1322,7 +1321,7 @@ describe('zitadel methods test', () => {
 
   it('should get machine user keys list', async () => {
     try {
-      const machineUserKeys = await zitadelClient.getMachineUserKeys(
+      const machineUserKeys = await zitadelClient.userMachine.key.list(
         testMachineUser.userId,
         {
           query: {
@@ -1345,7 +1344,7 @@ describe('zitadel methods test', () => {
 
   it('should get machine user PAT', async () => {
     try {
-      const machineUserPat = await zitadelClient.getMachineUserPAT(
+      const machineUserPat = await zitadelClient.userMachine.pat.getById(
         {
           tokenId: testMachineUserPat.tokenId,
           userId: testMachineUser.userId,
@@ -1364,7 +1363,7 @@ describe('zitadel methods test', () => {
 
   it('should get machine user PATs list', async () => {
     try {
-      const machineUserPats = await zitadelClient.getMachineUserPATsList(
+      const machineUserPats = await zitadelClient.userMachine.pat.list(
         testMachineUser.userId,
         {
           offset: '0',
@@ -1385,7 +1384,7 @@ describe('zitadel methods test', () => {
 
   it('should delete machine user PAT', async () => {
     try {
-      const machineUserPat = await zitadelClient.deleteMachineUserPAT(
+      const machineUserPat = await zitadelClient.userMachine.pat.delete(
         {
           tokenId: testMachineUserPat.tokenId,
           userId: testMachineUser.userId,
@@ -1406,7 +1405,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const userIdps = await zitadelClient.getUserIDPsList(
+      const userIdps = await zitadelClient.userHuman.idp.list(
         testHumanUser.userId,
         {
           query: {
@@ -1430,7 +1429,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const updatedUser = await zitadelClient.updateHumanUser(
+      const updatedUser = await zitadelClient.userHuman.update(
         testHumanUser.userId,
         {
           username: 'UpdatedTestHumanUser',
@@ -1461,7 +1460,7 @@ describe('zitadel methods test', () => {
 
   it('should delete machine user key', async () => {
     try {
-      const machineUserKey = await zitadelClient.deleteMachineUserKey(
+      const machineUserKey = await zitadelClient.userMachine.key.delete(
         {
           keyId: testMachineUserKey.keyId,
           userId: testMachineUser.userId,
@@ -1482,7 +1481,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
-      const user = await zitadelClient.deleteUserById(testHumanUser.userId)
+      const user = await zitadelClient.user.deleteById(testHumanUser.userId)
 
       expectTypeOf(user).toEqualTypeOf<ZITADEL.ZitadelUserDeleteResponse>()
       console.log('✓ User deleted successfully with ID:', testHumanUser.userId)
@@ -1495,7 +1494,7 @@ describe('zitadel methods test', () => {
 
   it('should delete an organization', async () => {
     try {
-      const organization = await zitadelClient.deleteOrganization(testOrganization.organizationId)
+      const organization = await zitadelClient.organization.delete(testOrganization.organizationId)
 
       expectTypeOf(organization).toEqualTypeOf<ZITADEL.ZitadelOrganizationDeleteResponse>()
       console.log('✓ Organization deleted successfully')
