@@ -365,7 +365,9 @@ describe('zitadel methods test', () => {
     try {
       testHumanUserData.username = `test-human-user-${Math.floor(Math.random() * 1000)}`
       testHumanUserData.email.email = `${testHumanUserData.username}@example.com`
+
       const humanUser = await zitadelClient.user.human.create(testHumanUserData)
+
 
       expectTypeOf(humanUser).toEqualTypeOf<ZITADEL.ZitadelHumanUserCreateResponse>()
       console.log('✓ Human user created successfully with ID:', humanUser.userId)
@@ -1191,6 +1193,7 @@ describe('zitadel methods test', () => {
   it('should create a machine user', async () => {
     try {
       const userName = `TestMachineUser${Math.floor(Math.random() * 1000)}`
+
       const machineUser = await zitadelClient.user.machine.create(
         {
           userName,
@@ -1213,6 +1216,7 @@ describe('zitadel methods test', () => {
 
   it('should create machine user secret', async () => {
     try {
+
       const machineUserSecretCreate = await zitadelClient.user.machine.secret.create(testMachineUser.userId, testOrganization.organizationId)
 
       expectTypeOf(machineUserSecretCreate).toEqualTypeOf<ZITADEL.ZitadelMachineUserSecretCreateResponse>()
@@ -1226,6 +1230,7 @@ describe('zitadel methods test', () => {
 
   it('should delete machine user secret', async () => {
     try {
+
       const machineUserSecretDelete = await zitadelClient.user.machine.secret.delete(testMachineUser.userId, testOrganization.organizationId)
 
       expectTypeOf(machineUserSecretDelete).toEqualTypeOf<ZITADEL.ZitadelMachineUserSecretDeleteResponse>()
@@ -1240,6 +1245,7 @@ describe('zitadel methods test', () => {
   it('should update a machine user', async () => {
     try {
       const machineUser = await zitadelClient.user.machine.update(
+
         testMachineUser.userId,
         {
           name: 'Updated Machine User',
@@ -1260,7 +1266,9 @@ describe('zitadel methods test', () => {
 
   it('should create a machine user PAT', async () => {
     try {
+
       const machineUserPat = await zitadelClient.user.machine.pat.create(
+        
         testMachineUser.userId,
         {
           expirationDate: new Date(ZITADEL_MACHINE_USER_PAT_EXPIRATION_DATE as string),
@@ -1281,7 +1289,9 @@ describe('zitadel methods test', () => {
   it('should create machine user key', async () => {
     try {
       const type = ZitadelMachineUserKeyType.JSON
+
       const machineUserKey = await zitadelClient.user.machine.key.create(
+
         testMachineUser.userId,
         {
           type,
@@ -1405,6 +1415,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
+      
       const userIdps = await zitadelClient.user.human.idp.list(
         testHumanUser.userId,
         {
@@ -1429,6 +1440,7 @@ describe('zitadel methods test', () => {
     try {
       if (!testHumanUser.userId)
         throw new Error('User ID is not defined')
+      
       const updatedUser = await zitadelClient.user.human.update(
         testHumanUser.userId,
         {
