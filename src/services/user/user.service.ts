@@ -1,4 +1,6 @@
 import { ApiEndpointsV1, ApiEndpointsV2, UsersEndpointsV1 } from '../../enums'
+import { UserHumanService } from './human/user.human.service'
+import { UserMachineService } from './machine/user.machine.service'
 import { MetadataService } from './metadata/metadata.service'
 import { OtpService } from './otp/otp.service'
 import { PasskeyService } from './passkey/passkey.service'
@@ -9,12 +11,16 @@ import type { ZitadelUserAuthenticationMethodsGetQueryDto, ZitadelUserEmailCreat
 import type { ZitadelUserAuthenticationMethodsGetResponse, ZitadelUserAvatarDeleteResponse, ZitadelUserByIdGetResponse, ZitadelUserByLoginNameGetResponse, ZitadelUserDeactivatePostResponse, ZitadelUserDeleteResponse, ZitadelUserEmailCreateResponse, ZitadelUserExistingCheckGetResponse, ZitadelUserHistoryPostResponse, ZitadelUserLockPostResponse, ZitadelUserPasswordCreateResponse, ZitadelUserPasswordResetCodeCreateResponse, ZitadelUserPermissionsGetResponseDto, ZitadelUserPhoneCreateResponse, ZitadelUserPhoneDeleteResponse, ZitadelUserReactivatePostResponse, ZitadelUserResendVerifyCodeByEmailPostResponse, ZitadelUserResendVerifyCodeByPhonePostResponse, ZitadelUsersSearchPostResponse, ZitadelUserUnlockPostResponse } from '../../responses'
 
 export class UserService {
+  private userHumanService: UserHumanService
+  private userMachineService: UserMachineService
   private metadataService: MetadataService
   private totpService: TotpService
   private u2fService: U2fService
   private otpService: OtpService
   private passkeyService: PasskeyService
   constructor(private httpClient: HttpClient) {
+    this.userHumanService = new UserHumanService(this.httpClient)
+    this.userMachineService = new UserMachineService(this.httpClient)
     this.metadataService = new MetadataService(httpClient)
     this.totpService = new TotpService(httpClient)
     this.u2fService = new U2fService(httpClient)
@@ -40,6 +46,14 @@ export class UserService {
 
   get passkey(): PasskeyService {
     return this.passkeyService
+  }
+
+  get human(): UserHumanService {
+    return this.userHumanService
+  }
+
+  get machine(): UserMachineService {
+    return this.userMachineService
   }
 
   /**

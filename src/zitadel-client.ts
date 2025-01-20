@@ -4,8 +4,6 @@ import { AppService } from './services/app/app.service'
 import { OrganizationService } from './services/organization/organization.service'
 import { PoliciesService } from './services/policies/policies.service'
 import { ProjectService } from './services/project/project.service'
-import { UserHumanService } from './services/user/human/user.human.service'
-import { UserMachineService } from './services/user/machine/user.machine.service'
 import { UserService } from './services/user/user.service'
 import { generateAssertion } from './utils/jwt.utils'
 import type { ZitadelClientOptions } from './interfaces'
@@ -15,8 +13,6 @@ export class ZitadelClient {
   private authService: AuthService
   private organizationService: OrganizationService
   private userService: UserService
-  private userHumanService: UserHumanService
-  private userMachineService: UserMachineService
   private projectService: ProjectService
   private appService: AppService
   private policiesService: PoliciesService
@@ -26,8 +22,6 @@ export class ZitadelClient {
     this.authService = new AuthService(options, this.httpClient)
     this.organizationService = new OrganizationService(this.httpClient)
     this.userService = new UserService(this.httpClient)
-    this.userHumanService = new UserHumanService(this.httpClient)
-    this.userMachineService = new UserMachineService(this.httpClient)
     this.projectService = new ProjectService(this.httpClient)
     this.appService = new AppService(this.httpClient)
     this.policiesService = new PoliciesService(this.httpClient)
@@ -52,16 +46,8 @@ export class ZitadelClient {
     return this.organizationService
   }
 
-  get userHuman(): UserHumanService {
-    return this.userHumanService
-  }
-
   get user(): UserService {
     return this.userService
-  }
-
-  get userMachine(): UserMachineService {
-    return this.userMachineService
   }
 
   get project(): ProjectService {
