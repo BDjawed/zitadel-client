@@ -69,7 +69,7 @@ describe('environment Variable Tests', () => {
 describe('zitadel methods test', () => {
   let zitadelClient: ZITADEL.ZitadelClient
   // let provisioningFile: ZITADEL.ZitadelProvisioningResponse
-  let authenticationStatus: ZITADEL.ZitadelAuthenticationResponse
+  // let authenticationStatus: ZITADEL.ZitadelAuthenticationResponse
   let defaultLoginSettings: ZITADEL.ZitadelLoginSettingsGetResponse
   let testOrganization: ZITADEL.ZitadelOrganizationCreateResponse
   let testHumanUser: ZITADEL.ZitadelHumanUserCreateResponse
@@ -205,10 +205,411 @@ describe('zitadel methods test', () => {
     }
   })
 
+  it('should check server health', async () => {
+    try {
+      const serverHealth = await zitadelClient.auth.healthCheck()
+      expectTypeOf(serverHealth).toEqualTypeOf<ZITADEL.ZitadelHealthCheckResponse>()
+      console.log('✓ Server health checked, response:', serverHealth)
+    }
+    catch (error) {
+      console.error('❌ Server health check failed:', error)
+      throw error
+    }
+  })
+
+  it('should get password complexity rules', async () => {
+    try {
+      const passwordComplexityRules = await zitadelClient.auth.getPasswordPolicy()
+      expectTypeOf(passwordComplexityRules).toEqualTypeOf<ZITADEL.ZitadelPasswordComplexityPolicyGetResponse>()
+      console.log('✓ Password complexity rules retrieved:', passwordComplexityRules)
+    }
+    catch (error) {
+      console.error('❌ Password complexity rules retrieval failed:', error)
+      throw error
+    }
+  })
+
+  it('should get label policy', async () => {
+    try {
+      const labelPolicy = await zitadelClient.auth.getLabelPolicy()
+      expectTypeOf(labelPolicy).toEqualTypeOf<ZITADEL.ZitadelLabelPolicyGetResponse>()
+      console.log('✓ Label policy retrieved:', labelPolicy)
+    }
+    catch (error) {
+      console.error('❌ Label policy retrieval failed:', error)
+      throw error
+    }
+  })
+
+  it('should get privacy policy', async () => {
+    try {
+      const privacyPolicy = await zitadelClient.auth.getPrivacyPolicy()
+      expectTypeOf(privacyPolicy).toEqualTypeOf<string>()
+      console.log('✓ Privacy policy retrieved:', privacyPolicy)
+    }
+    catch (error) {
+      console.error('❌ Privacy policy retrieval failed:', error)
+      throw error
+    }
+  })
+
+  it('should get login policy', async () => {
+    try {
+      const loginPolicy = await zitadelClient.auth.getLoginPolicy()
+      expectTypeOf(loginPolicy).toEqualTypeOf<ZITADEL.ZitadelLoginPolicyGetResponse>()
+      console.log('✓ Login policy retrieved:', loginPolicy)
+    }
+    catch (error) {
+      console.error('❌ Login policy retrieval failed:', error)
+      throw error
+    }
+  })
+
+  it('should get me ', async () => {
+    try {
+      const me = await zitadelClient.auth.me()
+      expectTypeOf(me).toEqualTypeOf<ZITADEL.ZitadelMyUserGetResponse>()
+      console.log('✓ Me retrieved:', me)
+    }
+    catch (error) {
+      console.error('❌ Me retrieval failed:', error)
+      throw error
+    }
+  })
+
+  it('should get my user history', async () => {
+    try {
+      const myUserHistory = await zitadelClient.auth.myHistory({
+        query: {
+          sequence: '1',
+          limit: 20,
+          asc: true,
+        },
+      })
+      expectTypeOf(myUserHistory).toEqualTypeOf<ZITADEL.ZitadelMyUserHistoryGetResponse>()
+      console.log('✓ My user history retrieved:', myUserHistory)
+    }
+    catch (error) {
+      console.error('❌ My user history retrieval failed:', error)
+      throw error
+    }
+  })
+
+  it('should get my user sessions', async () => {
+    try {
+      const myUserSessions = await zitadelClient.auth.mySessions()
+      expectTypeOf(myUserSessions).toEqualTypeOf<ZITADEL.ZitadelMyUserSessionsGetResponse>()
+      console.log('✓ My user sessions retrieved:', myUserSessions)
+    }
+    catch (error) {
+      console.error('❌ My user sessions retrieval failed:', error)
+      throw error
+    }
+  })
+
+  /*
+  My avatar deletion failed: {
+  code: 5,
+  message: 'Errors.Users.NotFound (USER-35N8f)',
+  details: [
+    {
+      '@type': 'type.googleapis.com/zitadel.v1.ErrorDetail',
+      id: 'USER-35N8f',
+      message: 'Errors.Users.NotFound'
+    }
+  ]
+}
+  it('should delete my avatar', async () => {
+    try {
+      const deleteMyAvatar = await zitadelClient.auth.deleteMyAvatar()
+      expectTypeOf(deleteMyAvatar).toEqualTypeOf<ZITADEL.ZitadelMyUserAvatarDeleteResponse>()
+      console.log('✓ My avatar deleted')
+    }
+    catch (error) {
+      console.error('❌ My avatar deletion failed:', error)
+      throw error
+    }
+  }) */
+
+  it('should retrieve my user authentication factors', async () => {
+    try {
+      const myUserAuthenticationFactors = await zitadelClient.auth.myAuthFactors()
+      expectTypeOf(myUserAuthenticationFactors).toEqualTypeOf<ZITADEL.ZitadelMyUserAuthFactorsGetResponse>()
+      console.log('✓ My user authentication factors retrieved:', myUserAuthenticationFactors)
+    }
+    catch (error) {
+      console.error('❌ My user authentication factors retrieval failed:', error)
+      throw error
+    }
+  })
+
+  /* it('should create a new OTP password for me', async () => {
+    try {
+      const createMyUserOTP = await zitadelClient.auth.createMyOtpPassword()
+      expectTypeOf(createMyUserOTP).toEqualTypeOf<ZITADEL.ZitadelMyUserOtpPasswordPostResponse>()
+      console.log('✓ My user OTP created:', createMyUserOTP)
+    }
+    catch (error) {
+      console.error('❌ My user OTP creation failed:', error)
+      throw error
+    }
+  })
+
+  it('should delete my user OTP password', async () => {
+    try {
+      const deleteMyUserOTP = await zitadelClient.auth.deleteMyOtpPassword()
+      expectTypeOf(deleteMyUserOTP).toEqualTypeOf<ZITADEL.ZitadelMyUserOtpPasswordDeleteResponse>()
+      console.log('✓ My user OTP deleted:', deleteMyUserOTP)
+    }
+    catch (error) {
+      console.error('❌ My user OTP deletion failed:', error)
+      throw error
+    }
+  })
+
+  it('should verify my user OTP password', async () => {
+    try {
+      const verifyMyUserOTP = await zitadelClient.auth.checkMyOtpPassword()
+      expectTypeOf(verifyMyUserOTP).toEqualTypeOf<ZITADEL.ZitadelMyUserOtpPasswordCheckPostResponse>()
+      console.log('✓ My user OTP verified:', verifyMyUserOTP)
+    }
+    catch (error) {
+      console.error('❌ My user OTP verification failed:', error)
+      throw error
+    }
+  })
+
+  it('should delete my user OTP password SMS', async () => {
+    try {
+      const deleteMyUserOTPSms = await zitadelClient.auth.deleteMyOtpPasswordSms()
+      expectTypeOf(deleteMyUserOTPSms).toEqualTypeOf<ZITADEL.ZitadelMyUserOtpPasswordDeleteResponse>()
+    console.log('✓ My user OTP SMS deleted:', deleteMyUserOTPSms)
+    }
+    catch (error) {
+      console.error('❌ My user OTP SMS deletion failed:', error)
+      throw error
+    }
+  })
+
+  it('should add a new OTP password SMS for me', async () => {
+    try {
+      const createMyUserOTPSms = await zitadelClient.auth.createMyOtpPasswordSms()
+      expectTypeOf(createMyUserOTPSms).toEqualTypeOf<ZITADEL.ZitadelMyUserOtpPasswordSmsPostResponse>()
+      console.log('✓ My user OTP SMS created:', createMyUserOTPSms)
+    }
+    catch (error) {
+      console.error('❌ My user OTP SMS creation failed:', error)
+      throw error
+    }
+  })
+
+  it('should delete my user OTP Password Email', async () => {
+    try {
+      const deleteMyUserOTPEmail = await zitadelClient.auth.deleteMyOtpPasswordEmail()
+      expectTypeOf(deleteMyUserOTPEmail).toEqualTypeOf<ZITADEL.ZitadelMyUserOtpPasswordDeleteResponse>()
+      console.log('✓ My user OTP Email deleted:', deleteMyUserOTPEmail)
+    }
+    catch (error) {
+      console.error('❌ My user OTP Email deletion failed:', error)
+      throw error
+    }
+  })
+
+  it('should create a new OTP Password Email for me', async () => {
+    try {
+      const createMyUserOTPEmail = await zitadelClient.auth.createMyOtpPasswordEmail()
+      expectTypeOf(createMyUserOTPEmail).toEqualTypeOf<ZITADEL.ZitadelMyUserOtpPasswordEmailPostResponse>()
+      console.log('✓ My user OTP Email created:', createMyUserOTPEmail)
+    }
+    catch (error) {
+      console.error('❌ My user OTP Email creation failed:', error)
+      throw error
+    }
+  })
+
+  it('should verify my user U2F token', async () => {
+    try {
+      const verifyMyUserU2fToken = await zitadelClient.auth.checkMyU2fToken({
+        verification: {
+          publicKeyCredential: 'string',
+          tokenName: 'string',
+        }
+      })
+      expectTypeOf(verifyMyUserU2fToken).toEqualTypeOf<ZITADEL.ZitadelMyUserU2fCheckPostResponse>()
+      console.log('✓ My user U2F token verified:', verifyMyUserU2fToken)
+    }
+    catch (error) {
+      console.error('❌ My user U2F token verification failed:', error)
+      throw error
+    }
+  })
+
+  it('should delete my U2F token', async () => {
+    try {
+      const deleteMyUserU2fToken = await zitadelClient.auth.deleteMyU2fToken('tokenId')
+      expectTypeOf(deleteMyUserU2fToken).toEqualTypeOf<ZITADEL.ZitadelMyUserU2fDeleteResponse>()
+      console.log('✓ My user U2F token deleted:', deleteMyUserU2fToken)
+    }
+    catch (error) {
+      console.error('❌ My user U2F token deletion failed:', error)
+      throw error
+    }
+  })
+
+  it('should list my user Passkeys', async () => {
+    try {
+      const listMyUserPasskeys = await zitadelClient.auth.listMyPasskeys()
+      expectTypeOf(listMyUserPasskeys).toEqualTypeOf<ZITADEL.ZitadelMyUserPasskeyGetResponse>()
+      console.log('✓ My user Passkeys listed successfully, PASS_KEYS:', listMyUserPasskeys)
+    } catch (error) {
+      console.error('❌ My user Passkeys listing failed:', error)
+      throw error
+    }
+  })
+
+  it('should create my user Passkey', async () => {
+    try {
+      const createMyUserPasskey = await zitadelClient.auth.createMyPasskey()
+      expectTypeOf(createMyUserPasskey).toEqualTypeOf<ZITADEL.ZitadelMyUserPasskeyPostResponse>()
+      console.log('✓ My user Passkey created:', createMyUserPasskey)
+    } catch (error) {
+      console.error('❌ My user Passkey creation failed:', error)
+      throw error
+    }
+  })
+
+  it('should create my user Passkey link', async () => {
+    try {
+      const createMyUserPasskeyLink = await zitadelClient.auth.createMyPasskeyLink()
+      expectTypeOf(createMyUserPasskeyLink).toEqualTypeOf<ZITADEL.ZitadelMyUserPasskeyLinkPostResponse>()
+      console.log('✓ My user Passkey link created:', createMyUserPasskeyLink)
+    } catch (error) {
+      console.error('❌ My user Passkey link creation failed:', error)
+      throw error
+    }
+  })
+
+  it('should send my user Passkey Link', async () => {
+    try {
+      const sendMyUserPasskeyLink = await zitadelClient.auth.sendMyPasskeyLink()
+      expectTypeOf(sendMyUserPasskeyLink).toEqualTypeOf<ZITADEL.ZitadelMyUserPasskeyLinkSendPostResponse>()
+      console.log('✓ My user Passkey link sent:', sendMyUserPasskeyLink)
+    } catch (error) {
+      console.error('❌ My user Passkey link sending failed:', error)
+      throw error
+    }
+  })
+
+  it('should verify my user Passkey', async () => {
+    try {
+      const verifyMyUserPasskey = await zitadelClient.auth.verifyMyPasskey({
+        verification: {
+          publicKeyCredential: 'string',
+          tokenName: 'string'
+        }
+      })
+      expectTypeOf(verifyMyUserPasskey).toEqualTypeOf<ZITADEL.ZitadelMyUserPasskeyVerifyPostResponse>()
+      console.log('✓ My user Passkey verified:', verifyMyUserPasskey)
+    } catch (error) {
+      console.error('❌ My user Passkey verification failed:', error)
+      throw error
+    }
+  })
+
+  it('should delete my user Passkey', async () => {
+    try {
+      const deleteMyUserPasskey = await zitadelClient.auth.deleteMyPasskey('passkeyId')
+      expectTypeOf(deleteMyUserPasskey).toEqualTypeOf<ZITADEL.ZitadelMyUserPasskeyDeleteResponse>()
+      console.log('✓ My user Passkey deleted:', deleteMyUserPasskey)
+    } catch (error) {
+      console.error('❌ My user Passkey deletion failed:', error)
+      throw error
+    }
+  }) */
+
+  it('should list my user Authorizations/Grants', async () => {
+    try {
+      const listMyUserAuthorizations = await zitadelClient.auth.listMyUserGrants({
+        query: {
+          offset: '0',
+          limit: 100,
+          asc: true,
+        },
+      })
+      expectTypeOf(listMyUserAuthorizations).toEqualTypeOf<ZITADEL.ZitadelMyUserGrantsPostResponse>()
+      console.log('✓ My user Authorizations listed successfully, AUTHORIZATIONS:', listMyUserAuthorizations)
+    }
+    catch (error) {
+      console.error('❌ My user Authorizations listing failed:', error)
+      throw error
+    }
+  })
+
+  it('should list my user organizations', async () => {
+    try {
+      const listMyUserOrganizations = await zitadelClient.auth.listMyOrganizations({
+        query: {
+          offset: '0',
+          limit: 100,
+          asc: true,
+        },
+        queries: [
+          {
+            /* nameQuery: {
+              name: 't',
+              method: ZitadelTextQueryMethod.CONTAINS_IGNORE_CASE
+            }, */
+            domainQuery: {
+              domain: '.',
+              method: ZitadelTextQueryMethod.CONTAINS,
+            },
+            /* stateQuery: {
+              state: ZITADEL.OrganizationState.UNSPECIFIED
+            }, */
+            /* idQuery: {
+              id: '11352464987497'
+            } */
+          },
+        ],
+        sortingColumn: ZITADEL.ZitadelMeUsersSearchSortingColumn.NAME,
+      })
+      expectTypeOf(listMyUserOrganizations).toEqualTypeOf<ZITADEL.ZitadelMyUserOrganizationsPostResponse>()
+      console.log('✓ My user organizations listed successfully, ORGANIZATIONS:', listMyUserOrganizations)
+    }
+    catch (error) {
+      console.error('❌ My user organizations listing failed:', error)
+      throw error
+    }
+  })
+
+  it('should list my user permissions', async () => {
+    try {
+      const listMyUserPermissions = await zitadelClient.auth.listMyPermissions()
+      expectTypeOf(listMyUserPermissions).toEqualTypeOf<ZITADEL.ZitadelMyUserListPermissionsPostResponse>()
+      console.log('✓ My user permissions listed successfully, PERMISSIONS:', listMyUserPermissions)
+    }
+    catch (error) {
+      console.error('❌ My user permissions listing failed:', error)
+      throw error
+    }
+  })
+
+  it('should list my user project roles', async () => {
+    try {
+      const listMyUserProjectRoles = await zitadelClient.auth.listMyProjectRoles()
+      expectTypeOf(listMyUserProjectRoles).toEqualTypeOf<ZITADEL.ZitadelMyUserListProjectRolesPostResponse>()
+      console.log('✓ My user project roles listed successfully, PROJECT_ROLES:', listMyUserProjectRoles)
+    }
+    catch (error) {
+      console.error('❌ My user project roles listing failed:', error)
+      throw error
+    }
+  })
+
   // Check if the client is authenticated
   it('should be authenticated', async () => {
     try {
-      authenticationStatus = zitadelClient.auth.getAuthenticationResponse()
+      const authenticationStatus = zitadelClient.auth.getAuthenticationResponse()
       expectTypeOf(authenticationStatus).toEqualTypeOf<ZITADEL.ZitadelAuthenticationResponse>()
       console.log('✓ Zitadel client authenticated')
       // export ZitadelAuthenticationResponse into a file

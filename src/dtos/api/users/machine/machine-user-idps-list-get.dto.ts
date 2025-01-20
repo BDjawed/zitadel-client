@@ -6,14 +6,14 @@ export const ZitadelMachineUserIdpsListGetPathSchema = z.object({
 
 export type ZitadelMachineUserIdpsListGetPathDto = z.infer<typeof ZitadelMachineUserIdpsListGetPathSchema>
 
-const QuerySchema = z.object({
+export const PaginationQuerySchema = z.object({
   offset: z.string(),
   limit: z.number().int(),
   asc: z.boolean(),
 })
 
 export const ZitadelMachineUserIdpsListGetSchema = z.object({
-  query: QuerySchema,
+  query: PaginationQuerySchema,
 })
 
 export type ZitadelMachineUserIdpsListGetDto = z.infer<typeof ZitadelMachineUserIdpsListGetSchema>

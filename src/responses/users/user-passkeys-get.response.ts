@@ -8,15 +8,15 @@ export enum AuthFactorState {
   REMOVED = 'AUTH_FACTOR_STATE_REMOVED',
 }
 
-const ResultSchema = z.object({
+export const PasskeyResultSchema = z.object({
   id: z.string(),
   state: z.nativeEnum(AuthFactorState),
   name: z.string(),
 })
 
 export const ZitadelUserPasskeysGetResponseSchema = ZitadelLoginSettingsUpdateResponseSchema.extend({
-  result: z.array(ResultSchema),
+  result: z.array(PasskeyResultSchema),
 })
 
-// type Result = z.infer<typeof ResultSchema>
+// type Result = z.infer<typeof PasskeyResultSchema>
 export type ZitadelUserPasskeysGetResponse = z.infer<typeof ZitadelUserPasskeysGetResponseSchema>

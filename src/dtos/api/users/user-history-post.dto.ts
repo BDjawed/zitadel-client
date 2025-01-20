@@ -1,16 +1,16 @@
 import { z } from 'zod'
 import { ZitadelOrganizationIdHeaderSchema } from '../common'
 
-export const ZitadelUserHistoryPostBodySchema = z.object({
+export const ZitadelUserHistoryQueryPostBodySchema = z.object({
   sequence: z.string().min(1, 'Sequence is required'),
   limit: z.number().min(1, 'Limit is required'),
   asc: z.boolean(),
 })
 
-export type ZitadelUserHistoryPostBodyDto = z.infer<typeof ZitadelUserHistoryPostBodySchema>
+export type ZitadelUserHistoryPostBodyDto = z.infer<typeof ZitadelUserHistoryQueryPostBodySchema>
 
 export const ZitadelUserHistoryPostSchema = z.object({
-  query: ZitadelUserHistoryPostBodySchema,
+  query: ZitadelUserHistoryQueryPostBodySchema,
 })
 
 export type ZitadelUserHistoryPostDto = z.infer<typeof ZitadelUserHistoryPostSchema>
