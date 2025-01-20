@@ -19,8 +19,8 @@ export class UserService {
   private otpService: OtpService
   private passkeyService: PasskeyService
   constructor(private httpClient: HttpClient) {
-    this.userHumanService = new UserHumanService(this.httpClient)
-    this.userMachineService = new UserMachineService(this.httpClient)
+    this.userHumanService = new UserHumanService(httpClient)
+    this.userMachineService = new UserMachineService(httpClient)
     this.metadataService = new MetadataService(httpClient)
     this.totpService = new TotpService(httpClient)
     this.u2fService = new U2fService(httpClient)
@@ -47,7 +47,6 @@ export class UserService {
   get passkey(): PasskeyService {
     return this.passkeyService
   }
-
 
   get human(): UserHumanService {
     return this.userHumanService

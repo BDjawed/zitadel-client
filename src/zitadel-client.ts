@@ -48,21 +48,8 @@ export class ZitadelClient {
 
   get user(): UserService {
     return this.userService
-
   }
 
-  get auth(): AuthService {
-    return this.authService
-  }
-
-  get organization(): OrganizationService {
-    return this.organizationService
-  }
-
-  get user(): UserService {
-    return this.userService
-  }
-    
   get project(): ProjectService {
     return this.projectService
   }
